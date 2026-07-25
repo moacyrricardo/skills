@@ -6,6 +6,7 @@ description: >
   findings to fresh specs), and finishes to an open PR — then re-reads the catalog and continues,
   since finishing one spec can free others. Stops at an open PR; never merges.
 skills:
+  - spec-workflow:spec-conventions
   - spec-workflow:specs-table
   - spec-workflow:build-spec
   - spec-workflow:spec-eval
