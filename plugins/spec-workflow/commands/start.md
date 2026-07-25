@@ -25,7 +25,7 @@ git checkout main && git pull
 
 If the working tree is dirty, stash first and tell the user:
 ```
-git stash push -m "auto-stash before spec-to-linear"
+git stash push -m "auto-stash before start"
 ```
 
 ## 3. Resolve Linear team

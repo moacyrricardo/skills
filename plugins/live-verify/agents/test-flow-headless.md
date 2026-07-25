@@ -174,4 +174,4 @@ Hand back, concisely:
   API — the fenced request/response text inline).
 - Anything notable (flake, timing, assumption made about the target).
 
-Do not push or post anything — the orchestrator (`/spec-workflow:spec-test-live`) publishes.
+Do not push or post anything — the orchestrator (`/spec-workflow:test-live`) publishes.

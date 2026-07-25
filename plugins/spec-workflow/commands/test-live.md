@@ -1,6 +1,6 @@
 Verify a shipped feature against the real running app and publish the proof. Orchestrates `/live-verify:run-local-dev` (ensure the server is up) + the `live-verify:test-flow-headless` agent (drive it, capture a screenshot/gif/text), then attaches that proof to the branch's GitHub PR and to the Linear ticket if there is one.
 
-Usage: `/spec-workflow:spec-test-live [what to verify] [url/slug/endpoint] [<issue-id>]`. Anything omitted is inferred from the `doing`/`done` spec and the PR diff; ask if genuinely ambiguous.
+Usage: `/spec-workflow:test-live [what to verify] [url/slug/endpoint] [<issue-id>]`. Anything omitted is inferred from the `doing`/`done` spec and the PR diff; ask if genuinely ambiguous.
 
 ---
 

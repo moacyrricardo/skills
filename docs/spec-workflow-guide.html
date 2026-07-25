@@ -311,7 +311,7 @@
       <b>idea</b><span class="arw">→</span>
       <b>concern</b><span class="arw">→</span>
       <b>specs</b><span class="arw">→</span>
-      <b>spec-ship</b><span class="arw">→</span>
+      <b>ship</b><span class="arw">→</span>
       <b>open PRs</b>
     </div>
   </div>
@@ -332,7 +332,7 @@
 <span class="c"># 3 · activate in the current session</span>
 <span class="p">/</span><span class="cmd">reload-plugins</span></pre>
     </div>
-    <p class="read reveal" style="margin-top:16px; color:var(--muted); font-size:14.5px;">Once installed, the commands are namespaced by their plugin — <code>/spec-workflow:new-spec</code>, <code>/spec-workflow:spec-ship</code>, and so on. They're written in full below.</p>
+    <p class="read reveal" style="margin-top:16px; color:var(--muted); font-size:14.5px;">Once installed, the commands are namespaced by their plugin — <code>/spec-workflow:new</code>, <code>/spec-workflow:ship</code>, and so on. They're written in full below.</p>
   </section>
 
   <!-- MODEL -->
@@ -377,21 +377,21 @@
       <div class="stage">
         <div class="stage-h">frame</div>
         <div class="node accent"><div class="k">concern · 002</div><div class="v">☂ umbrella</div><span class="badge">todo</span></div>
-        <div class="cmd-chip">/new-spec</div>
+        <div class="cmd-chip">/new</div>
       </div>
       <div class="stage">
         <div class="stage-h">decide</div>
         <div class="node"><div class="k">spec · 003</div><div class="v">slice A</div></div>
         <div class="node"><div class="k">spec · 004</div><div class="v">slice B</div></div>
         <div class="node"><div class="k">spec · 005</div><div class="v">slice C</div></div>
-        <div class="cmd-chip">/new-spec ×N</div>
+        <div class="cmd-chip">/new ×N</div>
       </div>
       <div class="stage">
         <div class="stage-h">ship</div>
         <div class="node pr"><div class="k">PR</div><div class="v">✓ 003</div></div>
         <div class="node pr"><div class="k">PR</div><div class="v">✓ 004</div></div>
         <div class="node pr"><div class="k">PR</div><div class="v">✓ 005</div></div>
-        <div class="cmd-chip">/spec-ship each</div>
+        <div class="cmd-chip">/ship each</div>
       </div>
       <div class="stage">
         <div class="stage-h">review</div>
@@ -412,8 +412,8 @@
         <div class="n">1</div>
         <div>
           <h3>Frame the idea as a concern</h3>
-          <p>Start wide. Run <code>new-spec</code> and choose <b>concern</b>. Capture the problem, the options you're weighing, and the open questions. You're not committing to an approach yet — you're giving the idea a home in the catalog.</p>
-          <span class="cmdrow"><span class="p">/</span>spec-workflow:new-spec <span style="color:var(--muted)">→ concern</span></span>
+          <p>Start wide. Run <code>new</code> and choose <b>concern</b>. Capture the problem, the options you're weighing, and the open questions. You're not committing to an approach yet — you're giving the idea a home in the catalog.</p>
+          <span class="cmdrow"><span class="p">/</span>spec-workflow:new <span style="color:var(--muted)">→ concern</span></span>
         </div>
       </div>
 
@@ -421,8 +421,8 @@
         <div class="n">2</div>
         <div>
           <h3>Split it into a few specs</h3>
-          <p>As the decisions firm up, break the concern into bounded, buildable slices — one <b>spec</b> each, via <code>new-spec</code>. Then mark the concern resolved with a note pointing at the specs that settled it. You now have a small stack of <span class="pill todo">todo</span> specs.</p>
-          <span class="cmdrow"><span class="p">/</span>spec-workflow:new-spec <span style="color:var(--muted)">→ spec &nbsp;(repeat)</span></span>
+          <p>As the decisions firm up, break the concern into bounded, buildable slices — one <b>spec</b> each, via <code>new</code>. Then mark the concern resolved with a note pointing at the specs that settled it. You now have a small stack of <span class="pill todo">todo</span> specs.</p>
+          <span class="cmdrow"><span class="p">/</span>spec-workflow:new <span style="color:var(--muted)">→ spec &nbsp;(repeat)</span></span>
         </div>
       </div>
 
@@ -430,8 +430,8 @@
         <div class="n">3</div>
         <div>
           <h3>Ship each spec</h3>
-          <p>Hand a spec to <code>spec-ship</code>. An agent builds it in the background: it flips <span class="pill todo">todo</span> → <span class="pill doing">doing</span> as the first commit (so the PR opens on that flip), implements the change, and leaves an <b>open</b> PR — stacked when specs depend on each other. It <b>never merges</b>. Run it once per spec.</p>
-          <span class="cmdrow"><span class="p">/</span>spec-workflow:spec-ship 003</span>
+          <p>Hand a spec to <code>ship</code>. An agent builds it in the background: it flips <span class="pill todo">todo</span> → <span class="pill doing">doing</span> as the first commit (so the PR opens on that flip), implements the change, and leaves an <b>open</b> PR — stacked when specs depend on each other. It <b>never merges</b>. Run it once per spec.</p>
+          <span class="cmdrow"><span class="p">/</span>spec-workflow:ship 003</span>
         </div>
       </div>
 
@@ -448,13 +448,13 @@
 
   <!-- EVIDENCE -->
   <section>
-    <p class="eyebrow reveal">What <span class="mono">spec-ship</span> leaves behind</p>
+    <p class="eyebrow reveal">What <span class="mono">ship</span> leaves behind</p>
     <h2 class="reveal">Every PR shows its work</h2>
     <p class="sec-lede reveal">The point of shipping through the agent isn't speed — it's that each pull request carries proof, so review is fast and grounded.</p>
     <div class="evi">
       <div class="evi-c card reveal"><div class="n">comment 1</div><div class="t">Tests</div><div class="d">New tests named and explained, plus the actual pass/fail run.</div></div>
-      <div class="evi-c card reveal"><div class="n">comment 2</div><div class="t">Spec-eval</div><div class="d">A read-only judgement of the branch against the spec's decision — gaps, in-scope fixes, and what was deferred to fresh specs.</div></div>
-      <div class="evi-c card reveal"><div class="n">comment 3</div><div class="t">Finish-branch</div><div class="d">The final commit that moves the spec <span class="pill done" style="font-size:10px">done</span> and records how the build differed from the plan.</div></div>
+      <div class="evi-c card reveal"><div class="n">comment 2</div><div class="t">Eval</div><div class="d">A read-only judgement of the branch against the spec's decision — gaps, in-scope fixes, and what was deferred to fresh specs.</div></div>
+      <div class="evi-c card reveal"><div class="n">comment 3</div><div class="t">Finish</div><div class="d">The final commit that moves the spec <span class="pill done" style="font-size:10px">done</span> and records how the build differed from the plan.</div></div>
       <div class="evi-c card reveal"><div class="n">comment 4</div><div class="t">Live evidence</div><div class="d">Proof it actually runs — a GIF of the flow, or a captured request/response — via the <code>live-verify</code> plugin.</div></div>
     </div>
   </section>
@@ -467,7 +467,7 @@
       <div class="plug reveal">
         <div class="nm">spec-workflow</div>
         <div class="dep">depends on · live-verify</div>
-        <p>The catalog lifecycle: <span class="mono">new-spec</span>, <span class="mono">spec-to-linear</span>, <span class="mono">build-spec</span>, <span class="mono">spec-eval</span>, <span class="mono">finish-branch</span>, <span class="mono">spec-ship</span>, <span class="mono">specs-table</span>, the <span class="mono">spec-driver</span> agent, and the <span class="mono">spec-conventions</span> skill.</p>
+        <p>The catalog lifecycle: <span class="mono">new</span>, <span class="mono">start</span>, <span class="mono">build</span>, <span class="mono">eval</span>, <span class="mono">finish</span>, <span class="mono">ship</span>, <span class="mono">plan</span>, the <span class="mono">autopilot</span> agent, and the <span class="mono">spec-conventions</span> skill.</p>
       </div>
       <div class="plug reveal">
         <div class="nm">live-verify</div>
