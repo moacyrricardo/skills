@@ -6,6 +6,9 @@ commands I use every day, published as an installable marketplace.
 This repo is itself a **plugin marketplace** (`moacyr-skills`). Each plugin lives under
 [`plugins/`](./plugins) and is independently installable.
 
+> 📖 **New here?** The [Spec Workflow guide](./docs/spec-workflow-guide.md) walks through going
+> from a rough idea to an open PR ([rich HTML version](./docs/spec-workflow-guide.html)).
+
 ## Install
 
 ```shell
