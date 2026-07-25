@@ -19,9 +19,9 @@ Record for each PR:
 - `headRefOid` — the HEAD SHA **before** merge; this is the `--onto` cut point for rebasing the next branch
 - `title` — for display and squash commit subject
 
-Derive the squash commit subject from the branch name: extract the issue id from `headRefName` (the segment matching `[A-Z][A-Z0-9]+-\d+`, e.g. `ABC-806`) and combine with the PR title, stripped of any leading `TAG: ` prefix your tracker/convention adds (e.g. `LIN: `). If the branch has no issue id, just use the cleaned PR title.
+Derive the squash commit subject from the branch name: extract the issue id from `headRefName` (the segment matching `[A-Z][A-Z0-9]+-\d+`, e.g. `ABC-806`) and combine with the PR title, stripped of any leading `TAG: ` prefix your tracker/convention adds. If the branch has no issue id, just use the cleaned PR title.
 
-Example: branch `alex/abc-806-create-integration-flow`, title `LIN: Create integration flow` → subject `ABC-806 Create integration flow`.
+Example: branch `alex/abc-806-create-integration-flow`, title `TAG: Create integration flow` → subject `ABC-806 Create integration flow`.
 
 ---
 
