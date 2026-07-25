@@ -2,6 +2,8 @@ Set up a spec for implementation: find or create a Linear issue, mark the spec a
 
 The todo → doing rename is committed to `main` first so the catalog always reflects in-progress work accurately. The feature branch is created from the updated main.
 
+> The statuses, the `NNN-status-slug` naming, and the `doing` metadata header (`Status:` / `Branch:` / `Issue:`) follow the **`spec-conventions`** skill.
+
 ---
 
 ## 1. Identify the spec(s)

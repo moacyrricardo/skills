@@ -5,7 +5,7 @@ Deeply evaluate the work done on the current branch against the spec. Read-only 
 ## Step 1 — Orient yourself
 
 1. Identify the current branch: `git branch --show-current`
-2. Find the corresponding `doing` spec in `specs/` (match by branch name or ask the user if ambiguous). Read it fully.
+2. Find the corresponding `doing` spec in `specs/` (match by branch name or ask the user if ambiguous). Read it fully — its structure, and the meaning of *spec* vs *concern*, follow the `spec-conventions` skill.
 3. Get the full diff of what was built: `git diff main...HEAD` (or `git diff origin/main...HEAD` if needed).
 4. Read every changed file in full — not just the diff hunks. You need full context to evaluate properly.
 5. Read the project's `CONTRIBUTING.md` if present — it is the authority for how commits and PRs divide a change (you measure the branch against it in axis D). If the project has no `CONTRIBUTING.md`, note that the change-division rules are unwritten and skip axis D.

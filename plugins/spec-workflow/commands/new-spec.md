@@ -1,5 +1,10 @@
 Help the user create a new spec or concern file in the project catalog.
 
+**Model & templates:** the definitions of *concern* vs *spec*, the `NNN-status-slug` naming, and
+the per-status file templates all come from the **`spec-conventions`** skill — read
+`${CLAUDE_PLUGIN_ROOT}/skills/spec-conventions/SKILL.md` first and create files that conform to it.
+This command is only the *create-on-`main`* procedure.
+
 Specs are always created on `main` so the catalog is a faithful view of status.
 
 ## 0. Ensure we are on main
@@ -25,42 +30,15 @@ git branch --show-current
 
 ## 1. Read the `specs/` directory to determine the next available number (NNN).
 
-## 2. Ask the user: is this a **concern** (exploratory, options open) or a **spec** (decision made, ready to build)?
+## 2. Ask the user: **concern** or **spec**? (The distinction is defined in the `spec-conventions` skill.)
 
 ## 3. Ask for a short slug (2-4 words, hyphenated).
 
-## 4. Create the file as `specs/NNN-todo-slug.md` with this structure:
+## 4. Create the file as `specs/NNN-todo-slug.md`
 
-For a **concern**:
-```
-# NNN — Title
-
-## Problem
-[What is the issue or tension being explored?]
-
-## Hypotheses / Options
-[List options with brief pros/cons]
-
-## Open Questions
-[What needs to be decided before this can become a spec?]
-```
-
-For a **spec**:
-```
-# NNN — Title
-
-## Context
-[Why this work is being done]
-
-## Decision
-[What was decided]
-
-## Implementation
-[Technical detail: models, methods, migrations, APIs]
-
-## Known Gaps
-[What is deliberately out of scope or deferred]
-```
+Use the matching **concern** or **spec** template from the `spec-conventions` skill (its
+`## File templates` section) and fill each section for this document. The section headings there
+are a contract other commands read — use them verbatim; don't rename or invent your own.
 
 ## 5. Commit and push to main
 

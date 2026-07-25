@@ -1,5 +1,9 @@
 Produce a planning table from the specs catalog.
 
+> Spec/concern definitions, statuses, the canonical section names, and the `CATALOG.md` index
+> format all come from the **`spec-conventions`** skill
+> (`${CLAUDE_PLUGIN_ROOT}/skills/spec-conventions/SKILL.md`) — this command reads that model.
+
 ## Default scope
 
 Unless the user explicitly asks for something different, only include **actionable work**:
@@ -11,14 +15,14 @@ Skip `done` specs and resolved concerns unless the user asks for them (e.g. "all
 
 ## Steps
 
-1. Read `specs/catalog.md` to get the full list and quickly identify the subset to process.
+1. Read `specs/CATALOG.md` (the catalog index) to get the full list and quickly identify the subset to process. If it's absent or stale, fall back to listing the `specs/` directory directly.
 
 2. For each spec in scope, read the file and extract:
 
    - **#** — the NNN number
    - **Summary** — one tight sentence: what is being built / what problem is being solved
    - **Open questions / blockers** — things that are still undecided or that block implementation:
-     - For `concern` files: items listed under `## Open Questions` or `## Open Gaps` that have no resolution note
+     - For `concern` files: items listed under `## Open Questions` that have no resolution note
      - For `todo`/`doing` specs: items in `## Known Gaps`, open `#comment:` lines, or explicit "deferred" notes that affect the current scope
      - If nothing is open, write "—"
    - **Ease** — implementation size estimate. Use one of: `XS · trivial`, `S · small`, `M · medium`, `L · large`, `XL · complex`. Base this on:
