@@ -57,6 +57,9 @@ Depends on **`live-verify`** (below) for the live-app proof step.
 | `ship` | Drive a ready spec to an open PR via the `autopilot` agent, with evidence comments. |
 | `test-live` | Verify a shipped feature against the running app and attach the proof to the PR/Linear (orchestrates `live-verify`). |
 | `plan` | Produce a planning table from the catalog. |
+| `setup` | Preemptively configure the workflow for a project: infer what it can from the codebase, ask for the rest, write it to `CLAUDE.md`. |
+| `redteam` | Adversarially stress-test a `todo`/`doing` spec for gaps and inconsistencies. Report-only, cites spec text, never fabricates or acts. |
+| `audit` | Check the catalog's structural integrity — CATALOG↔files, number collisions, cross-reference graph. Report + fix proposal (applies mechanical fixes on confirm). |
 
 **Agent**
 
@@ -125,7 +128,7 @@ hands-off behavior, add a `permissions.allow` rule in your `settings.json`, or c
 ├── plugins/
 │   ├── spec-workflow/            # depends on live-verify
 │   │   ├── .claude-plugin/plugin.json
-│   │   ├── commands/             # 8 slash commands
+│   │   ├── commands/             # 11 slash commands
 │   │   └── agents/               # autopilot
 │   ├── live-verify/             # standalone verification primitives
 │   │   ├── .claude-plugin/plugin.json
