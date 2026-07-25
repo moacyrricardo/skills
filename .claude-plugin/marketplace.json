@@ -19,6 +19,13 @@
       "description": "Prove a feature works against a running app: start the dev server, then drive it (browser or curl) to capture a screenshot/gif/text verdict. Reusable, no spec/tracker coupling.",
       "category": "testing",
       "tags": ["testing", "verification", "dev-server", "browser", "evidence"]
+    },
+    {
+      "name": "utils",
+      "source": "./plugins/utils",
+      "description": "General-purpose standalone helpers (catch-all/playground). Currently: stacked-merge — squash-merge a PR or a chain of stacked PRs into main with the rebase bookkeeping handled.",
+      "category": "utilities",
+      "tags": ["git", "pr", "squash-merge", "stacked-prs", "utilities"]
     }
   ]
 }

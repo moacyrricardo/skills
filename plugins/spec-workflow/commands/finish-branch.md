@@ -22,7 +22,7 @@ Close out the current branch by updating the spec and creating the final commit.
 4. Commit the rename and all content changes together in a single commit (`git mv` already staged the deletion of the old file; adding both paths ensures the content edits are included too):
    ```
    git add specs/NNN-doing-slug.md specs/NNN-done-slug.md
-   git commit -m "LIA-XXX Spec NNN: doing → done
+   git commit -m "<issue-id> Spec NNN: doing → done
 
    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"
    ```

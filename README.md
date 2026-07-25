@@ -53,7 +53,6 @@ Depends on **`live-verify`** (below) for the live-app proof step.
 | `finish-branch` | Update the spec (status, branch, summary) and create the final commit. |
 | `spec-ship` | Drive a ready spec to an open PR via the `spec-driver` agent, with evidence comments. |
 | `spec-test-live` | Verify a shipped feature against the running app and attach the proof to the PR/Linear (orchestrates `live-verify`). |
-| `spec-squash-merge` | Squash-merge a PR or a chain of stacked PRs into `main`. |
 | `specs-table` | Produce a planning table from the catalog. |
 
 **Agent**
@@ -72,6 +71,15 @@ It captures evidence; it never publishes — the caller does.
 | :-------- | :--- | :----------- |
 | `run-local-dev` | command | Start/confirm the project's local dev server (generic; reads `CLAUDE.md`). |
 | `test-flow-headless` | agent | Exercises a feature against a running app (Firefox via geckodriver, or curl) and returns a verdict plus a screenshot/gif/text artifact. |
+
+### `utils` — general-purpose helpers
+
+A catch-all/playground for standalone tools that don't belong to a specific workflow. Grows as
+I add small helpers; nothing here depends on the other plugins.
+
+| Command | What it does |
+| :------ | :----------- |
+| `stacked-merge` | Squash-merge a PR or a chain of stacked PRs into `main`, handling the `--onto` rebase bookkeeping between each merge. Presents the plan for confirmation before executing. |
 
 **Conventions this assumes.** These are extracted from my own setup, so they lean on a few
 project conventions you can adapt. Nothing project-specific is hardcoded in the commands —
@@ -108,12 +116,15 @@ hands-off behavior, add a `permissions.allow` rule in your `settings.json`, or c
 ├── plugins/
 │   ├── spec-workflow/            # depends on live-verify
 │   │   ├── .claude-plugin/plugin.json
-│   │   ├── commands/             # 9 slash commands
+│   │   ├── commands/             # 8 slash commands
 │   │   └── agents/               # spec-driver
-│   └── live-verify/             # standalone primitives
+│   ├── live-verify/             # standalone verification primitives
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── commands/             # run-local-dev
+│   │   └── agents/               # test-flow-headless
+│   └── utils/                   # general-purpose helpers (playground)
 │       ├── .claude-plugin/plugin.json
-│       ├── commands/             # run-local-dev
-│       └── agents/               # test-flow-headless
+│       └── commands/             # stacked-merge
 └── README.md
 ```
 

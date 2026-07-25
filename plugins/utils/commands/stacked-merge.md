@@ -19,9 +19,9 @@ Record for each PR:
 - `headRefOid` — the HEAD SHA **before** merge; this is the `--onto` cut point for rebasing the next branch
 - `title` — for display and squash commit subject
 
-Derive the squash commit subject from the branch name: extract the issue id from `headRefName` (the segment matching `[A-Z][A-Z0-9]+-\d+`, e.g. `ABC-806`) and combine with the PR title stripped of any `LIN: ` prefix.
+Derive the squash commit subject from the branch name: extract the issue id from `headRefName` (the segment matching `[A-Z][A-Z0-9]+-\d+`, e.g. `ABC-806`) and combine with the PR title, stripped of any leading `TAG: ` prefix your tracker/convention adds. If the branch has no issue id, just use the cleaned PR title.
 
-Example: branch `alex/abc-806-create-integration-flow`, title `LIN: Create integration flow` → subject `ABC-806 Create integration flow`.
+Example: branch `alex/abc-806-create-integration-flow`, title `TAG: Create integration flow` → subject `ABC-806 Create integration flow`.
 
 ---
 
@@ -100,21 +100,3 @@ so the user can verify only the right commits are being carried forward before t
 If any command fails, stop immediately, show the error, and do not proceed.
 
 After all PRs are merged, run `git checkout main && git pull` and report the list of merged PRs with their squash commit SHAs.
-
----
-
-## 5. Post-merge: event catalog
-
-Check whether any merged PR's spec (look for `specs/NNN-done-*.md` whose branch matches a merged PR) references new events or changed flows in its Implementation Notes.
-
-If yes: prompt the user:
-
-> "One or more merged branches introduced event flow changes. The event catalog (`specs/event-flow-catalog.md` + `.html`) should be updated on main now. Want me to do that?"
-
-If the user confirms, update both catalog files to reflect the merged changes and commit directly to main:
-```
-git add specs/event-flow-catalog.md specs/event-flow-catalog.html
-git commit -m "Update event catalog after merge of <PR list>"
-```
-
-If no merged spec touched events, skip this step silently.

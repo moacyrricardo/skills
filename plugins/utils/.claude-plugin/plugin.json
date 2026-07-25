@@ -1,0 +1,12 @@
+{
+  "name": "utils",
+  "description": "Standalone, general-purpose helpers — a catch-all/playground for small tools that don't belong to a specific workflow. Currently ships stacked-merge: squash-merge a PR or a chain of stacked PRs into main, handling the rebase bookkeeping between each merge.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Moacyr Ricardo",
+    "email": "moacyr.ricardo@gmail.com"
+  },
+  "homepage": "https://github.com/moacyrricardo/skills",
+  "repository": "https://github.com/moacyrricardo/skills",
+  "license": "MIT"
+}
