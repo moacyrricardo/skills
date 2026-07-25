@@ -19,7 +19,7 @@ git branch --show-current
   1. Check for uncommitted changes: `git status --porcelain`
   2. If the working tree is dirty, stash first:
      ```
-     git stash push -m "auto-stash before new-spec"
+     git stash push -m "auto-stash before new"
      ```
      Tell the user: "Stashed your uncommitted changes — will restore them after creating the spec."
   3. Switch to main and pull:
@@ -64,4 +64,4 @@ git checkout <original-branch>
 
 ## 7. Confirm
 
-Tell the user the spec was created on `main` as `specs/NNN-todo-slug.md` and is ready for `/spec-workflow:spec-to-linear` when they're ready to start building.
+Tell the user the spec was created on `main` as `specs/NNN-todo-slug.md` and is ready for `/spec-workflow:start` when they're ready to start building.

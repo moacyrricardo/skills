@@ -43,12 +43,12 @@ done
 Print the **base URL** (`http://localhost:$PORT`) and the **LAN URL**
 (`http://$(hostname -I | awk '{print $1}'):$PORT`) for on-device checks, plus the **kill**
 command from CLAUDE.md (or `kill $(lsof -ti :$PORT)`). Leave the server **running** — it's
-meant to persist for the rest of the session / for `/spec-workflow:spec-test-live`.
+meant to persist for the rest of the session / for `/spec-workflow:test-live`.
 
 ## 5. Concurrency / isolation (opt-in)
 
 By default this is a **singleton**: one shared server on the documented port, reused by every
-agent. That's correct for the common case and what `/spec-workflow:spec-test-live` expects. Multiple capture
+agent. That's correct for the common case and what `/spec-workflow:test-live` expects. Multiple capture
 agents can drive that one server concurrently **as long as none of them mutate shared state**
 (e.g. the credential hash-swap — see CLAUDE.md dev-login) — read-only captures are fine.
 

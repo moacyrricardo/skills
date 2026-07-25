@@ -9,7 +9,7 @@ implements it, tests it, proves it runs, and stops at a PR for you to review.
 > nicer formatting. This Markdown page is the quick, GitHub-readable companion.
 
 ```
-idea → concern → specs → spec-ship → open PRs
+idea → concern → specs → ship → open PRs
 ```
 
 ## Install
@@ -28,8 +28,8 @@ The repo is a plugin marketplace. Installing `spec-workflow` pulls in `live-veri
 /reload-plugins
 ```
 
-Once installed, commands are namespaced by their plugin: `/spec-workflow:new-spec`,
-`/spec-workflow:spec-ship`, `/utils:stacked-merge`, and so on.
+Once installed, commands are namespaced by their plugin: `/spec-workflow:new`,
+`/spec-workflow:ship`, `/utils:stacked-merge`, and so on.
 
 ## The model
 
@@ -52,31 +52,31 @@ todo  →  doing  →  done
 
 ### 1. Frame the idea as a concern
 
-Start wide. Run `new-spec` and choose **concern** — capture the problem, the options you're
+Start wide. Run `new` and choose **concern** — capture the problem, the options you're
 weighing, and the open questions. You're not committing to an approach yet.
 
 ```
-/spec-workflow:new-spec   → concern
+/spec-workflow:new   → concern
 ```
 
 ### 2. Split it into a few specs
 
 As the decisions firm up, break the concern into bounded, buildable slices — one **spec** each,
-via `new-spec`. Mark the concern resolved with a note pointing at the specs that settled it. You
+via `new`. Mark the concern resolved with a note pointing at the specs that settled it. You
 now have a small stack of `todo` specs.
 
 ```
-/spec-workflow:new-spec   → spec   (repeat)
+/spec-workflow:new   → spec   (repeat)
 ```
 
 ### 3. Ship each spec
 
-Hand a spec to `spec-ship`. An agent builds it in the background: it flips `todo → doing` as the
+Hand a spec to `ship`. An agent builds it in the background: it flips `todo → doing` as the
 first commit (so the PR opens on that flip), implements the change, and leaves an **open** PR —
 stacked when specs depend on each other. It **never merges**. Run it once per spec.
 
 ```
-/spec-workflow:spec-ship 003
+/spec-workflow:ship 003
 ```
 
 ### 4. Review, then merge
@@ -89,22 +89,22 @@ bookkeeping between them.
 /utils:stacked-merge 3 5 6
 ```
 
-## What `spec-ship` leaves behind
+## What `ship` leaves behind
 
 The point isn't speed — it's that each PR carries proof, so review is fast and grounded:
 
 | Comment | What |
 | :------ | :--- |
 | **1 · Tests** | New tests named and explained, plus the actual pass/fail run. |
-| **2 · Spec-eval** | A read-only judgement of the branch against the spec — gaps, in-scope fixes, deferrals. |
-| **3 · Finish-branch** | The final commit that moves the spec `done` and records how the build differed from the plan. |
+| **2 · Eval** | A read-only judgement of the branch against the spec — gaps, in-scope fixes, deferrals. |
+| **3 · Finish** | The final commit that moves the spec `done` and records how the build differed from the plan. |
 | **4 · Live evidence** | Proof it runs — a GIF of the flow, or a captured request/response — via `live-verify`. |
 
 ## The three plugins
 
 | Plugin | Depends on | What |
 | :----- | :--------- | :--- |
-| **spec-workflow** | live-verify | The catalog lifecycle: `new-spec`, `spec-to-linear`, `build-spec`, `spec-eval`, `finish-branch`, `spec-ship`, `specs-table`, the `spec-driver` agent, and the `spec-conventions` skill. |
+| **spec-workflow** | live-verify | The catalog lifecycle: `new`, `start`, `build`, `eval`, `finish`, `ship`, `plan`, the `autopilot` agent, and the `spec-conventions` skill. |
 | **live-verify** | — | Prove a feature works against a running app: start the dev server, then drive it (browser or `curl`) to capture a screenshot / GIF / text verdict. No spec/tracker coupling. |
 | **utils** | — | General-purpose helpers. Currently `stacked-merge` — squash-merge a PR or a chain of stacked PRs into `main`, rebasing between each. |
 

@@ -1,14 +1,14 @@
 ---
-description: Build a ready spec end-to-end via the spec-workflow:spec-driver agent (background) — opens the PR on the todo→doing commit, pushes as-you-go, posts 3 evidence comments (tests, spec-eval, finish-branch), then captures a live GIF of the running feature via the test agent and posts it as a 4th comment. Stops at an open PR; never merges.
+description: Build a ready spec end-to-end via the spec-workflow:autopilot agent (background) — opens the PR on the todo→doing commit, pushes as-you-go, posts 3 evidence comments (tests, eval, finish), then captures a live GIF of the running feature via the test agent and posts it as a 4th comment. Stops at an open PR; never merges.
 argument-hint: <spec-number> [extra notes]
 ---
 
 Build spec **$1** autonomously **in the background** and leave it at an OPEN, evidence-backed PR.
 
-This is an orchestration recipe, not new behavior: it wraps the existing `spec-workflow:spec-driver` agent in a
+This is an orchestration recipe, not new behavior: it wraps the existing `spec-workflow:autopilot` agent in a
 background `Workflow` and layers a fixed PR convention on top. It is **project-agnostic** — every
 build / test / branch / version specific comes from the *target project's* `CLAUDE.md` and from
-`spec-workflow:spec-driver`. Do not hardcode any project's toolchain here.
+`spec-workflow:autopilot`. Do not hardcode any project's toolchain here.
 
 `$1` is the spec number. Any text after it in "$ARGUMENTS" is extra caller notes — pass it through
 to the agent verbatim.
@@ -22,14 +22,14 @@ to the agent verbatim.
 4. While the workflow runs it drives **this same checkout** — don't run other git/build commands in
    it until it finishes (or have the agent use worktree isolation if the project prefers that).
 
-## Part A — Build (background Workflow, one spec-workflow:spec-driver agent)
+## Part A — Build (background Workflow, one spec-workflow:autopilot agent)
 Call the `Workflow` tool with a single-phase script whose one `agent()` call sets
-`agentType: 'spec-workflow:spec-driver'` and passes the prompt below (substitute the spec number; append the
+`agentType: 'spec-workflow:autopilot'` and passes the prompt below (substitute the spec number; append the
 caller notes). It runs in the background — report the task id, then stop and await the completion
 notification. Do not stream progress. **When it completes and the PR is open, proceed to Part B**
 (track it as a pending step so the long build doesn't make you forget it).
 
-**Agent prompt to pass to spec-workflow:spec-driver:**
+**Agent prompt to pass to spec-workflow:autopilot:**
 
 > Build ONE spec end-to-end: **spec $1** in this repo. Build ONLY this spec — do not drain the
 > backlog or touch other specs. Finish to an OPEN PR and stop. **Never merge, never push to main.**
@@ -59,21 +59,21 @@ notification. Do not stream progress. **When it completes and the PR is open, pr
 > post PR **COMMENT #1** titled `## Tests`: first list each NEW test by name with a one-line
 > statement of what it proves, THEN the actual test-run report (pass/fail counts + summary).
 >
-> **Spec-eval → COMMENT #2:** evaluate the branch against the spec with the `/spec-workflow:spec-eval` discipline
+> **Eval → COMMENT #2:** evaluate the branch against the spec with the `/spec-workflow:eval` discipline
 > (read-only judgement): does it satisfy the Decision? gaps? in-scope fixes vs. items to defer to
 > fresh specs? If the project's `CLAUDE.md` defines a version-bump policy, decide **explicitly**
 > whether this change warrants a bump and recommend accordingly. Post PR **COMMENT #2** titled
-> `## Spec eval`: the findings + a clear recommendation (SHIP as-is / apply these in-scope fixes /
+> `## Eval`: the findings + a clear recommendation (SHIP as-is / apply these in-scope fixes /
 > defer these). Then APPLY the in-scope fixes you recommended (including a fully-synced version bump
 > if recommended), commit + push, and re-run tests if code changed.
 >
-> **Finish → COMMENT #3:** finish with the `/spec-workflow:finish-branch` discipline — the FINAL commit updates
+> **Finish → COMMENT #3:** finish with the `/spec-workflow:finish` discipline — the FINAL commit updates
 > the spec (`git mv` doing→done, `Status: done`, keep the `Branch:` ref, add a short "how the
 > implementation differed from the spec" note). Commit + push. Post PR **COMMENT #3** titled
-> `## Finish-branch`: the finish output (final-commit summary, doing→done delta, how it differed).
+> `## Finish`: the finish output (final-commit summary, doing→done delta, how it differed).
 >
 > **Stop** at the open PR. Return a concise report: PR URL/number, the commit list, the test
-> result, the spec-eval recommendation, and confirmation all THREE comments were posted.
+> result, the eval recommendation, and confirmation all THREE comments were posted.
 >
 > Extra caller notes (may be empty): $ARGUMENTS
 
@@ -97,13 +97,13 @@ browser), and the dev-server lifecycle / publish are most reliable driven from t
 Default to the most **direct** proof of the changed behavior; fall back to regression-of-the-flow
 only when the change itself is unobservable.
 
-**Prefer the project's `/spec-workflow:spec-test-live` skill** — it orchestrates this end to end (start the dev
+**Prefer the project's `/spec-workflow:test-live` skill** — it orchestrates this end to end (start the dev
 server via `/live-verify:run-local-dev`, drive the `live-verify:test-flow-headless` agent, publish image artifacts to the
 `verification-artifacts` branch). Invoke it for spec $1's feature against the **build branch**, tell
 it which evidence type fits (per the heuristic above), and make sure the proof lands as a comment on
 the **build PR**.
 
-If `/spec-workflow:spec-test-live` is unavailable, do it manually — all app-specifics from the project's
+If `/spec-workflow:test-live` is unavailable, do it manually — all app-specifics from the project's
 `CLAUDE.md` "Dev server" + "UI evidence" sections:
 1. Check out the build branch and build it with the project toolchain.
 2. **Kill any stale dev-server instance first**, then start the dev server per the project's recipe
@@ -117,7 +117,7 @@ If `/spec-workflow:spec-test-live` is unavailable, do it manually — all app-sp
 5. Post **PR Comment #4** titled `## Live evidence` with a one-line note on WHAT it proves (feature
    behavior vs. regression of the affected flow), then the artifact:
    - **Image (GIF/PNG):** host it and embed the inline link by following the publish recipe in
-     **`/spec-workflow:spec-test-live` §4** (§4a host on the `verification-artifacts` orphan branch, §4b comment) —
+     **`/spec-workflow:test-live` §4** (§4a host on the `verification-artifacts` orphan branch, §4b comment) —
      that file is the single source of truth for the mechanics; don't restate them here.
    - **Text (API request/response or log excerpt):** paste it inline as a fenced block — no hosting needed.
 6. Stop the dev server.
@@ -126,10 +126,10 @@ If live capture genuinely can't run here (no browser/display), fall back to an A
 **say so** in the comment — never fake a pass, and never block the PR on capture tooling.
 
 ## Notes
-- Requires the `spec-workflow:spec-driver` agent (shipped by this plugin) and the `Workflow` harness to be available.
-- Part B additionally needs the project's dev-server + UI-evidence tooling (`/spec-workflow:spec-test-live`,
+- Requires the `spec-workflow:autopilot` agent (shipped by this plugin) and the `Workflow` harness to be available.
+- Part B additionally needs the project's dev-server + UI-evidence tooling (`/spec-workflow:test-live`,
   `/live-verify:run-local-dev`, the `live-verify:test-flow-headless` agent) and, for authed flows, the project's dev-login
   recipe — restore any mutated credential afterward.
-- The 3 comments deliberately mirror `/spec-workflow:spec-eval` and `/spec-workflow:finish-branch`; in a project without those
-  skills, spec-workflow:spec-driver still applies the same discipline inline.
+- The 3 comments deliberately mirror `/spec-workflow:eval` and `/spec-workflow:finish`; in a project without those
+  skills, spec-workflow:autopilot still applies the same discipline inline.
 - Depends on `gh` being authenticated and the project having a GitHub remote.

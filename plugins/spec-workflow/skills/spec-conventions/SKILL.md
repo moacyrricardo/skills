@@ -1,12 +1,12 @@
 ---
 name: spec-conventions
-description: The shared model for spec-driven development — what a spec vs a concern is, the NNN-status-slug naming and todo→doing→done lifecycle, the section templates for each, and the specs/ catalog with its CATALOG.md index. Load this when creating, reading, evaluating, renaming, resolving, or cataloging specs and concerns, or when maintaining CATALOG.md. This is the single source of truth the other spec-workflow commands and the spec-driver agent build on — prefer it over any inline restatement.
+description: The shared model for spec-driven development — what a spec vs a concern is, the NNN-status-slug naming and todo→doing→done lifecycle, the section templates for each, and the specs/ catalog with its CATALOG.md index. Load this when creating, reading, evaluating, renaming, resolving, or cataloging specs and concerns, or when maintaining CATALOG.md. This is the single source of truth the other spec-workflow commands and the autopilot agent build on — prefer it over any inline restatement.
 ---
 
 # Specs, concerns, and the catalog
 
 This is the vocabulary and file contract the whole `spec-workflow` plugin is built on. Every
-command and the `spec-driver` agent operate on the model defined here; when they mention a spec,
+command and the `autopilot` agent operate on the model defined here; when they mention a spec,
 a concern, a status, or a section name, this is what they mean.
 
 ## Concern vs spec

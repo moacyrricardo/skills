@@ -1,16 +1,16 @@
-Implement a spec end-to-end: code, tests, and hand-off to /spec-workflow:finish-branch. Calls /spec-workflow:spec-to-linear first if the branch and Linear issue are not already set up.
+Implement a spec end-to-end: code, tests, and hand-off to /spec-workflow:finish. Calls /spec-workflow:start first if the branch and Linear issue are not already set up.
 
 ---
 
 ## 1. Check prerequisites
 
-Determine whether `/spec-workflow:spec-to-linear` has already been run by checking:
+Determine whether `/spec-workflow:start` has already been run by checking:
 - Is there a `doing` spec in `specs/` whose branch matches the current git branch?
 - Is the current branch a feature branch (not `main`/`master`/`develop`)?
 
 If both are true, skip to step 2.
 
-If not, and the context is clear enough (spec identified, team known), run `/spec-workflow:spec-to-linear` now.
+If not, and the context is clear enough (spec identified, team known), run `/spec-workflow:start` now.
 
 If context is ambiguous — no spec referenced, team unknown, or branch state is unclear — ask the user before proceeding.
 
@@ -53,6 +53,6 @@ Present a summary:
 - Tests added or modified
 - Any decisions made that deviated from or were not covered by the spec
 
-Ask: **"Ready to call /spec-workflow:finish-branch. Confirm to proceed?"**
+Ask: **"Ready to call /spec-workflow:finish. Confirm to proceed?"**
 
-Wait for confirmation. On confirmation, invoke `/spec-workflow:finish-branch`.
+Wait for confirmation. On confirmation, invoke `/spec-workflow:finish`.
