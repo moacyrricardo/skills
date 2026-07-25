@@ -1,0 +1,24 @@
+{
+  "name": "moacyr-skills",
+  "owner": {
+    "name": "Moacyr Ricardo",
+    "email": "moacyr.ricardo@gmail.com"
+  },
+  "description": "Moacyr Ricardo's personal Claude Code plugins — custom skills, agents, and commands.",
+  "plugins": [
+    {
+      "name": "spec-workflow",
+      "source": "./plugins/spec-workflow",
+      "description": "Spec-driven development: a numbered specs/ catalog plus commands and agents that drive a decision from todo → doing → an open PR, with Linear and live-app verification wired in. Depends on live-verify.",
+      "category": "workflow",
+      "tags": ["specs", "workflow", "linear", "pr", "agents"]
+    },
+    {
+      "name": "live-verify",
+      "source": "./plugins/live-verify",
+      "description": "Prove a feature works against a running app: start the dev server, then drive it (browser or curl) to capture a screenshot/gif/text verdict. Reusable, no spec/tracker coupling.",
+      "category": "testing",
+      "tags": ["testing", "verification", "dev-server", "browser", "evidence"]
+    }
+  ]
+}
