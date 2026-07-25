@@ -114,9 +114,9 @@ changed. (Sub-sections like `### API Diff` may live here.)
 ## The catalog and CATALOG.md
 
 The `specs/` directory **is** the catalog; each filename encodes its document's authoritative
-status. `CATALOG.md`, at the catalog root, is a maintained **index** over it — the at-a-glance
-overview and the go-to source of truth for status across the set (and the natural aggregation
-point when a catalog spans repositories).
+status. `specs/CATALOG.md` is a maintained **index** over it — the at-a-glance overview and the
+go-to source of truth for status across the set (and the natural aggregation point when a catalog
+spans repositories).
 
 Recommended shape:
 

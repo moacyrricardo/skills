@@ -61,6 +61,12 @@ Depends on **`live-verify`** (below) for the live-app proof step.
 | :---- | :----------- |
 | `spec-driver` | Autonomously drains the `todo` backlog, building each spec to an open PR. Never merges. |
 
+**Skill**
+
+| Skill | What it does |
+| :---- | :----------- |
+| `spec-conventions` | The shared model the commands and `spec-driver` build on: concern vs spec, `NNN-status-slug` naming, the `todo→doing→done` lifecycle, the per-status section templates, and the `specs/` catalog + `CATALOG.md` index. Single source of truth — the commands reference it rather than restating it. |
+
 ### `live-verify` — prove a feature works against a running app
 
 Reusable primitives with **no spec/tracker coupling** — usable on any project. `spec-workflow`

@@ -16,7 +16,8 @@ If context is ambiguous — no spec referenced, team unknown, or branch state is
 
 ## 2. Read the spec
 
-Read the `doing` spec thoroughly. Understand:
+Read the `doing` spec thoroughly. Its structure and section names follow the `spec-conventions`
+skill (`${CLAUDE_PLUGIN_ROOT}/skills/spec-conventions/SKILL.md`). Understand:
 - What is being built and why (Context + Decision sections)
 - The technical detail (Implementation section)
 - What is explicitly out of scope (Known Gaps)

@@ -7,7 +7,7 @@ Close out the current branch by updating the spec and creating the final commit.
      ```
      git mv specs/NNN-doing-slug.md specs/NNN-done-slug.md
      ```
-   - Add a section `## Implementation Notes` describing how the implementation differed from the spec — decisions made during coding, things deferred, things that changed
+   - Add the `## Implementation Notes` section (defined in the `spec-conventions` skill) describing how the implementation differed from the spec — decisions made during coding, things deferred, things that changed
    - **Change-division note (inside `## Implementation Notes`):** assess how this branch divided the work into commits and PRs against the project's `CONTRIBUTING.md` (the authority — don't impose your own rules), and record it. This is a **report, not a fix** — do **not** restructure commits or rewrite history. State briefly how the split was done (commits / pre-PR / stack) and any divergence from `CONTRIBUTING.md`; if it conforms, one line saying so is enough. No `CONTRIBUTING.md` → skip.
    - Confirm the branch and Linear ticket are referenced at the top
    - **API Diff subsection:** check the project's `CLAUDE.md` for an `## API Modules` section:
