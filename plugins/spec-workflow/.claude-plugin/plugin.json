@@ -1,0 +1,13 @@
+{
+  "name": "spec-workflow",
+  "description": "Spec-driven development for Claude Code: a numbered specs/ catalog plus commands and agents that carry a decision from todo → doing → an open PR, with Linear and live-app verification wired in.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Moacyr Ricardo",
+    "email": "moacyr.ricardo@gmail.com"
+  },
+  "homepage": "https://github.com/moacyrricardo/skills",
+  "repository": "https://github.com/moacyrricardo/skills",
+  "license": "MIT",
+  "dependencies": ["live-verify"]
+}
