@@ -59,7 +59,7 @@ Depends on **`live-verify`** (below) for the live-app proof step.
 | `plan` | Produce a planning table from the catalog. |
 | `setup` | Preemptively configure the workflow for a project: infer what it can from the codebase, ask for the rest, write it to `CLAUDE.md`. |
 | `redteam` | Adversarially stress-test a `todo`/`doing` spec for gaps and inconsistencies. Report-only, cites spec text, never fabricates or acts. |
-| `audit` | Check the catalog's structural integrity — CATALOG↔files, number collisions, cross-reference graph. Report + fix proposal (applies mechanical fixes on confirm). |
+| `audit` | Check the catalog's structural integrity — CATALOG↔files, number collisions, cross-reference graph, and `NNN-assets/` link integrity. Report + fix proposal (applies mechanical fixes on confirm). |
 
 **Agent**
 

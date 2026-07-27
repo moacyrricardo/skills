@@ -135,7 +135,20 @@ Recommended shape:
 added, renamed (status change), or a concern is resolved. If the two ever disagree, the filenames
 win — reconcile `CATALOG.md` to match what's on disk.
 
-## Inline feedback: `#comment:`
+## Assets: `NNN-assets/`
+
+When a spec or concern needs supporting artifacts — interactive mocks, screenshots, analysis
+reports, sample data — they live in a sibling folder `specs/NNN-assets/`, keyed by the document's
+**permanent number**. Keying on the number (not the status) is deliberate: the folder never moves
+as the spec renames `todo → doing → done`, so links to it never break.
+
+- **Reference by relative link**, usually a header callout — e.g.
+  `> **Design reference:** [`142-assets/mock.html`](142-assets/mock.html)` — and mark the
+  authoritative artifact as the *source of truth* when there is one.
+- **Check the assets in** with the spec. Group freely inside (`144-assets/mock-landing-assets/`).
+- **Only when needed** — most specs have no assets; don't create an empty folder.
+- One spec may reference another's assets (note the reuse), but the folder always belongs to its
+  own number.
 
 Reviewers drop `#comment: ...` lines directly inside a spec/concern file. When asked to act on
 them, adapt the document accordingly and **remove the comment lines** in the same edit.
