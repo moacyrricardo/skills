@@ -19,10 +19,11 @@ This repo is itself a **plugin marketplace** (`moacyr-skills`). Each plugin live
 # 1. Register this repo as a marketplace (once)
 /plugin marketplace add moacyrricardo/skills
 
-# 2. Install a plugin from it
+# 2. Install the plugins
 /plugin install spec-workflow@moacyr-skills   # pulls live-verify automatically (it depends on it)
-# or grab the verification primitives on their own:
-/plugin install live-verify@moacyr-skills
+/plugin install utils@moacyr-skills           # standalone helpers (currently: stacked-merge)
+# (live-verify installs with spec-workflow; grab it alone if that's all you want:
+#  /plugin install live-verify@moacyr-skills)
 
 # 3. Activate in the current session
 /reload-plugins
@@ -33,7 +34,7 @@ Update later with `/plugin marketplace update moacyr-skills`.
 Prefer to try before installing? Clone the repo and point Claude Code at a plugin directly:
 
 ```shell
-claude --plugin-dir ./plugins/spec-workflow --plugin-dir ./plugins/live-verify
+claude --plugin-dir ./plugins/spec-workflow --plugin-dir ./plugins/live-verify --plugin-dir ./plugins/utils
 ```
 
 > Plugin commands and skills are **namespaced** by the plugin, so `/build` becomes
