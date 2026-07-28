@@ -59,6 +59,21 @@ todo  ──▶  doing  ──▶  done
 **Concerns** don't run `doing`/`done`. They live as `todo` while open and are retired by adding
 the WARNING block when a spec resolves them.
 
+**The status set is closed.** The only statuses are `todo`, `doing`, `done` (specs) and `concern`.
+**Never invent a new token** (`closed`, `wontfix`, `blocked`, `archived`, …). Any other state a
+document is in belongs in its *body*, not its filename.
+
+**A spec that will not be built** — superseded by a different approach, or abandoned — is still
+closed out as **`done`** (never a new status), with a **SUPERSEDED header** at the very top,
+mirroring how a concern is retired:
+
+```markdown
+> **SUPERSEDED — not implemented.** Replaced by spec NNN. <one line: why this approach was dropped.>
+```
+
+It stays `done` so `plan` drops it from actionable work; the header — plus a `superseded → NNN`
+note in its `CATALOG.md` row — records that it shipped nothing.
+
 ## File templates
 
 These section names are a **contract** — other commands read and write them by exact name, so use

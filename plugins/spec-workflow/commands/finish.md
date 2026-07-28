@@ -1,5 +1,11 @@
 Close out the current branch by updating the spec and creating the final commit.
 
+> **Abandoned instead of shipped?** If the branch's work is being dropped because the spec was
+> **superseded** (a different approach won), don't invent a status. Close the spec as **`done`**
+> with a **SUPERSEDED header** (per the `spec-conventions` skill) *instead of* `## Implementation
+> Notes`, note it on the PR, and skip the change-division report. The rest of this command covers
+> the normal shipped case.
+
 1. Identify which spec corresponds to the current branch (check for a `doing` spec whose branch reference matches the current branch, or ask the user).
 2. Read the spec and compare it against what was actually implemented (read relevant source files, git log).
 3. Update the spec:

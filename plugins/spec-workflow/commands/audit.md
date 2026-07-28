@@ -21,8 +21,11 @@ fixes on your confirmation.
 
 For each file under `specs/`:
 - Matches `NNN-status-slug.md` with a zero-padded `NNN`.
-- `status` is a valid lifecycle state (`todo` / `doing` / `done`). Concerns follow the same naming.
-- Flag anything malformed (bad number padding, unknown status token, stray files).
+- `status` is one of the **closed set** `todo` / `doing` / `done` (or `concern`).
+- **Unknown status token** (`closed`, `wontfix`, `archived`, …) → **error**: the status set is
+  closed. Prescribe the fix — rename to **`done`** with a **SUPERSEDED header** (per the
+  `spec-conventions` skill), never a new status.
+- Flag other malformations (bad number padding, stray files).
 
 ## 3. Number collisions
 
@@ -42,7 +45,8 @@ Only if `CATALOG.md` exists:
 
 Scan every spec/concern body for references to other documents and validate each edge:
 - Patterns: `blocked by NNN` / `blocked-by: NNN` / `depends on NNN`, `resolved by (spec) NNN`,
-  `supersedes NNN`, and the concern **WARNING** block's `resolved by spec NNN` pointer.
+  `supersedes NNN`, the concern **WARNING** block's `resolved by spec NNN` pointer, and a superseded
+  spec's `Replaced by NNN` header.
 - For each edge check: **target `NNN` exists**, and its **status is sane** for the relation, e.g.:
   - a concern marked "resolved by NNN" whose target is missing, or is itself a concern → broken.
   - `blocked by NNN` where `NNN` is already `done` → stale block (note; the blocker cleared).
