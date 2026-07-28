@@ -8,6 +8,10 @@ This repo is itself a **plugin marketplace** (`moacyr-skills`). Each plugin live
 
 > 📖 **New here?** The [Spec Workflow guide](./docs/spec-workflow-guide.md) walks through going
 > from a rough idea to an open PR ([rich HTML version](./docs/spec-workflow-guide.html)).
+>
+> 🧬 **How these were adapted from my personal `~/.claude` config:** the
+> [provenance diff](./docs/provenance.html) (open in a browser) shows every command/agent and how
+> it was transformed on the way to being shared.
 
 ## Install
 
