@@ -165,6 +165,8 @@ as the spec renames `todo → doing → done`, so links to it never break.
 - One spec may reference another's assets (note the reuse), but the folder always belongs to its
   own number.
 
+## Inline feedback: `#comment:`
+
 Reviewers drop `#comment: ...` lines directly inside a spec/concern file. When asked to act on
 them, adapt the document accordingly and **remove the comment lines** in the same edit.
 
