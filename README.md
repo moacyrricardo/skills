@@ -119,10 +119,31 @@ Ready: <readiness signal>
 - A `## Dev server` section in the project's `CLAUDE.md` that `run-local-dev` reads.
 - GitHub + the `gh` CLI for PRs.
 
-**One plugin caveat.** Claude Code ignores the `permissionMode` field on plugin-shipped agents,
-so `autopilot` will prompt for edits rather than auto-accepting them. To restore the
-hands-off behavior, add a `permissions.allow` rule in your `settings.json`, or copy
-`agents/autopilot.md` into your own `~/.claude/agents/` (where `permissionMode` is honored).
+**One plugin caveat — running `autopilot` hands-off.** Claude Code ignores the `permissionMode`
+field on plugin-shipped agents, so out of the box `autopilot` prompts on each edit instead of
+auto-accepting them. Two ways to restore the hands-off behavior:
+
+- **Auto-approve edits via `settings.json` (simplest).** `autopilot`'s only edit tools are `Edit`
+  and `Write`, so add these to `permissions.allow` in `~/.claude/settings.json`:
+
+  ```json
+  {
+    "permissions": {
+      "allow": ["Edit(**)", "Write(**)"],
+      "deny":  ["Edit(**/.env)", "Write(**/.env)", "Edit(**/.git/**)", "Write(**/.git/**)"]
+    }
+  }
+  ```
+
+  `deny` always wins over `allow`, so keep (or extend) a deny list for anything edits must never
+  touch. **Scope note:** `permissions.allow` is **global to every session**, not scoped to
+  `autopilot` — all your sessions will auto-accept edits, not just the agent. If that's too broad,
+  use the next option instead.
+
+- **Copy the agent local (keeps it scoped).** Copy `agents/autopilot.md` into your own
+  `~/.claude/agents/` and add `permissionMode: acceptEdits` to its frontmatter. `permissionMode`
+  *is* honored for local (non-plugin) agents, so auto-accept applies only when that agent runs —
+  no global change. The trade-off is a local copy that won't track plugin updates.
 
 ## Repository layout
 
