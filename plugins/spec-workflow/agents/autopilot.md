@@ -67,7 +67,11 @@ Repeat until no ready spec remains:
 6. **Re-evaluate** (steps 4–5) until `eval` comes back **clean** of in-scope findings.
    A clean eval is the per-spec exit condition.
 7. **Finish** — run the `finish` workflow: reconcile the spec, final commit, push, open
-   the PR (stacked on its dependency's branch when there is one).
+   the PR (stacked on its dependency's branch when there is one). **Post-condition — do this before
+   pushing:** `git status --porcelain specs/` must be clean. A dirty `specs/*-done-*.md` means the
+   `Status:` header + `## Implementation Notes` were stranded unstaged and the finish commit captured
+   only the `git mv` rename (stage **only** the `-done-` path — naming the gone `-doing-` path makes
+   `git add` fail silently). Re-`git add` the `-done-` path and amend before pushing.
 8. Loop back to step 1 — the table may now have freed specs.
 
 ## Empirical verification (do, don't just reason)
