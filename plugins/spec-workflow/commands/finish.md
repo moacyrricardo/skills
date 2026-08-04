@@ -25,11 +25,23 @@ Close out the current branch by updating the spec and creating the final commit.
        - New enums or new values added to existing enums
        - Removed or deprecated surface (one line: what it is, what replaces it if anything)
        - Omit internal types not exported by the API module
-4. Commit the rename and all content changes together in a single commit (`git mv` already staged the deletion of the old file; adding both paths ensures the content edits are included too):
+4. **Apply every content edit to the spec first** — the `Status:`/`Branch:` header and the full
+   `## Implementation Notes` section — **then** stage and commit as the last thing you do. Stage
+   **only the `-done-` path**: the `git mv` already staged the old path's deletion, so naming the
+   now-nonexistent `-doing-` path makes `git add` abort with `fatal: pathspec … did not match any
+   files` — which stages **nothing** (git's add is all-or-nothing on a bad pathspec) and strands
+   your header + Implementation Notes edits unstaged, leaving a rename-only finish commit. Do **not**
+   list the old path:
    ```
-   git add specs/NNN-doing-slug.md specs/NNN-done-slug.md
+   git add specs/NNN-done-slug.md          # ONLY the -done- path; the -doing- path no longer exists
    git commit -m "<issue-id> Spec NNN: doing → done
 
    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"
    ```
-5. Remind the user to push and open a PR.
+5. **Verify the finish is complete before pushing** (this is the failure mode to guard against —
+   a commit that captured only the rename): `git status --porcelain specs/` must be empty, and
+   `git show --stat HEAD` must show insertions on `specs/NNN-done-slug.md`. A stat line reading
+   `{doing => done} | 0` with `0 insertions` means the header + Implementation Notes were stranded
+   — re-run `git add specs/NNN-done-slug.md` and `git commit --amend --no-edit` (or, if already
+   pushed, add a follow-up commit; never force-push a shared branch).
+6. Remind the user to push and open a PR.

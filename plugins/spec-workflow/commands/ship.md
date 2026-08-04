@@ -69,7 +69,11 @@ notification. Do not stream progress. **When it completes and the PR is open, pr
 >
 > **Finish → COMMENT #3:** finish with the `/spec-workflow:finish` discipline — the FINAL commit updates
 > the spec (`git mv` doing→done, `Status: done`, keep the `Branch:` ref, add a short "how the
-> implementation differed from the spec" note). Commit + push. Post PR **COMMENT #3** titled
+> implementation differed from the spec" note). **Apply those edits first, then `git add
+> specs/$1-done-*.md` — ONLY the `-done-` path** (never the old `-doing-` path; it no longer exists,
+> so naming it makes `git add` fail and strands the header + notes, leaving a rename-only commit).
+> Commit + push, then **confirm `git status --porcelain specs/` is clean** — a dirty `-done-` spec
+> means the notes were stranded; re-add and amend before continuing. Post PR **COMMENT #3** titled
 > `## Finish`: the finish output (final-commit summary, doing→done delta, how it differed).
 >
 > **Stop** at the open PR. Return a concise report: PR URL/number, the commit list, the test
