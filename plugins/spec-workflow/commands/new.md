@@ -34,7 +34,16 @@ git branch --show-current
 
 ## 3. Ask for a short slug (2-4 words, hyphenated).
 
-## 4. Create the file as `specs/NNN-todo-slug.md`
+## 4. Create the file with the status token that matches the kind
+
+The **status is part of the filename** and must match what the user picked in step 2 (the closed
+status set lives in the `spec-conventions` skill):
+- **concern** → `specs/NNN-concern-slug.md`
+- **spec** → `specs/NNN-todo-slug.md` (a new spec is decided but not yet started)
+
+This matters: the filename is the *authoritative* status, so a concern mistakenly named
+`NNN-todo-slug.md` reads as a buildable spec — `plan` lists it as actionable and `autopilot`'s
+readiness gate stops auto-skipping it. A concern is `concern`, not `todo`.
 
 Use the matching **concern** or **spec** template from the `spec-conventions` skill (its
 `## File templates` section) and fill each section for this document. The section headings there
@@ -43,10 +52,11 @@ are a contract other commands read — use them verbatim; don't rename or invent
 ## 5. Commit and push to main
 
 ```
-git add specs/NNN-todo-slug.md
+git add specs/NNN-<status>-slug.md
 git commit -m "Spec NNN: add <slug>"
 git push origin main
 ```
+(`<status>` is `concern` or `todo`, matching the filename from step 4.)
 
 ## 6. Return to the original branch (if we switched)
 
@@ -64,4 +74,6 @@ git checkout <original-branch>
 
 ## 7. Confirm
 
-Tell the user the spec was created on `main` as `specs/NNN-todo-slug.md` and is ready for `/spec-workflow:start` when they're ready to start building.
+Tell the user what was created on `main`:
+- a **spec** (`specs/NNN-todo-slug.md`) is ready for `/spec-workflow:start` when they want to begin building it.
+- a **concern** (`specs/NNN-concern-slug.md`) stays exploratory — it is later *resolved by* a spec (which adds the WARNING block to it), not built directly.
