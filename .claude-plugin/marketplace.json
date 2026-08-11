@@ -28,6 +28,13 @@
       "tags": ["git", "pr", "squash-merge", "stacked-prs", "utilities"]
     },
     {
+      "name": "rich-html",
+      "source": "./plugins/rich-html",
+      "description": "Turn your work into rich, self-contained interactive HTML deliverables: report synthesizes heterogeneous sources into a readable document; decide aggregates pending decisions into an expandable-context surface that emits one prompt to execute them. General-purpose, no spec/tracker coupling.",
+      "category": "productivity",
+      "tags": ["html", "report", "decisions", "synthesis", "interactive"]
+    },
+    {
       "name": "prototype",
       "source": "./plugins/prototype",
       "description": "Turn a half-formed UI/flow idea into a faithful, clickable HTML mock in the target product's own look. mockup clones the real status-quo page and applies only the requested change (composing from the design system for net-new surfaces), declares its fidelity basis in a toggleable overlay, and emits one self-contained file. General-purpose, no spec/tracker coupling.",
