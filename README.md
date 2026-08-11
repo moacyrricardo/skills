@@ -21,6 +21,7 @@ This repo is itself a **plugin marketplace** (`moacyr-skills`). Each plugin live
 
 # 2. Install the plugins
 /plugin install spec-workflow@moacyr-skills   # pulls live-verify automatically (it depends on it)
+/plugin install rich-html@moacyr-skills       # report + decide (interactive HTML deliverables)
 /plugin install prototype@moacyr-skills       # mockup — clickable HTML mocks in the product's own look
 /plugin install utils@moacyr-skills           # standalone helpers (currently: stacked-merge)
 # (live-verify installs with spec-workflow; grab it alone if that's all you want:
@@ -35,7 +36,7 @@ Update later with `/plugin marketplace update moacyr-skills`.
 Prefer to try before installing? Clone the repo and point Claude Code at a plugin directly:
 
 ```shell
-claude --plugin-dir ./plugins/spec-workflow --plugin-dir ./plugins/live-verify --plugin-dir ./plugins/prototype --plugin-dir ./plugins/utils
+claude --plugin-dir ./plugins/spec-workflow --plugin-dir ./plugins/live-verify --plugin-dir ./plugins/rich-html --plugin-dir ./plugins/prototype --plugin-dir ./plugins/utils
 ```
 
 > Plugin commands and skills are **namespaced** by the plugin, so `/build` becomes
@@ -89,6 +90,23 @@ It captures evidence; it never publishes — the caller does.
 | :-------- | :--- | :----------- |
 | `run-local-dev` | command | Start/confirm the project's local dev server (generic; reads `CLAUDE.md`). |
 | `test-flow-headless` | agent | Exercises a feature against a running app (Firefox via geckodriver, or curl) and returns a verdict plus a screenshot/gif/text artifact. |
+
+### `rich-html` — interactive HTML deliverables
+
+Turn your work into rich, **self-contained interactive HTML** files. No spec or tracker coupling —
+usable on any project; the tools just *point at* whatever sources are around.
+
+> 📖 **Guide:** [`docs/rich-html-guide.md`](./docs/rich-html-guide.md) — the walkthrough, with the
+> two-track diagram and the `html-doc` format rules in the [rich HTML version](./docs/rich-html-guide.html).
+
+| Command | What it does |
+| :------ | :----------- |
+| `report` | Synthesize a readable document from heterogeneous sources (docs, trackers, PRs, git, code, logs) after asking what angle/audience you need. Cross-checks sources; conclusion up top, evidence one expand away. **Read-only.** |
+| `decide` | Aggregate the decisions waiting on you (concern options, PR-review forks, "needs decision" issues, autopilot escalations) into one surface where each expands in place to its real context — then emit **one prompt** to hand back to an agent to execute them all. |
+
+Both build on the **`html-doc`** skill, the shared format contract (self-containment / Artifact
+CSP, theme-awareness, the expandable-context pattern) so the two outputs feel like one system.
+`report` is for facts *about* things; `decide` is for the forks *between* them.
 
 ### `prototype` — clickable mocks in the product's own look
 
@@ -177,6 +195,10 @@ auto-accepting them. Two ways to restore the hands-off behavior:
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── commands/             # run-local-dev
 │   │   └── agents/               # test-flow-headless
+│   ├── rich-html/               # interactive HTML deliverables (no spec coupling)
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── commands/             # report, decide
+│   │   └── skills/               # html-doc (shared format contract)
 │   ├── prototype/              # clickable HTML mocks in the product's own look
 │   │   ├── .claude-plugin/plugin.json
 │   │   └── commands/             # mockup
