@@ -21,6 +21,7 @@ This repo is itself a **plugin marketplace** (`moacyr-skills`). Each plugin live
 
 # 2. Install the plugins
 /plugin install spec-workflow@moacyr-skills   # pulls live-verify automatically (it depends on it)
+/plugin install prototype@moacyr-skills       # mockup — clickable HTML mocks in the product's own look
 /plugin install utils@moacyr-skills           # standalone helpers (currently: stacked-merge)
 # (live-verify installs with spec-workflow; grab it alone if that's all you want:
 #  /plugin install live-verify@moacyr-skills)
@@ -34,7 +35,7 @@ Update later with `/plugin marketplace update moacyr-skills`.
 Prefer to try before installing? Clone the repo and point Claude Code at a plugin directly:
 
 ```shell
-claude --plugin-dir ./plugins/spec-workflow --plugin-dir ./plugins/live-verify --plugin-dir ./plugins/utils
+claude --plugin-dir ./plugins/spec-workflow --plugin-dir ./plugins/live-verify --plugin-dir ./plugins/prototype --plugin-dir ./plugins/utils
 ```
 
 > Plugin commands and skills are **namespaced** by the plugin, so `/build` becomes
@@ -88,6 +89,19 @@ It captures evidence; it never publishes — the caller does.
 | :-------- | :--- | :----------- |
 | `run-local-dev` | command | Start/confirm the project's local dev server (generic; reads `CLAUDE.md`). |
 | `test-flow-headless` | agent | Exercises a feature against a running app (Firefox via geckodriver, or curl) and returns a verdict plus a screenshot/gif/text artifact. |
+
+### `prototype` — clickable mocks in the product's own look
+
+Turn a half-formed UI/flow idea into a **faithful, clickable HTML mock** — *before* you know the
+flow. No spec or tracker coupling; it just inspects whatever product is around.
+
+| Command | What it does |
+| :------ | :----------- |
+| `mockup` | Runs a preflight to decide its **fidelity basis**, then builds the mock. If you're changing an existing screen it **clones the real status-quo page and applies only your change** (a true delta in context); for a net-new surface it composes from the design system. If there's no design system it climbs a ladder — product signals → domain archetype (labeled) → ask you — never a neutral fallback. Declares the basis in a toggleable annotation overlay and emits one self-contained HTML+CSS+JS file. |
+
+A mock **is** the product (a facsimile), not a document about it — so unlike `rich-html` it matches
+the product's *real* theme (even light-only), carries no document chrome, and prizes fidelity over
+legibility. A finished mock is a natural seed for a spec-workflow **concern**'s design reference.
 
 ### `utils` — general-purpose helpers
 
@@ -160,6 +174,9 @@ auto-accepting them. Two ways to restore the hands-off behavior:
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── commands/             # run-local-dev
 │   │   └── agents/               # test-flow-headless
+│   ├── prototype/              # clickable HTML mocks in the product's own look
+│   │   ├── .claude-plugin/plugin.json
+│   │   └── commands/             # mockup
 │   └── utils/                   # general-purpose helpers (playground)
 │       ├── .claude-plugin/plugin.json
 │       └── commands/             # stacked-merge
