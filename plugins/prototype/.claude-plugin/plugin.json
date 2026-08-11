@@ -1,0 +1,12 @@
+{
+  "name": "prototype",
+  "description": "Turn a half-formed UI/flow idea into a faithful, clickable HTML mock in the target product's own look — before you know the flow. mockup clones the real status-quo page and applies only the change you want (composing from the design system only for net-new surfaces), declares its fidelity basis in a toggleable overlay, and emits one self-contained file. A facsimile of the product, not a document about it. General-purpose — no spec or tracker coupling.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Moacyr Ricardo",
+    "email": "moacyr.ricardo@gmail.com"
+  },
+  "homepage": "https://github.com/moacyrricardo/skills",
+  "repository": "https://github.com/moacyrricardo/skills",
+  "license": "MIT"
+}
