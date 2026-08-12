@@ -78,7 +78,11 @@ State, in one line, how you read the request before you generate: the **fidelity
 **Status-quo diff (the common case).** Start from the *actual* current page — reproduce its real
 structure and styling as the baseline — then apply **only** the change the user asked for. The value
 is that the change reads as a **true delta in real context**; don't redesign the surroundings, don't
-"clean up" unrelated UI. Fidelity is *inherited*, not reconstructed.
+"clean up" unrelated UI. Fidelity is *inherited*, not reconstructed. Reproduce **enough** of the real
+surroundings to place the change in context — you may **stub or omit unrelated heavy components** (a
+big chart, a data grid you're not touching, a complex widget) to keep the mock focused, but
+**declare what you stubbed** in the overlay (§3), so the omission is honest rather than mistaken for
+the real screen.
 
 **Greenfield (net-new surface).** There's no page to clone, so compose the screen from the anchor
 you found in Check A — real design system if you have one, else derived/inferred look. Reuse the
@@ -99,6 +103,9 @@ The mock carries exactly one meta-layer: a **toggleable overlay** (a small fixed
   confirm or point me at one."*
 - **Invented components** — anything you drew that doesn't exist in the product yet, marked as
   invented (not passed off as real). Where you guessed a value (a colour, a label), say so.
+- **Stubbed / omitted & substituted** — real parts of the screen you left out or simplified to focus
+  the mock (§2), and any asset you substituted (a system font for the brand web font, a text wordmark
+  for the logo). Keeps the mock from being mistaken for the full, exact screen.
 
 This keeps the fidelity source **auditable at a glance** and preserves the honesty line the posture
 demands without turning the mock into a document.
@@ -108,8 +115,14 @@ demands without turning the mock into a document.
 Each `.html` must render identically as a local `file://`, an email attachment, or a Claude Artifact
 (strict CSP — blocks every external request):
 
-- **Inline all CSS and JS**; no CDN links, external fonts, or `fetch`/network. Embed any image as a
-  `data:` URI; prefer inline SVG + system-font stacks. Keep it under ~16 MB.
+- **Inline all CSS and JS**; no CDN links or `fetch`/network. Keep it under ~16 MB.
+- **Real fonts & assets — fidelity vs self-containment.** The product may use a **web font** (e.g.
+  loaded from Google Fonts) or **image assets** (logo, icon set) you can't fetch at runtime. Resolve
+  each one of two ways and **declare which** in the overlay: **embed it as a `data:` URI** when the
+  look genuinely depends on it (the brand font, the logo), or **substitute the nearest system
+  equivalent** (a matching system-font stack; an inline-SVG or styled-text stand-in for the wordmark)
+  when a close match is good enough. Prefer inline SVG + system-font stacks by default; never leave a
+  broken external reference.
 - **Escape** any real text pulled from the product so it can't break layout.
 - Remember the posture: the file's own styling is the *product's* theme, not a viewer-adaptive one.
 
