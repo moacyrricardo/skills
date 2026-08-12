@@ -95,6 +95,9 @@ It captures evidence; it never publishes — the caller does.
 Turn a half-formed UI/flow idea into a **faithful, clickable HTML mock** — *before* you know the
 flow. No spec or tracker coupling; it just inspects whatever product is around.
 
+> 📖 **Guide:** [`docs/prototype-guide.md`](./docs/prototype-guide.md) — the walkthrough, with the
+> preflight diagram and fidelity ladder in the [rich HTML version](./docs/prototype-guide.html).
+
 | Command | What it does |
 | :------ | :----------- |
 | `mockup` | Runs a preflight to decide its **fidelity basis**, then builds the mock. If you're changing an existing screen it **clones the real status-quo page and applies only your change** (a true delta in context); for a net-new surface it composes from the design system. If there's no design system it climbs a ladder — product signals → domain archetype (labeled) → ask you — never a neutral fallback. Declares the basis in a toggleable annotation overlay and emits one self-contained HTML+CSS+JS file. |
