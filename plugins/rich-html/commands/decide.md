@@ -44,7 +44,10 @@ For every decision, assemble:
 - **Expandable context** — the real evidence behind the fork, shown in place via `<details>`: the
   concern's options section, the PR's changed files / the specific thread, the issue excerpt, the
   code around the marker. This is the point of the surface — wire it to the *actual* source, not a
-  paraphrase. Escape interpolated text.
+  paraphrase. Escape interpolated text. When a fork turns on something visual — a code path, a
+  page-to-page flow, competing layouts — keep the prose that states the fork and pair it with the
+  matching supporting form from `html-doc`'s **Visual evidence** section (the layout-sketch form is
+  especially at home here), rather than describing the visual in words alone.
 - **Source link** — where it came from, so a choice is traceable.
 
 ## 3. Build the surface (per `html-doc`)
