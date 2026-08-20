@@ -1,0 +1,462 @@
+<title>Visual Evidence A/B</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#f6f6f3; --fg:#1c1c19; --muted:#6d6d64; --card:#ffffff; --card2:#faf9f6;
+    --border:#e4e3db; --accent:#0f766e; --accent-ink:#0b544e; --warn:#b45309;
+    --baseline:#8a8a80; --sk-strong:#b9b9af; --sk-weak:#e0dfd7;
+    --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 14px rgba(0,0,0,.05);
+  }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+    --bg:#131519; --fg:#e9e9e3; --muted:#9a9a90; --card:#1b1e23; --card2:#191c21;
+    --border:#2c2f36; --accent:#2dd4bf; --accent-ink:#7ff0e2; --warn:#f0a35a;
+    --baseline:#7c7c74; --sk-strong:#4a4d54; --sk-weak:#2c2f36;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35);
+  }}
+  :root[data-theme="dark"]{
+    --bg:#131519; --fg:#e9e9e3; --muted:#9a9a90; --card:#1b1e23; --card2:#191c21;
+    --border:#2c2f36; --accent:#2dd4bf; --accent-ink:#7ff0e2; --warn:#f0a35a;
+    --baseline:#7c7c74; --sk-strong:#4a4d54; --sk-weak:#2c2f36;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font:16px/1.6 "IBM Plex Sans",system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.eyebrow{font-family:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif}
+  code,pre,.mono,.num{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  .num{font-variant-numeric:tabular-nums}
+  main{max-width:1080px;margin:0 auto;padding:0 20px 88px}
+  a{color:var(--accent-ink)}
+
+  /* header */
+  header{
+    position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--border);
+  }
+  .hdr-in{max-width:1080px;margin:0 auto;padding:12px 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .brand{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:15px;letter-spacing:-.01em;margin-right:auto}
+  .brand span{color:var(--muted);font-weight:400}
+  .seg{display:inline-flex;border:1px solid var(--border);border-radius:9px;overflow:hidden;background:var(--card)}
+  .seg button{
+    appearance:none;border:0;background:transparent;color:var(--muted);
+    font:600 12.5px/1 "IBM Plex Sans",sans-serif;padding:8px 12px;cursor:pointer;white-space:nowrap
+  }
+  .seg button+button{border-left:1px solid var(--border)}
+  .seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+  :root[data-theme="dark"] .seg button[aria-pressed="true"],
+  @media (prefers-color-scheme:dark){}
+  .themebtn{appearance:none;border:1px solid var(--border);background:var(--card);color:var(--fg);
+    border-radius:9px;padding:8px 11px;font-size:12.5px;cursor:pointer}
+
+  /* hero */
+  .hero{padding:44px 0 26px;border-bottom:1px solid var(--border)}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:600}
+  h1{font-size:clamp(28px,4.4vw,44px);line-height:1.08;letter-spacing:-.02em;margin:.5rem 0 .4rem;text-wrap:balance;max-width:18ch}
+  .lede{font-size:18px;color:var(--muted);max-width:60ch;margin:0}
+  .legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:22px;font-size:13.5px}
+  .legend b{display:inline-flex;align-items:center;gap:7px;font-weight:600}
+  .dot{width:10px;height:10px;border-radius:50%}
+  .dot.a{background:var(--baseline)} .dot.b{background:var(--accent)}
+  .legend span{color:var(--muted)}
+
+  section.scn{padding:34px 0;border-bottom:1px solid var(--border)}
+  .scn-head{margin-bottom:16px}
+  .tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+  .tag{font-size:11.5px;font-weight:600;letter-spacing:.02em;padding:3px 9px;border-radius:999px;border:1px solid var(--border);color:var(--muted);background:var(--card2)}
+  .tag.cmd{color:var(--accent-ink);border-color:color-mix(in srgb,var(--accent) 40%,var(--border))}
+  .scn-head h2{font-size:21px;letter-spacing:-.01em;margin:.1rem 0 .3rem;max-width:34ch}
+  .scn-head p{margin:0;color:var(--muted);font-size:14.5px;max-width:70ch}
+
+  .arms{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+  body.mode-a .arm-b,body.mode-b .arm-a{display:none}
+  body.mode-a .arms,body.mode-b .arms{grid-template-columns:1fr}
+  @media (max-width:780px){.arms{grid-template-columns:1fr}}
+
+  .arm{border:1px solid var(--border);border-radius:13px;background:var(--card);box-shadow:var(--shadow);overflow:hidden}
+  .arm-tab{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:12px;font-weight:600;letter-spacing:.02em;border-bottom:1px solid var(--border);color:var(--muted);background:var(--card2)}
+  .arm-tab .k{width:9px;height:9px;border-radius:50%}
+  .arm-a .arm-tab .k{background:var(--baseline)} .arm-b .arm-tab .k{background:var(--accent)}
+  .arm-tab .hint{margin-left:auto;font-weight:400;color:var(--muted);font-size:11.5px}
+  .arm-body{padding:16px 16px 18px}
+
+  /* emitted-surface facsimile */
+  .surface .q{font-family:"Bricolage Grotesque",sans-serif;font-size:15.5px;font-weight:600;line-height:1.35;margin:0 0 12px}
+  .opts{display:flex;flex-direction:column;gap:8px;margin:0 0 6px;list-style:none;padding:0}
+  .opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--border);border-radius:9px;padding:9px 11px;font-size:14px;background:var(--card2)}
+  .opt .radio{width:15px;height:15px;border-radius:50%;border:2px solid var(--muted);margin-top:3px;flex:none}
+  .opt.rec{border-color:color-mix(in srgb,var(--accent) 55%,var(--border));background:color-mix(in srgb,var(--accent) 8%,var(--card2))}
+  .opt.rec .radio{border-color:var(--accent);background:radial-gradient(circle,var(--accent) 0 4px,transparent 5px)}
+  .opt .cons{color:var(--muted);font-size:12.5px;display:block;margin-top:1px}
+  .rec-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent-ink);border:1px solid color-mix(in srgb,var(--accent) 45%,var(--border));border-radius:5px;padding:1px 5px;margin-left:6px;vertical-align:1px}
+  .headline{font-family:"Bricolage Grotesque",sans-serif;font-size:15.5px;font-weight:600;line-height:1.35;margin:0 0 8px}
+  .surface p.body{margin:0 0 12px;font-size:14px}
+  details{border:1px solid var(--border);border-radius:9px;background:var(--card2);margin-top:10px}
+  details[open]{background:var(--card)}
+  summary{cursor:pointer;padding:9px 12px;font-size:12.5px;font-weight:600;color:var(--accent-ink);list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸ ";color:var(--muted)}
+  details[open] summary::before{content:"▾ "}
+  .det-in{padding:2px 13px 14px;font-size:13.5px;color:var(--fg)}
+  .det-in p{margin:.5rem 0}
+  .path{font-size:12px;color:var(--muted);margin-top:8px}
+  .path b{color:var(--accent-ink);font-weight:600}
+
+  pre{margin:10px 0 4px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:11px 12px;overflow-x:auto;font-size:12.5px;line-height:1.55}
+  :root[data-theme="dark"] pre{background:#0f1216}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) pre{background:#0f1216}}
+  pre .cm{color:var(--muted)} pre .hl{color:var(--accent-ink);font-weight:600}
+  pre .kw{color:var(--warn)}
+
+  figure{margin:10px 0 2px}
+  figcaption{font-size:11.5px;color:var(--muted);margin-top:6px}
+  .chart-wrap,.flow-wrap{overflow-x:auto}
+  svg{max-width:100%;height:auto;display:block}
+
+  /* layout sketches */
+  .sketches{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 2px}
+  .sketch{border:1px solid var(--border);border-radius:9px;overflow:hidden;background:var(--card2)}
+  .sk-top{display:flex;gap:5px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--border);background:var(--card)}
+  .sk-top i{width:7px;height:7px;border-radius:50%;background:var(--sk-weak);display:block}
+  .sk-cap{margin-left:auto;font-size:10.5px;color:var(--muted);font-weight:600}
+  .sk-body{padding:10px}
+  .bar{height:12px;border-radius:3px;background:var(--sk-strong)}
+  .chip{height:12px;width:24px;border-radius:3px;background:var(--accent);flex:none}
+  .line{height:6px;border-radius:3px;background:var(--sk-weak);margin-top:7px}
+  .row{display:flex;align-items:center;gap:6px}
+  .between{justify-content:space-between}
+  .lines{margin-top:12px}
+
+  .lookfor{margin-top:16px;border-left:3px solid var(--accent);background:var(--card2);border-radius:0 9px 9px 0;padding:11px 14px;font-size:13.5px}
+  .lookfor b{font-family:"Bricolage Grotesque",sans-serif}
+
+  /* scoring */
+  .score{padding:38px 0 0}
+  .score h2{font-size:22px;letter-spacing:-.01em;margin:0 0 6px}
+  .score>p{color:var(--muted);max-width:66ch;margin:0 0 18px;font-size:14.5px}
+  .tbl{width:100%;border-collapse:collapse;font-size:13.5px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  .tbl th,.tbl td{text-align:left;padding:11px 13px;vertical-align:top;border-bottom:1px solid var(--border)}
+  .tbl thead th{background:var(--card2);font-size:12px;letter-spacing:.02em}
+  .tbl tr:last-child td{border-bottom:0}
+  .tbl td.axis{font-weight:600;width:24%}
+  .yourcall{color:var(--warn);font-weight:600;font-size:12px;letter-spacing:.02em}
+  footer{padding:30px 0 0;color:var(--muted);font-size:13px}
+  .kbd{font-family:"IBM Plex Mono",monospace;font-size:12px;border:1px solid var(--border);border-radius:5px;padding:1px 5px;background:var(--card2)}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..48,500;12..48,600;12..48,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<header>
+  <div class="hdr-in">
+    <div class="brand">Visual Evidence A/B <span>· rich-html trial</span></div>
+    <div class="seg" role="group" aria-label="Which arm to show">
+      <button data-mode="a" aria-pressed="false">Baseline</button>
+      <button data-mode="both" aria-pressed="true">Side&nbsp;by&nbsp;side</button>
+      <button data-mode="b" aria-pressed="false">Improved</button>
+    </div>
+    <button class="themebtn" onclick="var r=document.documentElement;r.setAttribute('data-theme',(r.getAttribute('data-theme')==='dark')?'light':'dark')">◐ theme</button>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="eyebrow">rich-html · does visual evidence earn its place?</div>
+    <h1>Same decisions, two ways to show the evidence.</h1>
+    <p class="lede">Each scenario below is rendered twice from identical content. Only the
+      expandable evidence differs — <b>Baseline</b> describes it in prose; <b>Improved</b> keeps the
+      prose and adds the supporting artifact under it (code, chart, diagram, layout sketch).
+      Flip the control above to focus one arm, or read them side by side and judge.</p>
+    <div class="legend">
+      <b><span class="dot a"></span>Baseline</b><span>prose evidence only — html-doc as it read before §4</span>
+      <b><span class="dot b"></span>Improved</b><span>prose + one supporting artifact — text is still the point</span>
+    </div>
+  </div>
+
+  <!-- SCENARIO 1 -->
+  <section class="scn">
+    <div class="scn-head">
+      <div class="tags"><span class="tag cmd">/decide</span><span class="tag">code fork</span><span class="tag">form: code snippet + path-in</span></div>
+      <h2>Where should retry/backoff for outbound HTTP live?</h2>
+      <p>A real fork parked in a PR thread: centralize the logic, or add it per call-site. The choice turns on how requests actually flow through the code.</p>
+    </div>
+    <div class="arms">
+      <!-- baseline -->
+      <div class="arm arm-a">
+        <div class="arm-tab"><span class="k"></span>Baseline<span class="hint">prose evidence</span></div>
+        <div class="arm-body surface">
+          <p class="q">Retry/backoff for outbound HTTP — centralize it, or per call-site?</p>
+          <ul class="opts">
+            <li class="opt rec"><span class="radio"></span><div>Centralize in the client wrapper<span class="rec-badge">rec</span><span class="cons">One place; covers every call at once.</span></div></li>
+            <li class="opt"><span class="radio"></span><div>Add it per call-site<span class="cons">Flexible per call, but repeated and easy to forget.</span></div></li>
+          </ul>
+          <details><summary>Context — the two locations</summary>
+            <div class="det-in">
+              <p>Every outbound request already passes through a single <code>request()</code> function
+              in the client wrapper, and that wrapper already exposes an interceptor hook. Putting
+              backoff there would cover all 37 call sites at once. The per-call-site option repeats the
+              logic and risks call sites that forget to add it.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+      <!-- improved -->
+      <div class="arm arm-b">
+        <div class="arm-tab"><span class="k"></span>Improved<span class="hint">prose + code</span></div>
+        <div class="arm-body surface">
+          <p class="q">Retry/backoff for outbound HTTP — centralize it, or per call-site?</p>
+          <ul class="opts">
+            <li class="opt rec"><span class="radio"></span><div>Centralize in the client wrapper<span class="rec-badge">rec</span><span class="cons">One place; covers every call at once.</span></div></li>
+            <li class="opt"><span class="radio"></span><div>Add it per call-site<span class="cons">Flexible per call, but repeated and easy to forget.</span></div></li>
+          </ul>
+          <details><summary>Context — the two locations</summary>
+            <div class="det-in">
+              <p>Every outbound request already passes through a single <code>request()</code> function,
+              which already exposes an interceptor hook — so backoff added here covers all 37 call sites.</p>
+<pre><span class="cm">// client.ts:42 — every outbound call funnels through here</span>
+<span class="kw">async function</span> request(opts) {
+  <span class="hl">// ← backoff hook goes here: wraps all 37 call sites</span>
+  <span class="kw">const</span> res = <span class="kw">await</span> withRetry(() =&gt; fetch(opts.url, opts), policy);
+  <span class="kw">return</span> res;
+}</pre>
+              <p class="path"><b>Path in:</b> <code>apiFor(x).get()</code> → <code>request()</code> — no call site touches <code>fetch</code> directly.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+    <div class="lookfor"><b>What to look for.</b> Axes 1 &amp; 3 — with the snippet and the one-line path, can you commit to “centralize” without opening the repo? In Baseline you have to trust the sentence “everything funnels through <code>request()</code>.”</div>
+  </section>
+
+  <!-- SCENARIO 2 -->
+  <section class="scn">
+    <div class="scn-head">
+      <div class="tags"><span class="tag cmd">/decide</span><span class="tag">layout fork</span><span class="tag">form: divs+CSS sketch</span></div>
+      <h2>Dashboard header — single-row toolbar, or split title and actions?</h2>
+      <p>The form most likely to drift toward a mockup. The sketch has to stay a schematic thumbnail you choose against — not a facsimile of the product.</p>
+    </div>
+    <div class="arms">
+      <div class="arm arm-a">
+        <div class="arm-tab"><span class="k"></span>Baseline<span class="hint">prose evidence</span></div>
+        <div class="arm-body surface">
+          <p class="q">Dashboard header layout — one row, or title over actions?</p>
+          <ul class="opts">
+            <li class="opt"><span class="radio"></span><div>Single row: title + 3 actions inline<span class="cons">Compact on desktop; actions wrap awkwardly under 768px.</span></div></li>
+            <li class="opt rec"><span class="radio"></span><div>Two rows: title, then actions<span class="rec-badge">rec</span><span class="cons">Taller, but stable on small screens.</span></div></li>
+          </ul>
+          <details><summary>Context — the two layouts</summary>
+            <div class="det-in">
+              <p>Option A keeps the title and the three action buttons on one line — compact on wide
+              screens, but the buttons wrap under the title awkwardly below 768px. Option B gives the
+              title its own row with the actions beneath it: one row taller, but it holds its shape at
+              every width.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+      <div class="arm arm-b">
+        <div class="arm-tab"><span class="k"></span>Improved<span class="hint">prose + sketch</span></div>
+        <div class="arm-body surface">
+          <p class="q">Dashboard header layout — one row, or title over actions?</p>
+          <ul class="opts">
+            <li class="opt"><span class="radio"></span><div>Single row: title + 3 actions inline<span class="cons">Compact on desktop; actions wrap awkwardly under 768px.</span></div></li>
+            <li class="opt rec"><span class="radio"></span><div>Two rows: title, then actions<span class="rec-badge">rec</span><span class="cons">Taller, but stable on small screens.</span></div></li>
+          </ul>
+          <details open><summary>Context — the two layouts</summary>
+            <div class="det-in">
+              <p>Schematic thumbnails, not a mock — enough to compare the shapes:</p>
+              <div class="sketches">
+                <div class="sketch">
+                  <div class="sk-top"><i></i><i></i><i></i><span class="sk-cap">A · single row</span></div>
+                  <div class="sk-body">
+                    <div class="row between"><div class="bar" style="width:38%"></div><div class="row"><span class="chip"></span><span class="chip"></span><span class="chip"></span></div></div>
+                    <div class="lines"><div class="line"></div><div class="line" style="width:88%"></div><div class="line" style="width:72%"></div></div>
+                  </div>
+                </div>
+                <div class="sketch">
+                  <div class="sk-top"><i></i><i></i><i></i><span class="sk-cap">B · two rows</span></div>
+                  <div class="sk-body">
+                    <div class="bar" style="width:52%"></div>
+                    <div class="row" style="margin-top:8px"><span class="chip"></span><span class="chip"></span><span class="chip"></span></div>
+                    <div class="lines"><div class="line"></div><div class="line" style="width:88%"></div><div class="line" style="width:72%"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+    <div class="lookfor"><b>What to look for.</b> Axis 5 (drift) lives here. The sketch is grey blocks — it shows arrangement, not the product. If a form ever needs real colors, type, and states, that’s the signal it belongs in <code>mockup</code>, not <code>decide</code>.</div>
+  </section>
+
+  <!-- SCENARIO 3 -->
+  <section class="scn">
+    <div class="scn-head">
+      <div class="tags"><span class="tag cmd">/report</span><span class="tag">trend</span><span class="tag">form: chart (via dataviz)</span></div>
+      <h2>Did PR merge throughput recover after the March dip?</h2>
+      <p>A report finding that <em>is</em> a shape over time — the form a report reaches for most. The numbers are in the prose either way; the chart is what makes the recovery legible at a glance.</p>
+    </div>
+    <div class="arms">
+      <div class="arm arm-a">
+        <div class="arm-tab"><span class="k"></span>Baseline<span class="hint">prose evidence</span></div>
+        <div class="arm-body surface">
+          <p class="headline">PR merge throughput dipped in March, then fully recovered by June.</p>
+          <p class="body">Merged PRs fell from 21 in February to 9 in March during the incident
+          freeze, then climbed back — 18 in April, 27 in May, 31 in June, above the pre-dip baseline.</p>
+          <details><summary>Evidence — monthly merged PRs</summary>
+            <div class="det-in">
+              <p class="num">Jan 24 · Feb 21 · Mar 9 · Apr 18 · May 27 · Jun 31 (source: <code>gh pr list --state merged</code>)</p>
+            </div>
+          </details>
+        </div>
+      </div>
+      <div class="arm arm-b">
+        <div class="arm-tab"><span class="k"></span>Improved<span class="hint">prose + chart</span></div>
+        <div class="arm-body surface">
+          <p class="headline">PR merge throughput dipped in March, then fully recovered by June.</p>
+          <p class="body">Merged PRs fell from 21 in February to 9 in March during the incident
+          freeze, then climbed back — above the pre-dip baseline by June.</p>
+          <details open><summary>Evidence — monthly merged PRs</summary>
+            <div class="det-in">
+              <figure>
+                <div class="chart-wrap">
+                <svg viewBox="0 0 440 210" role="img" aria-label="Bar chart of merged PRs per month: Jan 24, Feb 21, Mar 9, Apr 18, May 27, Jun 31" font-size="11">
+                  <line x1="34" y1="184" x2="430" y2="184" stroke="var(--border)"/>
+                  <line x1="34" y1="99" x2="430" y2="99" stroke="var(--border)" stroke-dasharray="2 4" opacity=".6"/>
+                  <text x="30" y="188" text-anchor="end" fill="var(--muted)" font-size="10">0</text>
+                  <text x="30" y="103" text-anchor="end" fill="var(--muted)" font-size="10">16</text>
+                  <!-- bars -->
+                  <rect x="33" y="56.5" width="34" height="127.5" rx="4" fill="var(--accent)"/>
+                  <rect x="99" y="72.4" width="34" height="111.6" rx="4" fill="var(--accent)"/>
+                  <rect x="165" y="136.2" width="34" height="47.8" rx="4" fill="var(--accent)" opacity=".55"/>
+                  <rect x="231" y="88.4" width="34" height="95.6" rx="4" fill="var(--accent)"/>
+                  <rect x="297" y="40.6" width="34" height="143.4" rx="4" fill="var(--accent)"/>
+                  <rect x="363" y="19.3" width="34" height="164.7" rx="4" fill="var(--accent)"/>
+                  <!-- selective value labels: the dip and the peak -->
+                  <text x="182" y="130" text-anchor="middle" fill="var(--warn)" font-size="11" font-weight="600">9</text>
+                  <text x="182" y="205" text-anchor="middle" fill="var(--warn)" font-size="9.5">freeze</text>
+                  <text x="380" y="13" text-anchor="middle" fill="var(--accent-ink)" font-size="11" font-weight="600">31</text>
+                  <!-- month labels -->
+                  <g fill="var(--muted)" font-size="10.5" text-anchor="middle">
+                    <text x="50" y="200">Jan</text><text x="116" y="200">Feb</text><text x="182" y="200">Mar</text>
+                    <text x="248" y="200">Apr</text><text x="314" y="200">May</text><text x="380" y="200">Jun</text>
+                  </g>
+                </svg>
+                </div>
+                <figcaption>Merged PRs per month · source <code>gh pr list --state merged</code> · single series, one hue (dataviz)</figcaption>
+              </figure>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+    <div class="lookfor"><b>What to look for.</b> Axis 1 (grasp). The V-shape — dip at March, peak at June — reads in one saccade from the chart; the same fact in the prose list makes you assemble it from six numbers.</div>
+  </section>
+
+  <!-- SCENARIO 4 -->
+  <section class="scn">
+    <div class="scn-head">
+      <div class="tags"><span class="tag cmd">/report</span><span class="tag">flow</span><span class="tag">form: inline-SVG diagram</span></div>
+      <h2>How did the guest checkout flow change?</h2>
+      <p>A page A→B→C change. A diagram shows the inserted step in place; the prose has to spell out a before-and-after the reader holds in their head.</p>
+    </div>
+    <div class="arms">
+      <div class="arm arm-a">
+        <div class="arm-tab"><span class="k"></span>Baseline<span class="hint">prose evidence</span></div>
+        <div class="arm-body surface">
+          <p class="headline">Guest checkout now inserts one optional-account step before shipping.</p>
+          <p class="body">Previously the flow was Cart → Shipping → Payment. The new flow adds a
+          Details step — where a guest can skip account creation — between Cart and Shipping, so the
+          path is one screen longer for everyone.</p>
+          <details><summary>Evidence — the route change</summary>
+            <div class="det-in"><p>Old: <code>/cart → /shipping → /pay</code>. New: <code>/cart → /details → /shipping → /pay</code> (see PR&nbsp;#412).</p></div>
+          </details>
+        </div>
+      </div>
+      <div class="arm arm-b">
+        <div class="arm-tab"><span class="k"></span>Improved<span class="hint">prose + diagram</span></div>
+        <div class="arm-body surface">
+          <p class="headline">Guest checkout now inserts one optional-account step before shipping.</p>
+          <p class="body">A new <b>Details</b> step — where a guest can skip account creation — now
+          sits between Cart and Shipping, one screen longer for everyone.</p>
+          <details open><summary>Evidence — the route change</summary>
+            <div class="det-in">
+              <figure>
+                <div class="flow-wrap">
+                <svg viewBox="0 0 560 96" role="img" aria-label="Checkout flow: Cart, then new Details step, then Shipping, then Payment" font-size="12">
+                  <defs>
+                    <marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                      <path d="M0,0 L6,3 L0,6 Z" fill="var(--muted)"/>
+                    </marker>
+                  </defs>
+                  <g font-family="IBM Plex Sans,sans-serif" text-anchor="middle">
+                    <!-- Cart -->
+                    <rect x="14" y="38" width="96" height="38" rx="8" fill="var(--card2)" stroke="var(--border)"/>
+                    <text x="62" y="61" fill="var(--fg)">Cart</text>
+                    <!-- Details (new) -->
+                    <rect x="150" y="38" width="96" height="38" rx="8" fill="color-mix(in srgb,var(--accent) 12%,var(--card2))" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 4"/>
+                    <text x="198" y="61" fill="var(--accent-ink)" font-weight="600">Details</text>
+                    <text x="198" y="26" fill="var(--accent-ink)" font-size="10" font-weight="700">+ NEW</text>
+                    <!-- Shipping -->
+                    <rect x="286" y="38" width="96" height="38" rx="8" fill="var(--card2)" stroke="var(--border)"/>
+                    <text x="334" y="61" fill="var(--fg)">Shipping</text>
+                    <!-- Payment -->
+                    <rect x="422" y="38" width="96" height="38" rx="8" fill="var(--card2)" stroke="var(--border)"/>
+                    <text x="470" y="61" fill="var(--fg)">Payment</text>
+                    <!-- arrows -->
+                    <g stroke="var(--muted)" stroke-width="1.5">
+                      <line x1="112" y1="57" x2="146" y2="57" marker-end="url(#ar)"/>
+                      <line x1="248" y1="57" x2="282" y2="57" marker-end="url(#ar)"/>
+                      <line x1="384" y1="57" x2="418" y2="57" marker-end="url(#ar)"/>
+                    </g>
+                  </g>
+                </svg>
+                </div>
+                <figcaption>Guest checkout route · the dashed node is inserted · source PR&nbsp;#412</figcaption>
+              </figure>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+    <div class="lookfor"><b>What to look for.</b> Axis 2 (decide/conclude in place). The inserted node is visually obvious in its position; the prose makes you diff two <code>/cart → … → /pay</code> strings to find the one that’s different.</div>
+  </section>
+
+  <!-- SCORING -->
+  <section class="score">
+    <h2>Scoring rubric</h2>
+    <p>Five axes, Baseline vs Improved. Axes 1–3 are <span class="yourcall">your call</span> — they’re
+    reader experience, which is exactly what this page exists to let you feel. Axes 4–5 I can read
+    directly, filled below.</p>
+    <table class="tbl">
+      <thead><tr><th>Axis</th><th>Baseline</th><th>Improved</th></tr></thead>
+      <tbody>
+        <tr><td class="axis">1 · Time to grasp the fork</td><td><span class="yourcall">your call</span> — read the prose arm</td><td><span class="yourcall">your call</span> — read the artifact arm</td></tr>
+        <tr><td class="axis">2 · Decide/conclude without leaving the page</td><td><span class="yourcall">your call</span></td><td><span class="yourcall">your call</span></td></tr>
+        <tr><td class="axis">3 · Confidence in the pick</td><td><span class="yourcall">your call</span></td><td><span class="yourcall">your call</span></td></tr>
+        <tr><td class="axis">4 · Build + file-size cost</td><td>Lowest — prose only.</td><td>Modestly higher: inline SVG/code adds roughly 1–4&nbsp;KB per artifact and a little authoring effort (the chart borrows the dataviz palette). Still one self-contained file, no network — the format contract holds.</td></tr>
+        <tr><td class="axis">5 · Drift toward mockup</td><td>None — nothing visual to over-build.</td><td>Low for code / chart / flow. The one to watch is the layout sketch (scenario 2); kept schematic here, it stays a thumbnail. If it ever wants real color/type/state, that’s the line into <code>mockup</code>.</td></tr>
+      </tbody>
+    </table>
+    <footer>
+      <p>Controls: <span class="kbd">Baseline</span> / <span class="kbd">Side by side</span> /
+      <span class="kbd">Improved</span> up top swap the arms; <span class="kbd">◐ theme</span> flips
+      light/dark (every artifact form should survive both). All four scenarios are synthetic, picked
+      to hit one supporting form each. Next pass: dogfood the same trial on real forks from this repo.</p>
+    </footer>
+  </section>
+</main>
+
+<script>
+  var seg=document.querySelector('.seg');
+  seg.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    var m=b.dataset.mode;
+    document.body.className = (m==='both')?'':('mode-'+m);
+    seg.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed', x===b);});
+  });
+</script>
