@@ -101,6 +101,16 @@ expandable-context format *is* the value.
 If `report` runs into a decision that needs making, it points at `decide`; if `decide` finds
 reportable state rather than a fork, it points back at `report`.
 
+## Changelog
+
+- **2026-08-20 · Visual evidence — a fourth `html-doc` rule.** Evidence can now be carried in the
+  form that reads fastest — a code snippet, an inline-SVG flow diagram, a chart (via the `dataviz`
+  skill), an existing screenshot, or a schematic divs+CSS layout sketch — always *added under* the
+  prose claim, never replacing it. Backed by a side-by-side trial:
+  [`rich-html-visual-evidence-ab.html`](./rich-html-visual-evidence-ab.html) renders four scenarios
+  (code / layout / chart / flow) twice from identical content — prose-only vs. prose + a supporting
+  artifact — with a Baseline / Side-by-side / Improved toggle and a scoring rubric.
+
 ---
 
 Part of [moacyrricardo/skills](https://github.com/moacyrricardo/skills) · see the

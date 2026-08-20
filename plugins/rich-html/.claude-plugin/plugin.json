@@ -1,7 +1,7 @@
 {
   "name": "rich-html",
   "description": "Turn your work into rich, self-contained interactive HTML deliverables. report synthesizes heterogeneous sources (docs, trackers, PRs, git, code) into a readable document; decide aggregates pending decisions into an expandable-context surface that emits one prompt to execute them. General-purpose — no spec or tracker coupling.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "Moacyr Ricardo",
     "email": "moacyr.ricardo@gmail.com"

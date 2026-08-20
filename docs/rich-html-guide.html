@@ -116,11 +116,20 @@
   }
 
   /* rules cards */
-  .rules { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 6px; }
+  .rules { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-top: 6px; }
   .rule { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
   .rule .t { font-weight: 620; font-size: 15px; margin-bottom: 4px; }
   .rule .d { color: var(--muted); font-size: 13.5px; }
   @media (max-width: 720px) { .rules { grid-template-columns: 1fr; } }
+
+  /* changelog */
+  .clog { display: flex; flex-direction: column; gap: 14px; margin-top: 6px; }
+  .clog-item { display: grid; grid-template-columns: 116px 1fr; gap: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; }
+  .clog-when { font-family: var(--mono); font-size: 12.5px; color: var(--muted); padding-top: 3px; letter-spacing: .02em; }
+  .clog-body h3 { margin-bottom: 6px; }
+  .clog-body p { margin: 0 0 12px; color: var(--ink-soft); font-size: 15px; }
+  .clog-body .btn { font-size: 12.5px; }
+  @media (max-width: 620px) { .clog-item { grid-template-columns: 1fr; gap: 6px; } }
 
   /* steps */
   .steps { display: flex; flex-direction: column; gap: 20px; margin-top: 8px; }
@@ -248,12 +257,13 @@
   <!-- HTML-DOC SKILL -->
   <section>
     <p class="eyebrow reveal">The shared format · <span class="mono">html-doc</span></p>
-    <h2 class="reveal">Three rules that make one file work everywhere</h2>
+    <h2 class="reveal">Four rules that make one file work everywhere</h2>
     <p class="sec-lede reveal">Both commands build on the <code>html-doc</code> skill, which encodes the non-obvious constraints so the two outputs feel like one system.</p>
     <div class="rules">
       <div class="rule reveal"><div class="t">Self-contained</div><div class="d">Inline CSS/JS, no network, assets as <code>data:</code> URIs — renders as a local file, an email attachment, or a Claude Artifact under a strict CSP.</div></div>
       <div class="rule reveal"><div class="t">Theme-aware</div><div class="d">Respects the reader's light/dark with a manual toggle. A document adapts to the reader — the opposite of a <code>mockup</code>.</div></div>
       <div class="rule reveal"><div class="t">Progressive disclosure</div><div class="d">Conclusion visible, evidence one expand away via native <code>&lt;details&gt;</code>. Dense, but never a wall.</div></div>
+      <div class="rule reveal"><div class="t">Visual evidence</div><div class="d">The prose claim <em>plus</em>, when it helps, a supporting artifact under it — a code snippet, an inline-SVG diagram, a chart (via <code>dataviz</code>), a screenshot, or a layout sketch. Never the artifact alone.</div></div>
     </div>
   </section>
 
@@ -318,6 +328,23 @@
     <h2 class="reveal">Reading vs deciding</h2>
     <div class="callout reveal">
       Reaching for the <b>state of something</b>, a synthesis, a briefing → <code>report</code>. Facing a pile of <b>unmade choices</b> you want to clear in one pass → <code>decide</code>. If <code>report</code> hits a decision that needs making it points at <code>decide</code>; if <code>decide</code> finds reportable state rather than a fork, it points back at <code>report</code>.
+    </div>
+  </section>
+
+  <!-- CHANGELOG -->
+  <section>
+    <p class="eyebrow reveal">Changelog</p>
+    <h2 class="reveal">What's changed</h2>
+    <p class="sec-lede reveal">Notable additions to the shared format, each backed by the evidence behind the call.</p>
+    <div class="clog">
+      <div class="clog-item reveal">
+        <div class="clog-when">2026-08-20</div>
+        <div class="clog-body">
+          <h3>Visual evidence — a fourth <span class="mono">html-doc</span> rule</h3>
+          <p>Evidence can now be carried in the form that reads fastest — a code snippet, an inline-SVG flow diagram, a chart (via <code>dataviz</code>), an existing screenshot, or a schematic layout sketch — always <em>added under</em> the prose claim, never replacing it. The trial below renders four scenarios (code / layout / chart / flow) twice from identical content: prose-only vs. prose + a supporting artifact, with a Baseline / Side-by-side / Improved toggle and a scoring rubric.</p>
+          <a class="btn" href="./rich-html-visual-evidence-ab.html">Open the Visual Evidence A/B trial →</a>
+        </div>
+      </div>
     </div>
   </section>
 
