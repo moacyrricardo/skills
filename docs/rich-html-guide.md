@@ -43,8 +43,8 @@ two outputs feel like one system.
 
 ## The shared format — the `html-doc` skill
 
-`report` and `decide` both build on `html-doc`, which encodes the three non-obvious rules that make
-one HTML file work everywhere and stay readable:
+`report` and `decide` both build on `html-doc`, which encodes the non-obvious rules that make
+one HTML file work everywhere, stay readable, and carry evidence in the form that reads fastest:
 
 - **Self-contained** — inline CSS/JS, no network, assets as `data:` URIs. Renders identically as a
   local file, an email attachment, or a Claude Artifact (which enforces a strict CSP).
@@ -52,6 +52,9 @@ one HTML file work everywhere and stay readable:
   adapts to the reader — the opposite of a `mockup`, which matches the product's real theme.)
 - **Progressive disclosure** — the conclusion is visible; the evidence is one expand away, in place,
   via native `<details>`. Dense, but never a wall.
+- **Visual evidence** — evidence is always the prose claim *plus*, when it helps, a supporting
+  artifact under it (never the artifact alone): a code snippet, an inline-SVG flow diagram, a chart
+  (via the `dataviz` skill), an existing screenshot, or a schematic divs+CSS layout sketch.
 
 ## `report` — sources → a readable document
 

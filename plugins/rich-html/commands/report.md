@@ -54,7 +54,11 @@ Lead with the answer to the framing question; make the reader *choose* to go dee
   by default per the `html-doc` progressive-disclosure rule. Escape interpolated source text.
 - **Attribute claims** to their source (link the PR/issue, name the file:line) so the report is
   checkable, not just assertable.
-- Prefer showing the real artifact (a fenced diff, a small table) over describing it.
+- Back a claim with the real artifact, not just a description of it — a one-line claim *plus* its
+  supporting form from `html-doc`'s **Visual evidence** section: a fenced diff or table, a chart for
+  a trend (load `dataviz`), an inline-SVG diagram for a flow, an existing screenshot for a UI state.
+  Charts are the form a report reaches for most. The prose still carries the point; the artifact
+  substantiates it.
 
 ## 4. Deliver
 

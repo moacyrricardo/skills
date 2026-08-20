@@ -58,6 +58,42 @@ the conclusion; let the reader expand to the proof, in place.
   "expand/collapse all", `decide`'s selection state). Keep it small and unobtrusive.
 - The document must be **fully readable with JS disabled** — JS enhances, it never gates content.
 
+## 4. Visual evidence — match evidence to its form
+
+Every piece of evidence is **text plus, when it helps, a supporting artifact — never the artifact
+alone.** The prose states the claim or the fork and carries the reader; a code snippet, chart,
+diagram, or sketch sits *under* it, inside the expandable context, as substantiation the reader can
+check. So the question is never "text or visual" — it is whether a supporting artifact earns its
+place beside the text. Both commands draw from the same small vocabulary of supporting forms so
+their output stays one system; each command owns *when* a piece of its content warrants one, this
+skill owns *how* each is built (and every form here is inline and CSP-safe — SVG and divs inline,
+images as `data:` URIs):
+
+- **Code → the real snippet, plus how execution reaches it.** Paste the actual lines (escaped, in
+  `<pre>`) and add one line on the path in — the caller, the trigger — so the point rests on the
+  code, not a paraphrase.
+- **Flow (state/page A → B) → a small inline-SVG diagram.** Labeled nodes and an arrow, so the
+  reader sees the path instead of reading a sentence about it. Keep it a few nodes; it is a
+  signpost, not a UML chart.
+- **Trend / distribution / comparison → a chart.** Inline SVG, no chart library. When you draw one,
+  **load the `dataviz` skill first** for palette, form choice, and light/dark-safe rendering rather
+  than hand-rolling a bar — a report synthesizing history or logs is often *itself* a trend, so this
+  is the form `report` reaches for most.
+- **UI appearance → show it.** Embed the screenshot as a `data:` URI rather than describing how a
+  screen looks. **Read-only caveat:** both commands only inspect — use an image the source already
+  has (a PR, an issue, a thread); never spin up the app just to capture one. With no existing image,
+  fall back to a layout sketch or plain description.
+- **Page layout → rough it in divs+CSS.** A few styled divs sketching each option's arrangement,
+  side by side, so shapes compare at a glance. This one is **decide-flavored** — it serves *choosing
+  between* layouts, so `report` rarely needs it. And it is a **thumbnail, not a facsimile**: pixel
+  fidelity to the product is `mockup`'s posture and deliberately not this skill's (see §2). Keep it
+  schematic.
+
+Every aid is **evidence, not decoration** — the text always stays; add a supporting artifact only
+when it substantiates the claim faster than more prose would. And none of them gate content: because
+the prose already carries the point, the document stays fully usable if an image fails to load or JS
+is off.
+
 ## Accessibility & robustness (baseline, not optional)
 
 - Semantic structure: one `<h1>`, real `<h2>`/`<section>` landmarks, real `<button>`s (not
