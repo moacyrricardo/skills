@@ -1,4 +1,4 @@
-Status: doing
+Status: done
 Branch: moacyrricardo/spec-002-branch-review
 
 # 002 — branch-review: a filterable diff review command for rich-html
@@ -142,3 +142,31 @@ facet. No coupling.
   accepted as good-enough.
 - **Not yet dogfooded off boletim:** the redteam used boletim PRs. First non-boletim run may surface
   path-heuristic gaps the target `CLAUDE.md` override is meant to absorb.
+
+## Implementation Notes
+
+Built as decided. `plugins/rich-html/commands/branch-review.md` is the new thin command; it
+delegates all file HOW to `html-doc` (whose contract was widened from two commands to three) and
+composes `dataviz` for the summary chart. Version bumped `0.2.0 → 0.3.0` in both `plugin.json` and
+the top-level `.claude-plugin/marketplace.json`; the third command was propagated across
+`docs/rich-html-guide.{md,html}`, `docs/index.html`, and `README.md`.
+
+**Verified by a dogfood run** — a fresh agent given *only* the command file, the `html-doc`
+contract, and PR #640 (no other context) produced a real 64 KB self-contained, CSP-safe, filterable
+review. The intent-named taxonomy held (five clusters, each named by intent, none a bare layer
+word; it independently reproduced the "headline change is the untagged cluster" asymmetry). Verdict:
+~90% of a hand-written review out of the box.
+
+**Differed from the spec:** the dogfood showed the *content model* was right but the *rendering
+rules* were under-specified — the agent had to invent every filter/count/chart decision. Those were
+then pinned down in the command (not anticipated at spec time): mixed-facet hunks may split into
+presentational sub-hunks; summary/counts reflect the currently-visible filtered hunks; the chart
+axis is pinned to the full-diff maximum (no rescale on filter); filters sit at the top of the
+layout; the headline-often-untagged and test-cluster tie-breaker rules were added to §3; the
+net-diff flag was scaffolded to distinguish a *changed* path from a mere context *reference*; and a
+"the two axes are lenses, not a partition" caveat was added (facet `spec` and change-type
+`process/convention` legitimately overlap on small PRs).
+
+**Gap resolved:** `dataviz` is a harness-provided skill (not a repo file); it loads via the Skill
+tool, so the command's "load `dataviz` first" is satisfiable. Known Gaps carried forward unchanged:
+net-diff flag remains heuristic; off-boletim dogfooding still pending.
