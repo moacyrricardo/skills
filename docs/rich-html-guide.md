@@ -1,16 +1,17 @@
 # rich-html — turn your work into interactive HTML deliverables
 
-A short guide to the `rich-html` plugin and its two commands, `report` and `decide`. Both take the
-scattered inputs of your work and turn them into a single **self-contained, interactive HTML file** —
-one to *read*, one to *act on*.
+A short guide to the `rich-html` plugin and its three commands, `report`, `decide`, and
+`branch-review`. Each takes the scattered inputs of your work and turns them into a single
+**self-contained, interactive HTML file** — to *read*, to *act on*, or to *review*.
 
 > 📖 **Prefer the visual version?** Open [`rich-html-guide.html`](./rich-html-guide.html) in a
 > browser for the same guide with the two-track diagram and nicer formatting. This Markdown page is
 > the quick, GitHub-readable companion.
 
 ```
-sources    → report → a readable document
-decisions  → decide → an expandable surface + one prompt
+sources    → report        → a readable document
+decisions  → decide        → an expandable surface + one prompt
+a diff     → branch-review → a filterable review, grouped by change-type
 ```
 
 ## Install
@@ -26,25 +27,27 @@ decisions  → decide → an expandable surface + one prompt
 /reload-plugins
 ```
 
-Once installed the commands are namespaced: `/rich-html:report`, `/rich-html:decide`.
+Once installed the commands are namespaced: `/rich-html:report`, `/rich-html:decide`,
+`/rich-html:branch-review`.
 
-## Two tools, one system
+## Three tools, one system
 
-Both commands produce a **document about your work** — not the product itself (that's what the
+Every command produces a **document about your work** — not the product itself (that's what the
 `prototype` plugin's `mockup` is for). They share a format contract, the `html-doc` skill, so the
-two outputs feel like one system.
+outputs feel like one system.
 
-| | `report` | `decide` |
-| :-- | :------- | :------- |
-| **Turns** | heterogeneous sources | pending decisions |
-| **Into** | a readable document | an interactive decision surface |
-| **You** | read it | choose per decision, then run the emitted prompt |
-| **For** | facts *about* things | the forks *between* things |
+| | `report` | `decide` | `branch-review` |
+| :-- | :------- | :------- | :-------------- |
+| **Turns** | heterogeneous sources | pending decisions | a branch/PR diff |
+| **Into** | a readable document | an interactive decision surface | a filterable diff review |
+| **You** | read it | choose per decision, then run the emitted prompt | filter & read |
+| **For** | facts *about* things | the forks *between* things | what a change *does*, and why |
 
 ## The shared format — the `html-doc` skill
 
-`report` and `decide` both build on `html-doc`, which encodes the non-obvious rules that make
-one HTML file work everywhere, stay readable, and carry evidence in the form that reads fastest:
+`report`, `decide`, and `branch-review` all build on `html-doc`, which encodes the non-obvious
+rules that make one HTML file work everywhere, stay readable, and carry evidence in the form that
+reads fastest:
 
 - **Self-contained** — inline CSS/JS, no network, assets as `data:` URIs. Renders identically as a
   local file, an email attachment, or a Claude Artifact (which enforces a strict CSP).
@@ -93,16 +96,45 @@ agent can execute.
 Guardrail: `decide` always renders the rich surface — it **never** degrades into chat Q&A. The
 expandable-context format *is* the value.
 
+## `branch-review` — a diff → a filterable review
+
+Read-only. It never touches the branch it reviews.
+
+1. **Resolve the diff** — from a PR number/URL, a `base...head` range, a branch name, or bare (the
+   current branch vs. its merge-base). The exact base and totals are pinned in the header, so you
+   know precisely what is under review.
+2. **Two filter axes** — every change is tagged by **facet** (`code / tests / docs / spec`) and
+   clustered by **change-type**: *why* each cluster of changes exists, **named by its intent**
+   (`jul2026-sync-replay`, not a bare `service`). The full diff slices both ways, and a summary —
+   files, ± lines, a `dataviz` bar chart of the line distribution — recomputes as you filter.
+3. **Reasoning over hunks** — each cluster leads with one paragraph on *why* it exists; the real
+   diff is one expand below it.
+
+```
+/rich-html:branch-review #662
+```
+
 ## When to use which
 
 - Reaching for the **state of something**, a synthesis, a briefing → **`report`**.
 - Facing a pile of **unmade choices** and want to clear them in one pass → **`decide`**.
+- Wanting to **understand or review a diff** — what a branch or PR actually changed, and why →
+  **`branch-review`**.
 
 If `report` runs into a decision that needs making, it points at `decide`; if `decide` finds
-reportable state rather than a fork, it points back at `report`.
+reportable state rather than a fork, it points back at `report`; and if a change hides an unmade
+decision, `branch-review` points at `decide` too.
 
 ## Changelog
 
+- **2026-08-21 · `branch-review` — a third command (plugin `0.3.0`).** Turns a branch or PR diff
+  into a filterable HTML review: the full diff sliced by **facet** (`code / tests / docs / spec`)
+  and regrouped by **change-type**, each cluster **named by its intent** rather than a generic
+  layer. The change-type rule was hardened by an adversarial redteam across three real PRs — the
+  original seed-vs-emergent taxonomy was undecidable when a change fit both, so it became
+  name-by-intent with *generic-layer naming* as the checkable smell. Built from specs
+  [`001`](../specs/001-concern-branch-review.md) (concern) and
+  [`002`](../specs/002-doing-branch-review.md) (spec).
 - **2026-08-20 · Visual evidence — a fourth `html-doc` rule.** Evidence can now be carried in the
   form that reads fastest — a code snippet, an inline-SVG flow diagram, a chart (via the `dataviz`
   skill), an existing screenshot, or a schematic divs+CSS layout sketch — always *added under* the
