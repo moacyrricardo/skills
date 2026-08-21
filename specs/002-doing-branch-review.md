@@ -1,3 +1,6 @@
+Status: doing
+Branch: moacyrricardo/spec-002-branch-review
+
 # 002 — branch-review: a filterable diff review command for rich-html
 
 ## Context
