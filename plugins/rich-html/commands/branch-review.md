@@ -40,7 +40,10 @@ Tag every change with a **facet**; the filter is `[all] [code] [tests] [docs] [s
 - **`tests`** — test paths and suffixes (`*test*`, `*spec*`, `__tests__`, `*_test.*`, test dirs).
 - **`docs`** — comment-only / javadoc-only hunks, `*.md`, doc dirs. **Classify this at the hunk
   level, not the file level:** a code file whose change is a big comment or javadoc block is `docs`,
-  not `code` — otherwise prose-heavy diffs read as pure code.
+  not `code` — otherwise prose-heavy diffs read as pure code. A single hunk can **mix facets**: tag
+  it by its dominant facet, and where a block inside it is cleanly one facet (a whole javadoc
+  paragraph beside code) you may split it into presentational sub-hunks so each carries one tag.
+  Don't over-split — this is for legibility, not partition purity.
 - **`spec`** — files under a `specs/` catalog (or the project's documented spec location).
 
 This axis is heuristics, not judgment — the lowest-risk part. Let the target project's `CLAUDE.md`
@@ -66,6 +69,13 @@ changes exists**, and follow these rules exactly:
 - **All-emergent is fine.** A revert or consolidation has no forward-feature clusters and every
   cluster is change-specific — that is correct, not a gap. Too few tags is never the problem;
   generic names are.
+- **The headline change is often the untagged one.** The cluster that is the *actual point* of the
+  PR frequently fits no seed word and stays change-specific, while the peripheral clusters (a
+  migration, test scaffolding, the spec record) carry seed tags. That asymmetry is expected.
+- **Cluster tests by the intent they serve.** When test files back two genuinely different
+  production changes, split them into separate clusters named for each; when splitting would force a
+  generic name, keep them one. ("Too few tags is never the problem" governs the seed tags — not how
+  finely you cluster by intent.)
 - **Each cluster carries its reasoning** — one short paragraph on *why* it exists — sitting **above
   the actual hunks** it draws on, in `<details>` (the `html-doc` Visual-evidence rule: the claim in
   prose, the real diff one expand below it, escaped). Those hunks **may overlap** another cluster's
@@ -77,15 +87,22 @@ spec/concern for the *intent* and link it. If it has none, the review works iden
 
 ## 4. Summarize — a summary that moves with the filter
 
-Lead with a **summary block** that recomputes as facets and change-types are toggled: files
-touched, +/− lines, per-change-type line counts. Render the per-change-type line distribution as a
-**single-series bar chart** — inline SVG, no chart library. **Load the `dataviz` skill first** for
-palette and light/dark-safe form; a review's line distribution *is* a distribution.
+A **summary block**, directly under the filter controls, that recomputes as facets and change-types
+are toggled. It reflects the **currently visible** (filtered) changes: files touched (each distinct
+file counted once), ± lines, and per-change-type line counts over the hunks still shown. Render the
+per-change-type line distribution as a **single-series bar chart** — inline SVG, no chart library.
+**Load the `dataviz` skill first** for palette and light/dark-safe form; a review's line
+distribution *is* a distribution. **Pin the chart's axis to the full-diff maximum** so toggling a
+filter shortens bars in place without rescaling the axis — the bars stay comparable to the whole
+change rather than jumping.
 
 ## 5. Build the surface (per `html-doc`)
 
 One self-contained, theme-aware file:
 
+- **Layout order:** the filter controls sit at the **top** — they govern the whole document — then
+  the summary block and its chart, then the change-type clusters. Filters are the control surface;
+  everything below reflects the current selection.
 - **Two filter axes** — facet and change-type — as combinable checkbox rows with **live counts**.
   The full diff renders filtered by the active selection.
 - **Change-type clusters are the primary structure**; the facet filter narrows within and across
@@ -110,7 +127,13 @@ deliverable.
   from the target project's `CLAUDE.md`, never hardcoded here.
 - **Known gap — net-diff blindness:** the review reads the net `base...head` diff, so on a
   build-then-revert branch, work the PR body centers on can net to zero and not appear. When the PR
-  body names paths that are absent from the net diff, **flag that** rather than silently omit it.
+  body describes a path as *changed by this PR* but that path is absent from the net diff, **flag
+  it**. A path the body merely *references* for context — an unchanged file, a line number in
+  existing code — is not a gap; don't flag those.
+- **The two axes are lenses, not a partition.** Facet and change-type can overlap — spec content
+  shows up under the `spec` facet *and* a `process/convention` change-type, and on a small PR the two
+  axes can nearly coincide. That's fine: each axis is a way to slice the same diff, not a claim that
+  they carve disjoint sets.
 - Complements `report` (facts *about* heterogeneous sources) and `decide` (the forks *between*
   things). A branch review is the third shape: one diff, read and organized. If the change hides a
   decision that still needs making, point at `decide`.
