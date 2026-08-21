@@ -1,12 +1,13 @@
 ---
 name: html-doc
-description: The shared authoring contract for the rich-html plugin's document tools (report and decide) — how to build a single self-contained, theme-aware, interactive HTML file that renders anywhere (browser or Claude Artifact under a strict CSP) and uses progressive disclosure / expandable context to keep a dense document readable. Load this when generating a rich-html report or decision surface so the two feel like one system. This is the single source of truth those commands build on — prefer it over any inline restatement.
+description: The shared authoring contract for the rich-html plugin's document tools (report, decide, and branch-review) — how to build a single self-contained, theme-aware, interactive HTML file that renders anywhere (browser or Claude Artifact under a strict CSP) and uses progressive disclosure / expandable context to keep a dense document readable. Load this when generating a rich-html report, decision surface, or branch review so they feel like one system. This is the single source of truth those commands build on — prefer it over any inline restatement.
 ---
 
 # Authoring a self-contained interactive HTML document
 
-`report` and `decide` both emit **one HTML file** that a person opens and interacts with. This
-skill is the format contract they share so their output feels like one system. It is *not* about
+`report`, `decide`, and `branch-review` each emit **one HTML file** that a person opens and
+interacts with. This skill is the format contract they share so their output feels like one system.
+It is *not* about
 what to put in the document (each command owns its content) — only *how the file is built*.
 
 The three non-obvious constraints below are the whole point of the skill; a capable model will get
@@ -64,7 +65,7 @@ Every piece of evidence is **text plus, when it helps, a supporting artifact —
 alone.** The prose states the claim or the fork and carries the reader; a code snippet, chart,
 diagram, or sketch sits *under* it, inside the expandable context, as substantiation the reader can
 check. So the question is never "text or visual" — it is whether a supporting artifact earns its
-place beside the text. Both commands draw from the same small vocabulary of supporting forms so
+place beside the text. All three commands draw from the same small vocabulary of supporting forms so
 their output stays one system; each command owns *when* a piece of its content warrants one, this
 skill owns *how* each is built (and every form here is inline and CSP-safe — SVG and divs inline,
 images as `data:` URIs):
@@ -80,7 +81,7 @@ images as `data:` URIs):
   than hand-rolling a bar — a report synthesizing history or logs is often *itself* a trend, so this
   is the form `report` reaches for most.
 - **UI appearance → show it.** Embed the screenshot as a `data:` URI rather than describing how a
-  screen looks. **Read-only caveat:** both commands only inspect — use an image the source already
+  screen looks. **Read-only caveat:** all three commands only inspect — use an image the source already
   has (a PR, an issue, a thread); never spin up the app just to capture one. With no existing image,
   fall back to a layout sketch or plain description.
 - **Page layout → rough it in divs+CSS.** A few styled divs sketching each option's arrangement,
@@ -107,7 +108,7 @@ is off.
 
 ## The house skeleton
 
-Both commands start from the same shape — a fixed header with the theme toggle, then content:
+All three commands start from the same shape — a fixed header with the theme toggle, then content:
 
 ```html
 <!doctype html><html lang="en"><head><meta charset="utf-8">
@@ -131,7 +132,7 @@ Both commands start from the same shape — a fixed header with the theme toggle
 ## Delivering the file
 
 - Write the `.html` to disk and hand it back with the file tools (or publish as an Artifact when
-  the user wants a shareable link — Artifacts render this format natively). Both commands say where
-  their output lands.
+  the user wants a shareable link — Artifacts render this format natively). Each command says where
+  its output lands.
 - One document = one file. If a command produces a companion machine payload (e.g. `decide`'s
   emitted prompt), that is separate from this HTML, not embedded chrome inside it.

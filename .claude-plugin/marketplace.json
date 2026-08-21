@@ -30,9 +30,9 @@
     {
       "name": "rich-html",
       "source": "./plugins/rich-html",
-      "description": "Turn your work into rich, self-contained interactive HTML deliverables: report synthesizes heterogeneous sources into a readable document; decide aggregates pending decisions into an expandable-context surface that emits one prompt to execute them. General-purpose, no spec/tracker coupling.",
+      "description": "Turn your work into rich, self-contained interactive HTML deliverables: report synthesizes heterogeneous sources into a readable document; decide aggregates pending decisions into an expandable-context surface that emits one prompt to execute them; branch-review turns a branch or PR diff into a filterable review grouped by change-type. General-purpose, no spec/tracker coupling.",
       "category": "productivity",
-      "tags": ["html", "report", "decisions", "synthesis", "interactive"]
+      "tags": ["html", "report", "decisions", "branch-review", "diff", "synthesis", "interactive"]
     },
     {
       "name": "prototype",
