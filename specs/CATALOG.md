@@ -2,4 +2,5 @@
 
 | #   | Status  | Title / slug   | Branch | Issue | Notes                                          |
 |-----|---------|----------------|--------|-------|------------------------------------------------|
-| 001 | concern | branch-review  | —      | —     | rich-html filterable diff review; command-vs-recipe fork open |
+| 001 | concern | branch-review  | —      | —     | → resolved by 002 (new thin command; taxonomy redteamed) |
+| 002 | todo    | branch-review  | —      | —     | `/rich-html:branch-review`; ready for /spec-workflow:start |

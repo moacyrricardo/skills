@@ -1,5 +1,14 @@
 # 001 — branch-review: a filterable diff "review" for rich-html
 
+> **WARNING — resolved by spec 002.** Concluded: build it as a **new thin command**
+> `/rich-html:branch-review` (Q1 → option A), delegating file HOW to `html-doc`. The change-type
+> taxonomy (Q2/Q3) was hardened by an adversarial redteam that **killed the seed-vs-emergent
+> binary** proposed here — it is undecidable when a change fits both, which made an "all-seed"
+> smell circular. The decided rule is **name-by-intent** with **generic-layer naming** (not
+> "all-seed") as the checkable smell. Q4/Q5 (diff-source contract, facet heuristics) are decided in
+> spec 002. This concern is retained as the exploration record; the design lives in
+> `001-assets/design-proposal.md` and the decision in spec 002.
+
 ## Problem
 
 `/rich-html:report`, run by hand against PR #662 (a ~1k-line change in the boletim repo),
