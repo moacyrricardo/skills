@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Branch review · skills #20</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --surface:#fff; --surface-2:#eef1f6; --ink:#171a21; --ink-soft:#454b57;
+    --muted:#737b8a; --line:#e0e4ea; --line-strong:#c9cfd9; --accent:#2a78d6; --accent-ink:#1f5fae;
+    --add-bg:#e6f4ea; --add-ink:#116329; --del-bg:#fbe9e9; --del-ink:#b3261e;
+    --seq:#2a78d6; --chip:#fff; --radius:12px;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+    --bg:#0e1014; --surface:#161a21; --surface-2:#1c212a; --ink:#e9ebf1; --ink-soft:#b7bdca;
+    --muted:#808896; --line:#262c37; --line-strong:#333a47; --accent:#3987e5; --accent-ink:#8fb6f2;
+    --add-bg:#12261a; --add-ink:#5cc98a; --del-bg:#2a1518; --del-ink:#f0857f;
+    --seq:#3987e5; --chip:#1c212a;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0e1014; --surface:#161a21; --surface-2:#1c212a; --ink:#e9ebf1; --ink-soft:#b7bdca;
+    --muted:#808896; --line:#262c37; --line-strong:#333a47; --accent:#3987e5; --accent-ink:#8fb6f2;
+    --add-bg:#12261a; --add-ink:#5cc98a; --del-bg:#2a1518; --del-ink:#f0857f;
+    --seq:#3987e5; --chip:#1c212a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+  a{color:var(--accent-ink)}
+  code{font-family:var(--mono);font-size:.9em;background:var(--surface-2);border:1px solid var(--line);border-radius:5px;padding:.05em .35em}
+  h1,h2{letter-spacing:-.01em;line-height:1.15}
+  header.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .top-in{display:flex;align-items:center;gap:14px;height:58px}
+  .brand{font-family:var(--mono);font-weight:600;font-size:13.5px}
+  .brand .d{color:var(--accent)}
+  .sp{flex:1}
+  .themebtn{font-family:var(--mono);font-size:12px;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+  .themebtn:hover{border-color:var(--line-strong)}
+  .hero{padding:30px 0 6px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  h1{font-size:clamp(26px,4vw,38px);margin:0 0 10px}
+  .pin{font-family:var(--mono);font-size:13px;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:inline-block}
+  .pin .plus{color:var(--add-ink);font-weight:600}
+  .pin .minus{color:var(--del-ink);font-weight:600}
+  .lead{color:var(--ink-soft);max-width:70ch;margin:16px 0 0}
+  .note{border-left:3px solid var(--accent);background:var(--surface);border-radius:0 10px 10px 0;padding:12px 16px;color:var(--ink-soft);font-size:14.5px;margin:18px 0}
+  section.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin:18px 0}
+  .ctrl h3,.sum h3{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .axis{margin-bottom:12px}
+  .axis:last-child{margin-bottom:0}
+  .axis .albl{font-size:12.5px;color:var(--muted);margin-bottom:6px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-family:var(--mono);font-size:12.5px;display:inline-flex;align-items:center;gap:7px;background:var(--chip);border:1px solid var(--line-strong);border-radius:999px;padding:6px 12px;cursor:pointer;user-select:none;color:var(--ink)}
+  .chip[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--surface));color:var(--accent-ink)}
+  .chip .cnt{font-size:11px;color:var(--muted)}
+  .chip[aria-pressed="true"] .cnt{color:var(--accent-ink)}
+  .sumgrid{display:grid;grid-template-columns:auto auto auto;gap:10px 26px;align-items:baseline;margin-bottom:16px}
+  .sumgrid .k{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .sumgrid .v{font-size:22px;font-weight:640}
+  .chart{display:flex;flex-direction:column;gap:8px}
+  .bar{display:grid;grid-template-columns:180px 1fr 44px;gap:12px;align-items:center;font-size:13px}
+  .bar .blabel{font-family:var(--mono);font-size:12px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .btrack{background:var(--surface-2);border-radius:5px;height:16px;overflow:hidden}
+  .bfill{display:block;height:100%;background:var(--seq);border-radius:0 4px 4px 0;transition:width .28s cubic-bezier(.2,.7,.2,1)}
+  .bar .bval{font-family:var(--mono);font-size:12px;color:var(--ink-soft);text-align:right}
+  .bar[hidden]{display:none}
+  .cluster{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin:16px 0}
+  .cluster[hidden]{display:none}
+  .chead{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .chead h2{font-size:18px;margin:0;font-family:var(--mono);font-weight:600}
+  .ctag{font-family:var(--mono);font-size:11px;letter-spacing:.04em;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:3px 9px;color:var(--ink-soft)}
+  .ctag.none{border-style:dashed;color:var(--accent-ink);border-color:var(--accent)}
+  .clines{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .why{color:var(--ink-soft);font-size:14.5px;max-width:80ch;margin:12px 0 14px}
+  .files{display:flex;flex-direction:column;gap:10px}
+  .file[hidden]{display:none}
+  .fhead{display:flex;align-items:center;gap:10px;font-size:13px}
+  .fpath{font-family:var(--mono);font-size:12.5px;color:var(--ink);word-break:break-all}
+  .fbadge{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;border-radius:5px;padding:1px 7px;border:1px solid var(--line)}
+  .f-code{color:var(--accent-ink)} .f-docs{color:#8a5a00} .f-spec{color:#0f766e} .f-tests{color:#7c3aed}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .f-docs{color:#e0a94f} :root:not([data-theme="light"]) .f-spec{color:#2dd4bf}}
+  :root[data-theme="dark"] .f-docs{color:#e0a94f} :root[data-theme="dark"] .f-spec{color:#2dd4bf}
+  .fstat{margin-left:auto;font-family:var(--mono);font-size:12px}
+  .fstat .plus{color:var(--add-ink)} .fstat .minus{color:var(--del-ink)}
+  details{margin-top:6px}
+  summary{font-family:var(--mono);font-size:12px;color:var(--muted);cursor:pointer;padding:2px 0}
+  pre.diff{margin:8px 0 0;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:10px 0;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.55}
+  .dl{display:block;padding:0 12px;white-space:pre}
+  .dl.add{background:var(--add-bg);color:var(--add-ink)}
+  .dl.del{background:var(--del-bg);color:var(--del-ink)}
+  .dl.meta{color:var(--muted)}
+  .empty{display:none;color:var(--muted);font-size:14px;padding:8px 2px}
+  .empty.on{display:block}
+  footer{border-top:1px solid var(--line);margin-top:30px;padding:22px 0 50px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap top-in">
+  <span class="brand">rich-html<span class="d">.</span>branch-review</span>
+  <span class="sp"></span>
+  <button class="themebtn" onclick="var r=document.documentElement,d=r.getAttribute('data-theme')==='dark'||(!r.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme:dark)').matches);r.setAttribute('data-theme',d?'light':'dark')">&#9680; theme</button>
+</div></header>
+
+<main class="wrap">
+  <div class="hero">
+    <p class="eyebrow">branch review · worked example</p>
+    <h1>skills&nbsp;#20 — add the branch-review command</h1>
+    <p class="pin">main…moacyrricardo/spec-002-branch-review · 10 files · <span class="plus">+303</span> <span class="minus">&minus;52</span></p>
+    <p class="lead">A review of the PR that added <code>branch-review</code> itself — reviewed <em>by</em> <code>branch-review</code>. Slice the diff two ways with the filters: by <strong>facet</strong> (what kind of file) or by <strong>change-type</strong> (why the cluster exists). Everything below reacts; with JavaScript off, all clusters, reasoning, and diffs are still present.</p>
+    <div class="note">This PR splits cleanly — each change-type cluster happens to be facet-homogeneous, so here the two axes nearly coincide. That is the caveat the command names out loud: <strong>the axes are lenses, not a partition</strong>. On a mixed PR (a code fix whose tests and migration ride along) they cross-cut; on this one they align, and that alignment is itself the signal that the change is tidy.</div>
+  </div>
+
+  <section class="panel ctrl" aria-label="Filters">
+    <h3>Filters — two axes, combinable</h3>
+    <div class="axis">
+      <div class="albl">Facet — what kind of change</div>
+      <div class="chips" id="facetChips">
+        <button class="chip" data-facet="code" aria-pressed="true">code <span class="cnt" data-fc="code"></span></button>
+        <button class="chip" data-facet="tests" aria-pressed="true">tests <span class="cnt" data-fc="tests"></span></button>
+        <button class="chip" data-facet="docs" aria-pressed="true">docs <span class="cnt" data-fc="docs"></span></button>
+        <button class="chip" data-facet="spec" aria-pressed="true">spec <span class="cnt" data-fc="spec"></span></button>
+      </div>
+    </div>
+    <div class="axis">
+      <div class="albl">Change-type — why the cluster exists</div>
+      <div class="chips" id="clusterChips"><button class="chip" data-cluster="branch-review-command" aria-pressed="true">branch-review-command<span class="cnt">(139)</span></button>
+<button class="chip" data-cluster="promote-to-third-command" aria-pressed="true">promote-to-third-command<span class="cnt">(25)</span></button>
+<button class="chip" data-cluster="docs-propagation" aria-pressed="true">docs-propagation<span class="cnt">(158)</span></button>
+<button class="chip" data-cluster="spec-002-record" aria-pressed="true">spec-002-record<span class="cnt">(33)</span></button></div>
+    </div>
+  </section>
+
+  <section class="panel sum" aria-label="Summary">
+    <h3>Summary — recomputes as you filter</h3>
+    <div class="sumgrid">
+      <div><div class="k">files</div><div class="v"><span id="sFiles"></span></div></div>
+      <div><div class="k">added</div><div class="v"><span class="plus" id="sAdd" style="color:var(--add-ink)"></span></div></div>
+      <div><div class="k">removed</div><div class="v"><span class="minus" id="sDel" style="color:var(--del-ink)"></span></div></div>
+    </div>
+    <div class="chart" id="chart" aria-label="Lines changed per change-type (bar chart, axis pinned to the full diff)">
+<div class="bar" data-cluster="branch-review-command" data-full="139"><span class="blabel">branch-review-command</span><span class="btrack"><span class="bfill" style="width:88.0%"></span></span><span class="bval">139</span></div>
+<div class="bar" data-cluster="promote-to-third-command" data-full="25"><span class="blabel">promote-to-third-command</span><span class="btrack"><span class="bfill" style="width:15.8%"></span></span><span class="bval">25</span></div>
+<div class="bar" data-cluster="docs-propagation" data-full="158"><span class="blabel">docs-propagation</span><span class="btrack"><span class="bfill" style="width:100.0%"></span></span><span class="bval">158</span></div>
+<div class="bar" data-cluster="spec-002-record" data-full="33"><span class="blabel">spec-002-record</span><span class="btrack"><span class="bfill" style="width:20.9%"></span></span><span class="bval">33</span></div>
+    </div>
+  </section>
+
+  <div id="clusters">
+
+  <section class="cluster" data-cluster="branch-review-command">
+    <div class="chead">
+      <h2>branch-review-command</h2><span class="ctag none">change-specific</span>
+      <span class="clines" data-cluster-lines>139 lines</span>
+    </div>
+    <p class="why">The point of the PR: one new file that <em>is</em> the command. <code>branch-review.md</code> defines the whole content model — resolve the diff, the facet axis, the name-by-intent change-type axis, the filter-driven summary — and delegates every format concern to <code>html-doc</code>, so it adds behaviour, not chrome. It fits no seed word because it <em>is</em> the change; that is why it stays untagged while everything around it carries a tag.</p>
+    <div class="files">
+<div class="file" data-facet="code" data-add="139" data-del="0"><div class="fhead"><span class="fpath">plugins/rich-html/commands/branch-review.md</span><span class="fbadge f-code">code</span><span class="fstat"><span class="plus">+139</span> <span class="minus">&minus;0</span></span></div><details><summary>diff</summary><pre class="diff"><span class="dl meta">@@ -0,0 +1,139 @@</span>
+<span class="dl add">+---</span>
+<span class="dl add">+description: Turn a branch or PR diff into a self-contained, filterable HTML review — the full diff narrowed by facet (code/tests/docs/spec) and regrouped by change-type (why each cluster of changes exists), with a summary that recomputes as you filter. Asks nothing it can infer; reads the diff and its intent, then emits one theme-aware file. Read-only — it never touches the branch it reviews.</span>
+<span class="dl add">+argument-hint: &lt;branch | PR#/URL | range&gt; [angle/audience notes]</span>
+<span class="dl add">+---</span>
+<span class="dl add">+</span>
+<span class="dl add">+Build a rich HTML **branch review** of **$ARGUMENTS**.</span>
+<span class="dl add">+</span>
+<span class="dl add">+A branch review turns a diff into **one readable, filterable document** — not a wall of hunks. It</span>
+<span class="dl add">+reads the change and *why each part of it exists*, then lets a reviewer slice the full diff two</span>
+<span class="dl add">+ways: by **facet** (is this code, tests, docs, or spec?) and by **change-type** (what is this</span>
+<span class="dl add">+cluster of changes *for*?). It is a document *about* a diff — it **never mutates** what it reviews</span>
+<span class="dl add">+(no commits, no pushes, no PR edits, no branch changes). The output is a single self-contained</span>
+<span class="dl add">+interactive HTML file.</span>
+<span class="dl add">+</span>
+<span class="dl add">+**Format contract:** the *how* of the file — self-containment / Artifact CSP, theme-awareness,</span>
+<span class="dl add">+progressive disclosure, and the **Visual evidence** vocabulary (the diff hunks and the summary</span>
+<span class="dl add">+chart are exactly that) — comes from the **`html-doc`** skill. Read</span>
+<span class="dl add">+`${CLAUDE_PLUGIN_ROOT}/skills/html-doc/SKILL.md` first and conform to it. This command owns only</span>
+<span class="dl add">+the *what*: resolving the diff, classifying it, and structuring the review.</span>
+<span class="dl add">+</span>
+<span class="dl add">+## 1. Resolve the diff — pin exactly what is under review</span>
+<span class="dl add">+</span>
+<span class="dl add">+Work out the change set from `$ARGUMENTS`, in priority order:</span>
+<span class="dl add">+</span>
+<span class="dl add">+- **PR number / URL** (`#662`, a GitHub URL) → `gh pr diff &lt;n&gt;` for the diff and `gh pr view &lt;n&gt;`</span>
+<span class="dl add">+  for title, body, and threads (the *intent* behind the change). Base = the PR&#x27;s base branch.</span>
+<span class="dl add">+- **A range** (`main...feature`, `a1b2..c3d4`) → use it verbatim.</span>
+<span class="dl add">+- **A branch name** → `git merge-base` against the repo&#x27;s default branch, then diff `base...branch`.</span>
+<span class="dl add">+- **Bare / no argument** → the current branch against its merge-base with the default branch.</span>
+<span class="dl add">+</span>
+<span class="dl add">+The diff is the **net** `base...head`. Pin the resolved base and totals in the report header</span>
+<span class="dl add">+(`main…feature · 42 files · +1,013 −287`) so the reader knows exactly what they are looking at.</span>
+<span class="dl add">+`gh` is only needed for the PR path — a range or branch needs nothing but `git`.</span>
+<span class="dl add">+</span>
+<span class="dl add">+## 2. Classify by facet — the mechanical axis</span>
+<span class="dl add">+</span>
+<span class="dl add">+Tag every change with a **facet**; the filter is `[all] [code] [tests] [docs] [spec]`, combinable:</span>
+<span class="dl add">+</span>
+<span class="dl add">+- **`code`** — non-test source files.</span>
+<span class="dl add">+- **`tests`** — test paths and suffixes (`*test*`, `*spec*`, `__tests__`, `*_test.*`, test dirs).</span>
+<span class="dl add">+- **`docs`** — comment-only / javadoc-only hunks, `*.md`, doc dirs. **Classify this at the hunk</span>
+<span class="dl add">+  level, not the file level:** a code file whose change is a big comment or javadoc block is `docs`,</span>
+<span class="dl add">+  not `code` — otherwise prose-heavy diffs read as pure code. A single hunk can **mix facets**: tag</span>
+<span class="dl add">+  it by its dominant facet, and where a block inside it is cleanly one facet (a whole javadoc</span>
+<span class="dl add">+  paragraph beside code) you may split it into presentational sub-hunks so each carries one tag.</span>
+<span class="dl add">+  Don&#x27;t over-split — this is for legibility, not partition purity.</span>
+<span class="dl add">+- **`spec`** — files under a `specs/` catalog (or the project&#x27;s documented spec location).</span>
+<span class="dl add">+</span>
+<span class="dl add">+This axis is heuristics, not judgment — the lowest-risk part. Let the target project&#x27;s `CLAUDE.md`</span>
+<span class="dl add">+override the path rules if it documents its own layout.</span>
+<span class="dl add">+</span>
+<span class="dl add">+## 3. Cluster by change-type — name each cluster by its intent</span>
+<span class="dl add">+</span>
+<span class="dl add">+This is the axis that makes the review worth more than a diff viewer, and the one that degrades</span>
+<span class="dl add">+into a generic dump if you get it wrong. Group the diff by **change-type = why a cluster of</span>
+<span class="dl add">+changes exists**, and follow these rules exactly:</span>
+<span class="dl add">+</span>
+<span class="dl add">+- **Name every cluster by what *this* change does** — `jul2026-sync-replay`,</span>
+<span class="dl add">+  `java-opts-expansion-fix`, `pipeline-revert` — **never a bare layer word** like `service`,</span>
+<span class="dl add">+  `config`, or `migration`. The name is the reasoning in miniature.</span>
+<span class="dl add">+- **Treat this vocabulary as a prompt list and an optional tag, not buckets to sort into:**</span>
+<span class="dl add">+  `model/repository`, `config`, `service`, `api-surface`, `migration`, `test-scaffolding`,</span>
+<span class="dl add">+  `process/convention` (spec records, catalog/changelog, lint config). Use it to *prompt* yourself</span>
+<span class="dl add">+  to look, and to *tag* a cluster for filtering — **never make &quot;is this seed or emergent?&quot; a</span>
+<span class="dl add">+  question you have to answer.** A cluster can carry a tag *and* be named by its intent.</span>
+<span class="dl add">+- **The smell to watch for is generic-layer naming.** If a cluster&#x27;s *name* is a bare layer word</span>
+<span class="dl add">+  instead of a phrase describing what the change does, you have probably missed the point of the</span>
+<span class="dl add">+  change — re-read the diff. (Checkable from the names alone, which is the whole point.)</span>
+<span class="dl add">+- **All-emergent is fine.** A revert or consolidation has no forward-feature clusters and every</span>
+<span class="dl add">+  cluster is change-specific — that is correct, not a gap. Too few tags is never the problem;</span>
+<span class="dl add">+  generic names are.</span>
+<span class="dl add">+- **The headline change is often the untagged one.** The cluster that is the *actual point* of the</span>
+<span class="dl add">+  PR frequently fits no seed word and stays change-specific, while the peripheral clusters (a</span>
+<span class="dl add">+  migration, test scaffolding, the spec record) carry seed tags. That asymmetry is expected.</span>
+<span class="dl add">+- **Cluster tests by the intent they serve.** When test files back two genuinely different</span>
+<span class="dl add">+  production changes, split them into separate clusters named for each; when splitting would force a</span>
+<span class="dl add">+  generic name, keep them one. (&quot;Too few tags is never the problem&quot; governs the seed tags — not how</span>
+<span class="dl add">+  finely you cluster by intent.)</span>
+<span class="dl add">+- **Each cluster carries its reasoning** — one short paragraph on *why* it exists — sitting **above</span>
+<span class="dl add">+  the actual hunks** it draws on, in `&lt;details&gt;` (the `html-doc` Visual-evidence rule: the claim in</span>
+<span class="dl add">+  prose, the real diff one expand below it, escaped). Those hunks **may overlap** another cluster&#x27;s</span>
+<span class="dl add">+  — two change-types can live on one physical line. Intents partition cleanly; hunks need not.</span>
+<span class="dl add">+</span>
+<span class="dl add">+If the diff has a `specs/` catalog (or the project&#x27;s documented spec location), read the relevant</span>
+<span class="dl add">+spec/concern for the *intent* and link it. If it has none, the review works identically without the</span>
+<span class="dl add">+`spec` facet — **never require one.**</span>
+<span class="dl add">+</span>
+<span class="dl add">+## 4. Summarize — a summary that moves with the filter</span>
+<span class="dl add">+</span>
+<span class="dl add">+A **summary block**, directly under the filter controls, that recomputes as facets and change-types</span>
+<span class="dl add">+are toggled. It reflects the **currently visible** (filtered) changes: files touched (each distinct</span>
+<span class="dl add">+file counted once), ± lines, and per-change-type line counts over the hunks still shown. Render the</span>
+<span class="dl add">+per-change-type line distribution as a **single-series bar chart** — inline SVG, no chart library.</span>
+<span class="dl add">+**Load the `dataviz` skill first** for palette and light/dark-safe form; a review&#x27;s line</span>
+<span class="dl add">+distribution *is* a distribution. **Pin the chart&#x27;s axis to the full-diff maximum** so toggling a</span>
+<span class="dl add">+filter shortens bars in place without rescaling the axis — the bars stay comparable to the whole</span>
+<span class="dl add">+change rather than jumping.</span>
+<span class="dl add">+</span>
+<span class="dl add">+## 5. Build the surface (per `html-doc`)</span>
+<span class="dl add">+</span>
+<span class="dl add">+One self-contained, theme-aware file:</span>
+<span class="dl add">+</span>
+<span class="dl add">+- **Layout order:** the filter controls sit at the **top** — they govern the whole document — then</span>
+<span class="dl add">+  the summary block and its chart, then the change-type clusters. Filters are the control surface;</span>
+<span class="dl add">+  everything below reflects the current selection.</span>
+<span class="dl add">+- **Two filter axes** — facet and change-type — as combinable checkbox rows with **live counts**.</span>
+<span class="dl add">+  The full diff renders filtered by the active selection.</span>
+<span class="dl add">+- **Change-type clusters are the primary structure**; the facet filter narrows within and across</span>
+<span class="dl add">+  them. Each cluster is its reasoning paragraph + the hunks one expand away.</span>
+<span class="dl add">+- Hunks in `&lt;pre&gt;` with add/del styling, every interpolated line **escaped** (`&lt;`, `&gt;`, `&amp;`) so a</span>
+<span class="dl add">+  diff can&#x27;t break the layout or inject markup.</span>
+<span class="dl add">+- **Selection state in small vanilla JS.** The document must be **fully readable with JS disabled**</span>
+<span class="dl add">+  — clusters, reasoning, and diffs are all present; filtering is the enhancement, never the gate.</span>
+<span class="dl add">+</span>
+<span class="dl add">+## 6. Deliver</span>
+<span class="dl add">+</span>
+<span class="dl add">+Write the `.html` to a sensible path (the user&#x27;s scratchpad unless they name a location) and hand</span>
+<span class="dl add">+it back with the file tools; offer to publish it as an Artifact for a shareable link. Give a</span>
+<span class="dl add">+one-or-two-line summary of what the change *is* — don&#x27;t restate the review in chat; the file is the</span>
+<span class="dl add">+deliverable.</span>
+<span class="dl add">+</span>
+<span class="dl add">+## Notes</span>
+<span class="dl add">+</span>
+<span class="dl add">+- **Read-only** is a hard guarantee: this command resolves a diff and writes exactly one output</span>
+<span class="dl add">+  file. It never commits, pushes, edits a PR/issue, or changes the branch it reviews.</span>
+<span class="dl add">+- Project-agnostic: the tracker, the default branch, the spec location, and any path overrides come</span>
+<span class="dl add">+  from the target project&#x27;s `CLAUDE.md`, never hardcoded here.</span>
+<span class="dl add">+- **Known gap — net-diff blindness:** the review reads the net `base...head` diff, so on a</span>
+<span class="dl add">+  build-then-revert branch, work the PR body centers on can net to zero and not appear. When the PR</span>
+<span class="dl add">+  body describes a path as *changed by this PR* but that path is absent from the net diff, **flag</span>
+<span class="dl add">+  it**. A path the body merely *references* for context — an unchanged file, a line number in</span>
+<span class="dl add">+  existing code — is not a gap; don&#x27;t flag those.</span>
+<span class="dl add">+- **The two axes are lenses, not a partition.** Facet and change-type can overlap — spec content</span>
+<span class="dl add">+  shows up under the `spec` facet *and* a `process/convention` change-type, and on a small PR the two</span>
+<span class="dl add">+  axes can nearly coincide. That&#x27;s fine: each axis is a way to slice the same diff, not a claim that</span>
+<span class="dl add">+  they carve disjoint sets.</span>
+<span class="dl add">+- Complements `report` (facts *about* heterogeneous sources) and `decide` (the forks *between*</span>
+<span class="dl add">+  things). A branch review is the third shape: one diff, read and organized. If the change hides a</span>
+<span class="dl add">+  decision that still needs making, point at `decide`.</span></pre></details></div>
+    </div>
+  </section>
+
+  <section class="cluster" data-cluster="promote-to-third-command">
+    <div class="chead">
+      <h2>promote-to-third-command</h2><span class="ctag">api-surface</span>
+      <span class="clines" data-cluster-lines>25 lines</span>
+    </div>
+    <p class="why">Makes <code>branch-review</code> a first-class sibling rather than a loose file. The shared <code>html-doc</code> contract is widened from &ldquo;two commands&rdquo; to three, and the plugin&rsquo;s public surface — its <code>plugin.json</code> description and <code>0.2.0&nbsp;&rarr;&nbsp;0.3.0</code> version, and the marketplace entry&rsquo;s description and tags — is updated to announce it. No behaviour here; this is registration.</p>
+    <div class="files">
+<div class="file" data-facet="code" data-add="9" data-del="8"><div class="fhead"><span class="fpath">plugins/rich-html/skills/html-doc/SKILL.md</span><span class="fbadge f-code">code</span><span class="fstat"><span class="plus">+9</span> <span class="minus">&minus;8</span></span></div><details><summary>diff</summary><pre class="diff"><span class="dl meta">@@ -1,12 +1,13 @@</span>
+<span class="dl ctx"> ---</span>
+<span class="dl ctx"> name: html-doc</span>
+<span class="dl del">-description: The shared authoring contract for the rich-html plugin&#x27;s document tools (report and decide) — how to build a single self-contained, theme-aware, interactive HTML file that renders anywhere (browser or Claude Artifact under a strict CSP) and uses progressive disclosure / expandable context to keep a dense document readable. Load this when generating a rich-html report or decision surface so the two feel like one system. This is the single source of truth those commands build on — prefer it over any inline restatement.</span>
+<span class="dl add">+description: The shared authoring contract for the rich-html plugin&#x27;s document tools (report, decide, and branch-review) — how to build a single self-contained, theme-aware, interactive HTML file that renders anywhere (browser or Claude Artifact under a strict CSP) and uses progressive disclosure / expandable context to keep a dense document readable. Load this when generating a rich-html report, decision surface, or branch review so they feel like one system. This is the single source of truth those commands build on — prefer it over any inline restatement.</span>
+<span class="dl ctx"> ---</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> # Authoring a self-contained interactive HTML document</span>
+<span class="dl ctx"> </span>
+<span class="dl del">-`report` and `decide` both emit **one HTML file** that a person opens and interacts with. This</span>
+<span class="dl del">-skill is the format contract they share so their output feels like one system. It is *not* about</span>
+<span class="dl add">+`report`, `decide`, and `branch-review` each emit **one HTML file** that a person opens and</span>
+<span class="dl add">+interacts with. This skill is the format contract they share so their output feels like one system.</span>
+<span class="dl add">+It is *not* about</span>
+<span class="dl ctx"> what to put in the document (each command owns its content) — only *how the file is built*.</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> The three non-obvious constraints below are the whole point of the skill; a capable model will get</span>
+<span class="dl meta">@@ -64,7 +65,7 @@ Every piece of evidence is **text plus, when it helps, a supporting artifact —</span>
+<span class="dl ctx"> alone.** The prose states the claim or the fork and carries the reader; a code snippet, chart,</span>
+<span class="dl ctx"> diagram, or sketch sits *under* it, inside the expandable context, as substantiation the reader can</span>
+<span class="dl ctx"> check. So the question is never &quot;text or visual&quot; — it is whether a supporting artifact earns its</span>
+<span class="dl del">-place beside the text. Both commands draw from the same small vocabulary of supporting forms so</span>
+<span class="dl add">+place beside the text. All three commands draw from the same small vocabulary of supporting forms so</span>
+<span class="dl ctx"> their output stays one system; each command owns *when* a piece of its content warrants one, this</span>
+<span class="dl ctx"> skill owns *how* each is built (and every form here is inline and CSP-safe — SVG and divs inline,</span>
+<span class="dl ctx"> images as `data:` URIs):</span>
+<span class="dl meta">@@ -80,7 +81,7 @@ images as `data:` URIs):</span>
+<span class="dl ctx">   than hand-rolling a bar — a report synthesizing history or logs is often *itself* a trend, so this</span>
+<span class="dl ctx">   is the form `report` reaches for most.</span>
+<span class="dl ctx"> - **UI appearance → show it.** Embed the screenshot as a `data:` URI rather than describing how a</span>
+<span class="dl del">-  screen looks. **Read-only caveat:** both commands only inspect — use an image the source already</span>
+<span class="dl add">+  screen looks. **Read-only caveat:** all three commands only inspect — use an image the source already</span>
+<span class="dl ctx">   has (a PR, an issue, a thread); never spin up the app just to capture one. With no existing image,</span>
+<span class="dl ctx">   fall back to a layout sketch or plain description.</span>
+<span class="dl ctx"> - **Page layout → rough it in divs+CSS.** A few styled divs sketching each option&#x27;s arrangement,</span>
+<span class="dl meta">@@ -107,7 +108,7 @@ is off.</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> ## The house skeleton</span>
+<span class="dl ctx"> </span>
+<span class="dl del">-Both commands start from the same shape — a fixed header with the theme toggle, then content:</span>
+<span class="dl add">+All three commands start from the same shape — a fixed header with the theme toggle, then content:</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> ```html</span>
+<span class="dl ctx"> &lt;!doctype html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;</span>
+<span class="dl meta">@@ -131,7 +132,7 @@ Both commands start from the same shape — a fixed header with the theme toggle</span>
+<span class="dl ctx"> ## Delivering the file</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> - Write the `.html` to disk and hand it back with the file tools (or publish as an Artifact when</span>
+<span class="dl del">-  the user wants a shareable link — Artifacts render this format natively). Both commands say where</span>
+<span class="dl del">-  their output lands.</span>
+<span class="dl add">+  the user wants a shareable link — Artifacts render this format natively). Each command says where</span>
+<span class="dl add">+  its output lands.</span>
+<span class="dl ctx"> - One document = one file. If a command produces a companion machine payload (e.g. `decide`&#x27;s</span>
+<span class="dl ctx">   emitted prompt), that is separate from this HTML, not embedded chrome inside it.</span></pre></details></div>
+<div class="file" data-facet="code" data-add="2" data-del="2"><div class="fhead"><span class="fpath">plugins/rich-html/.claude-plugin/plugin.json</span><span class="fbadge f-code">code</span><span class="fstat"><span class="plus">+2</span> <span class="minus">&minus;2</span></span></div><details><summary>diff</summary><pre class="diff"><span class="dl meta">@@ -1,7 +1,7 @@</span>
+<span class="dl ctx"> {</span>
+<span class="dl ctx">   &quot;name&quot;: &quot;rich-html&quot;,</span>
+<span class="dl del">-  &quot;description&quot;: &quot;Turn your work into rich, self-contained interactive HTML deliverables. report synthesizes heterogeneous sources (docs, trackers, PRs, git, code) into a readable document; decide aggregates pending decisions into an expandable-context surface that emits one prompt to execute them. General-purpose — no spec or tracker coupling.&quot;,</span>
+<span class="dl del">-  &quot;version&quot;: &quot;0.2.0&quot;,</span>
+<span class="dl add">+  &quot;description&quot;: &quot;Turn your work into rich, self-contained interactive HTML deliverables. report synthesizes heterogeneous sources (docs, trackers, PRs, git, code) into a readable document; decide aggregates pending decisions into an expandable-context surface that emits one prompt to execute them; branch-review turns a branch or PR diff into a filterable review, grouped by change-type. General-purpose — no spec or tracker coupling.&quot;,</span>
+<span class="dl add">+  &quot;version&quot;: &quot;0.3.0&quot;,</span>
+<span class="dl ctx">   &quot;author&quot;: {</span>
+<span class="dl ctx">     &quot;name&quot;: &quot;Moacyr Ricardo&quot;,</span>
+<span class="dl ctx">     &quot;email&quot;: &quot;moacyr.ricardo@gmail.com&quot;</span></pre></details></div>
+<div class="file" data-facet="code" data-add="2" data-del="2"><div class="fhead"><span class="fpath">.claude-plugin/marketplace.json</span><span class="fbadge f-code">code</span><span class="fstat"><span class="plus">+2</span> <span class="minus">&minus;2</span></span></div><details><summary>diff</summary><pre class="diff"><span class="dl meta">@@ -30,9 +30,9 @@</span>
+<span class="dl ctx">     {</span>
+<span class="dl ctx">       &quot;name&quot;: &quot;rich-html&quot;,</span>
+<span class="dl ctx">       &quot;source&quot;: &quot;./plugins/rich-html&quot;,</span>
+<span class="dl del">-      &quot;description&quot;: &quot;Turn your work into rich, self-contained interactive HTML deliverables: report synthesizes heterogeneous sources into a readable document; decide aggregates pending decisions into an expandable-context surface that emits one prompt to execute them. General-purpose, no spec/tracker coupling.&quot;,</span>
+<span class="dl add">+      &quot;description&quot;: &quot;Turn your work into rich, self-contained interactive HTML deliverables: report synthesizes heterogeneous sources into a readable document; decide aggregates pending decisions into an expandable-context surface that emits one prompt to execute them; branch-review turns a branch or PR diff into a filterable review grouped by change-type. General-purpose, no spec/tracker coupling.&quot;,</span>
+<span class="dl ctx">       &quot;category&quot;: &quot;productivity&quot;,</span>
+<span class="dl del">-      &quot;tags&quot;: [&quot;html&quot;, &quot;report&quot;, &quot;decisions&quot;, &quot;synthesis&quot;, &quot;interactive&quot;]</span>
+<span class="dl add">+      &quot;tags&quot;: [&quot;html&quot;, &quot;report&quot;, &quot;decisions&quot;, &quot;branch-review&quot;, &quot;diff&quot;, &quot;synthesis&quot;, &quot;interactive&quot;]</span>
+<span class="dl ctx">     },</span>
+<span class="dl ctx">     {</span>
+<span class="dl ctx">       &quot;name&quot;: &quot;prototype&quot;,</span></pre></details></div>
+    </div>
+  </section>
+
+  <section class="cluster" data-cluster="docs-propagation">
+    <div class="chead">
+      <h2>docs-propagation</h2><span class="ctag">docs</span>
+      <span class="clines" data-cluster-lines>158 lines</span>
+    </div>
+    <p class="why">Weaves the third command through every human-facing page so the docs don&rsquo;t lie about a two-command plugin. The guide gains a three-track diagram, a third tool card, a step group, and a changelog entry; the landing page and README get the third command in their tables and blurbs. Pure documentation — mechanical, but load-bearing for anyone discovering the feature.</p>
+    <div class="files">
+<div class="file" data-facet="docs" data-add="8" data-del="6"><div class="fhead"><span class="fpath">README.md</span><span class="fbadge f-docs">docs</span><span class="fstat"><span class="plus">+8</span> <span class="minus">&minus;6</span></span></div><details><summary>diff</summary><pre class="diff"><span class="dl meta">@@ -17,7 +17,7 @@ This repo is itself a **plugin marketplace** (`moacyr-skills`). Each plugin live</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> # 2. Install the plugins</span>
+<span class="dl ctx"> /plugin install spec-workflow@moacyr-skills   # pulls live-verify automatically (it depends on it)</span>
+<span class="dl del">-/plugin install rich-html@moacyr-skills       # report + decide (interactive HTML deliverables)</span>
+<span class="dl add">+/plugin install rich-html@moacyr-skills       # report, decide, branch-review (interactive HTML deliverables)</span>
+<span class="dl ctx"> /plugin install prototype@moacyr-skills       # mockup — clickable HTML mocks in the product&#x27;s own look</span>
+<span class="dl ctx"> /plugin install utils@moacyr-skills           # standalone helpers (currently: stacked-merge)</span>
+<span class="dl ctx"> # (live-verify installs with spec-workflow; grab it alone if that&#x27;s all you want:</span>
+<span class="dl meta">@@ -93,16 +93,18 @@ Turn your work into rich, **self-contained interactive HTML** files. No spec or</span>
+<span class="dl ctx"> usable on any project; the tools just *point at* whatever sources are around.</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> &gt; 📖 **Guide:** [`docs/rich-html-guide.md`](./docs/rich-html-guide.md) — the walkthrough, with the</span>
+<span class="dl del">-&gt; two-track diagram and the `html-doc` format rules in the [rich HTML version](./docs/rich-html-guide.html).</span>
+<span class="dl add">+&gt; three-track diagram and the `html-doc` format rules in the [rich HTML version](./docs/rich-html-guide.html).</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> | Command | What it does |</span>
+<span class="dl ctx"> | :------ | :----------- |</span>
+<span class="dl ctx"> | `report` | Synthesize a readable document from heterogeneous sources (docs, trackers, PRs, git, code, logs) after asking what angle/audience you need. Cross-checks sources; conclusion up top, evidence one expand away. **Read-only.** |</span>
+<span class="dl ctx"> | `decide` | Aggregate the decisions waiting on you (concern options, PR-review forks, &quot;needs decision&quot; issues, autopilot escalations) into one surface where each expands in place to its real context — then emit **one prompt** to hand back to an agent to execute them all. |</span>
+<span class="dl add">+| `branch-review` | Turn a branch or PR diff into a filterable HTML review: the full diff sliced by facet (code/tests/docs/spec) and regrouped by change-type — *why* each cluster exists, named by intent — with a summary that recomputes as you filter. **Read-only.** |</span>
+<span class="dl ctx"> </span>
+<span class="dl del">-Both build on the **`html-doc`** skill, the shared format contract (self-containment / Artifact</span>
+<span class="dl del">-CSP, theme-awareness, the expandable-context pattern) so the two outputs feel like one system.</span>
+<span class="dl del">-`report` is for facts *about* things; `decide` is for the forks *between* them.</span>
+<span class="dl add">+All three build on the **`html-doc`** skill, the shared format contract (self-containment / Artifact</span>
+<span class="dl add">+CSP, theme-awareness, the expandable-context pattern) so the outputs feel like one system.</span>
+<span class="dl add">+`report` is for facts *about* things; `decide` is for the forks *between* them; `branch-review` is</span>
+<span class="dl add">+for what a change *does*.</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> ### `prototype` — clickable mocks in the product&#x27;s own look</span>
+<span class="dl ctx"> </span>
+<span class="dl meta">@@ -193,7 +195,7 @@ auto-accepting them. Two ways to restore the hands-off behavior:</span>
+<span class="dl ctx"> │   │   └── agents/               # test-flow-headless</span>
+<span class="dl ctx"> │   ├── rich-html/               # interactive HTML deliverables (no spec coupling)</span>
+<span class="dl ctx"> │   │   ├── .claude-plugin/plugin.json</span>
+<span class="dl del">-│   │   ├── commands/             # report, decide</span>
+<span class="dl add">+│   │   ├── commands/             # report, decide, branch-review</span>
+<span class="dl ctx"> │   │   └── skills/               # html-doc (shared format contract)</span>
+<span class="dl ctx"> │   ├── prototype/              # clickable HTML mocks in the product&#x27;s own look</span>
+<span class="dl ctx"> │   │   ├── .claude-plugin/plugin.json</span></pre></details></div>
+<div class="file" data-facet="docs" data-add="3" data-del="3"><div class="fhead"><span class="fpath">docs/index.html</span><span class="fbadge f-docs">docs</span><span class="fstat"><span class="plus">+3</span> <span class="minus">&minus;3</span></span></div><details><summary>diff</summary><pre class="diff"><span class="dl meta">@@ -295,7 +295,7 @@ &lt;h2 class=&quot;reveal&quot;&gt;Add the marketplace, install a plugin, reload&lt;/h2&gt;</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> &lt;span class=&quot;c&quot;&gt;# 2 · install what you want&lt;/span&gt;</span>
+<span class="dl ctx"> &lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;cmd&quot;&gt;plugin install&lt;/span&gt; spec-workflow@moacyr-skills   &lt;span class=&quot;c&quot;&gt;# pulls live-verify with it&lt;/span&gt;</span>
+<span class="dl del">-&lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;cmd&quot;&gt;plugin install&lt;/span&gt; rich-html@moacyr-skills       &lt;span class=&quot;c&quot;&gt;# report + decide&lt;/span&gt;</span>
+<span class="dl add">+&lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;cmd&quot;&gt;plugin install&lt;/span&gt; rich-html@moacyr-skills       &lt;span class=&quot;c&quot;&gt;# report, decide, branch-review&lt;/span&gt;</span>
+<span class="dl ctx"> &lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;cmd&quot;&gt;plugin install&lt;/span&gt; prototype@moacyr-skills       &lt;span class=&quot;c&quot;&gt;# clickable mockups&lt;/span&gt;</span>
+<span class="dl ctx"> &lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;cmd&quot;&gt;plugin install&lt;/span&gt; utils@moacyr-skills           &lt;span class=&quot;c&quot;&gt;# standalone helpers&lt;/span&gt;</span>
+<span class="dl ctx"> </span>
+<span class="dl meta">@@ -320,7 +320,7 @@ &lt;h2 class=&quot;reveal&quot;&gt;Five plugins, one marketplace&lt;/h2&gt;</span>
+<span class="dl ctx">       &lt;a class=&quot;plug reveal&quot; href=&quot;./rich-html-guide.html&quot;&gt;</span>
+<span class="dl ctx">         &lt;div class=&quot;nm&quot;&gt;rich-html&lt;/div&gt;</span>
+<span class="dl ctx">         &lt;div class=&quot;dep&quot;&gt;standalone&lt;/div&gt;</span>
+<span class="dl del">-        &lt;p&gt;Turn your work into self-contained interactive HTML. &lt;code&gt;report&lt;/code&gt; synthesizes heterogeneous sources into a readable document; &lt;code&gt;decide&lt;/code&gt; aggregates pending decisions into a surface that emits one prompt to execute them.&lt;/p&gt;</span>
+<span class="dl add">+        &lt;p&gt;Turn your work into self-contained interactive HTML. &lt;code&gt;report&lt;/code&gt; synthesizes heterogeneous sources into a readable document; &lt;code&gt;decide&lt;/code&gt; aggregates pending decisions into a surface that emits one prompt; &lt;code&gt;branch-review&lt;/code&gt; turns a branch or PR diff into a filterable review, grouped by change-type.&lt;/p&gt;</span>
+<span class="dl ctx">         &lt;span class=&quot;more&quot;&gt;Read the guide&lt;/span&gt;</span>
+<span class="dl ctx">       &lt;/a&gt;</span>
+<span class="dl ctx">       &lt;a class=&quot;plug reveal&quot; href=&quot;./prototype-guide.html&quot;&gt;</span>
+<span class="dl meta">@@ -359,7 +359,7 @@ &lt;h2 class=&quot;reveal&quot;&gt;New? Read a guide first&lt;/h2&gt;</span>
+<span class="dl ctx">       &lt;a class=&quot;guide reveal&quot; href=&quot;./rich-html-guide.html&quot;&gt;</span>
+<span class="dl ctx">         &lt;div class=&quot;k&quot;&gt;guide&lt;/div&gt;</span>
+<span class="dl ctx">         &lt;div class=&quot;t&quot;&gt;rich-html&lt;/div&gt;</span>
+<span class="dl del">-        &lt;div class=&quot;d&quot;&gt;Two tools, one system: &lt;code&gt;report&lt;/code&gt; to read, &lt;code&gt;decide&lt;/code&gt; to act on — the &lt;code&gt;html-doc&lt;/code&gt; format rules.&lt;/div&gt;</span>
+<span class="dl add">+        &lt;div class=&quot;d&quot;&gt;Three tools, one system: &lt;code&gt;report&lt;/code&gt; to read, &lt;code&gt;decide&lt;/code&gt; to act on, &lt;code&gt;branch-review&lt;/code&gt; to review — the &lt;code&gt;html-doc&lt;/code&gt; format rules.&lt;/div&gt;</span>
+<span class="dl ctx">         &lt;div class=&quot;md&quot;&gt;also: rich-html-guide.md&lt;/div&gt;</span>
+<span class="dl ctx">       &lt;/a&gt;</span>
+<span class="dl ctx">       &lt;a class=&quot;guide reveal&quot; href=&quot;./prototype-guide.html&quot;&gt;</span></pre></details></div>
+<div class="file" data-facet="docs" data-add="50" data-del="18"><div class="fhead"><span class="fpath">docs/rich-html-guide.md</span><span class="fbadge f-docs">docs</span><span class="fstat"><span class="plus">+50</span> <span class="minus">&minus;18</span></span></div><details><summary>diff</summary><pre class="diff"><span class="dl meta">@@ -1,16 +1,17 @@</span>
+<span class="dl ctx"> # rich-html — turn your work into interactive HTML deliverables</span>
+<span class="dl ctx"> </span>
+<span class="dl del">-A short guide to the `rich-html` plugin and its two commands, `report` and `decide`. Both take the</span>
+<span class="dl del">-scattered inputs of your work and turn them into a single **self-contained, interactive HTML file** —</span>
+<span class="dl del">-one to *read*, one to *act on*.</span>
+<span class="dl add">+A short guide to the `rich-html` plugin and its three commands, `report`, `decide`, and</span>
+<span class="dl add">+`branch-review`. Each takes the scattered inputs of your work and turns them into a single</span>
+<span class="dl add">+**self-contained, interactive HTML file** — to *read*, to *act on*, or to *review*.</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> &gt; 📖 **Prefer the visual version?** Open [`rich-html-guide.html`](./rich-html-guide.html) in a</span>
+<span class="dl ctx"> &gt; browser for the same guide with the two-track diagram and nicer formatting. This Markdown page is</span>
+<span class="dl ctx"> &gt; the quick, GitHub-readable companion.</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> ```</span>
+<span class="dl del">-sources    → report → a readable document</span>
+<span class="dl del">-decisions  → decide → an expandable surface + one prompt</span>
+<span class="dl add">+sources    → report        → a readable document</span>
+<span class="dl add">+decisions  → decide        → an expandable surface + one prompt</span>
+<span class="dl add">+a diff     → branch-review → a filterable review, grouped by change-type</span>
+<span class="dl ctx"> ```</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> ## Install</span>
+<span class="dl meta">@@ -26,25 +27,27 @@ decisions  → decide → an expandable surface + one prompt</span>
+<span class="dl ctx"> /reload-plugins</span>
+<span class="dl ctx"> ```</span>
+<span class="dl ctx"> </span>
+<span class="dl del">-Once installed the commands are namespaced: `/rich-html:report`, `/rich-html:decide`.</span>
+<span class="dl add">+Once installed the commands are namespaced: `/rich-html:report`, `/rich-html:decide`,</span>
+<span class="dl add">+`/rich-html:branch-review`.</span>
+<span class="dl ctx"> </span>
+<span class="dl del">-## Two tools, one system</span>
+<span class="dl add">+## Three tools, one system</span>
+<span class="dl ctx"> </span>
+<span class="dl del">-Both commands produce a **document about your work** — not the product itself (that&#x27;s what the</span>
+<span class="dl add">+Every command produces a **document about your work** — not the product itself (that&#x27;s what the</span>
+<span class="dl ctx"> `prototype` plugin&#x27;s `mockup` is for). They share a format contract, the `html-doc` skill, so the</span>
+<span class="dl del">-two outputs feel like one system.</span>
+<span class="dl add">+outputs feel like one system.</span>
+<span class="dl ctx"> </span>
+<span class="dl del">-| | `report` | `decide` |</span>
+<span class="dl del">-| :-- | :------- | :------- |</span>
+<span class="dl del">-| **Turns** | heterogeneous sources | pending decisions |</span>
+<span class="dl del">-| **Into** | a readable document | an interactive decision surface |</span>
+<span class="dl del">-| **You** | read it | choose per decision, then run the emitted prompt |</span>
+<span class="dl del">-| **For** | facts *about* things | the forks *between* things |</span>
+<span class="dl add">+| | `report` | `decide` | `branch-review` |</span>
+<span class="dl add">+| :-- | :------- | :------- | :-------------- |</span>
+<span class="dl add">+| **Turns** | heterogeneous sources | pending decisions | a branch/PR diff |</span>
+<span class="dl add">+| **Into** | a readable document | an interactive decision surface | a filterable diff review |</span>
+<span class="dl add">+| **You** | read it | choose per decision, then run the emitted prompt | filter &amp; read |</span>
+<span class="dl add">+| **For** | facts *about* things | the forks *between* things | what a change *does*, and why |</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> ## The shared format — the `html-doc` skill</span>
+<span class="dl ctx"> </span>
+<span class="dl del">-`report` and `decide` both build on `html-doc`, which encodes the non-obvious rules that make</span>
+<span class="dl del">-one HTML file work everywhere, stay readable, and carry evidence in the form that reads fastest:</span>
+<span class="dl add">+`report`, `decide`, and `branch-review` all build on `html-doc`, which encodes the non-obvious</span>
+<span class="dl add">+rules that make one HTML file work everywhere, stay readable, and carry evidence in the form that</span>
+<span class="dl add">+reads fastest:</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> - **Self-contained** — inline CSS/JS, no network, assets as `data:` URIs. Renders identically as a</span>
+<span class="dl ctx">   local file, an email attachment, or a Claude Artifact (which enforces a strict CSP).</span>
+<span class="dl meta">@@ -93,16 +96,45 @@ agent can execute.</span>
+<span class="dl ctx"> Guardrail: `decide` always renders the rich surface — it **never** degrades into chat Q&amp;A. The</span>
+<span class="dl ctx"> expandable-context format *is* the value.</span>
+<span class="dl ctx"> </span>
+<span class="dl add">+## `branch-review` — a diff → a filterable review</span>
+<span class="dl add">+</span>
+<span class="dl add">+Read-only. It never touches the branch it reviews.</span>
+<span class="dl add">+</span>
+<span class="dl add">+1. **Resolve the diff** — from a PR number/URL, a `base...head` range, a branch name, or bare (the</span>
+<span class="dl add">+   current branch vs. its merge-base). The exact base and totals are pinned in the header, so you</span>
+<span class="dl add">+   know precisely what is under review.</span>
+<span class="dl add">+2. **Two filter axes** — every change is tagged by **facet** (`code / tests / docs / spec`) and</span>
+<span class="dl add">+   clustered by **change-type**: *why* each cluster of changes exists, **named by its intent**</span>
+<span class="dl add">+   (`jul2026-sync-replay`, not a bare `service`). The full diff slices both ways, and a summary —</span>
+<span class="dl add">+   files, ± lines, a `dataviz` bar chart of the line distribution — recomputes as you filter.</span>
+<span class="dl add">+3. **Reasoning over hunks** — each cluster leads with one paragraph on *why* it exists; the real</span>
+<span class="dl add">+   diff is one expand below it.</span>
+<span class="dl add">+</span>
+<span class="dl add">+```</span>
+<span class="dl add">+/rich-html:branch-review #662</span>
+<span class="dl add">+```</span>
+<span class="dl add">+</span>
+<span class="dl ctx"> ## When to use which</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> - Reaching for the **state of something**, a synthesis, a briefing → **`report`**.</span>
+<span class="dl ctx"> - Facing a pile of **unmade choices** and want to clear them in one pass → **`decide`**.</span>
+<span class="dl add">+- Wanting to **understand or review a diff** — what a branch or PR actually changed, and why →</span>
+<span class="dl add">+  **`branch-review`**.</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> If `report` runs into a decision that needs making, it points at `decide`; if `decide` finds</span>
+<span class="dl del">-reportable state rather than a fork, it points back at `report`.</span>
+<span class="dl add">+reportable state rather than a fork, it points back at `report`; and if a change hides an unmade</span>
+<span class="dl add">+decision, `branch-review` points at `decide` too.</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> ## Changelog</span>
+<span class="dl ctx"> </span>
+<span class="dl add">+- **2026-08-21 · `branch-review` — a third command (plugin `0.3.0`).** Turns a branch or PR diff</span>
+<span class="dl add">+  into a filterable HTML review: the full diff sliced by **facet** (`code / tests / docs / spec`)</span>
+<span class="dl add">+  and regrouped by **change-type**, each cluster **named by its intent** rather than a generic</span>
+<span class="dl add">+  layer. The change-type rule was hardened by an adversarial redteam across three real PRs — the</span>
+<span class="dl add">+  original seed-vs-emergent taxonomy was undecidable when a change fit both, so it became</span>
+<span class="dl add">+  name-by-intent with *generic-layer naming* as the checkable smell. Built from specs</span>
+<span class="dl add">+  [`001`](../specs/001-concern-branch-review.md) (concern) and</span>
+<span class="dl add">+  [`002`](../specs/002-doing-branch-review.md) (spec).</span>
+<span class="dl ctx"> - **2026-08-20 · Visual evidence — a fourth `html-doc` rule.** Evidence can now be carried in the</span>
+<span class="dl ctx">   form that reads fastest — a code snippet, an inline-SVG flow diagram, a chart (via the `dataviz`</span>
+<span class="dl ctx">   skill), an existing screenshot, or a schematic divs+CSS layout sketch — always *added under* the</span></pre></details></div>
+<div class="file" data-facet="docs" data-add="58" data-del="12"><div class="fhead"><span class="fpath">docs/rich-html-guide.html</span><span class="fbadge f-docs">docs</span><span class="fstat"><span class="plus">+58</span> <span class="minus">&minus;12</span></span></div><details><summary>diff</summary><pre class="diff"><span class="dl meta">@@ -92,14 +92,14 @@</span>
+<span class="dl ctx">   .term .cmd { color: var(--ink); font-weight: 600; }</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx">   /* two-tool table cards */</span>
+<span class="dl del">-  .defs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }</span>
+<span class="dl add">+  .defs { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 8px; }</span>
+<span class="dl ctx">   .def { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; }</span>
+<span class="dl ctx">   .def .tag { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 8px; }</span>
+<span class="dl ctx">   .def h3 { margin-bottom: 8px; }</span>
+<span class="dl ctx">   .def p { margin: 0 0 10px; color: var(--ink-soft); font-size: 15.5px; }</span>
+<span class="dl ctx">   .def .meta { font-family:var(--mono); font-size:12px; color:var(--muted); }</span>
+<span class="dl ctx">   .def .meta b { color: var(--ink-soft); font-weight:600; }</span>
+<span class="dl del">-  @media (max-width: 620px) { .defs { grid-template-columns: 1fr; } }</span>
+<span class="dl add">+  @media (max-width: 780px) { .defs { grid-template-columns: 1fr; } }</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx">   /* two-track diagram */</span>
+<span class="dl ctx">   .tracks { display:flex; flex-direction:column; gap:14px; margin-top:6px; }</span>
+<span class="dl meta">@@ -181,11 +181,12 @@</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx">   &lt;div class=&quot;hero&quot;&gt;</span>
+<span class="dl ctx">     &lt;p class=&quot;eyebrow reveal&quot;&gt;Claude Code · interactive HTML deliverables&lt;/p&gt;</span>
+<span class="dl del">-    &lt;h1 class=&quot;reveal&quot;&gt;Turn your work into &lt;span class=&quot;grad&quot;&gt;documents you can read and act on.&lt;/span&gt;&lt;/h1&gt;</span>
+<span class="dl del">-    &lt;p class=&quot;lede reveal&quot;&gt;Two commands that take the scattered inputs of your work and produce one self-contained, interactive HTML file. &lt;code&gt;report&lt;/code&gt; synthesizes sources into something to read; &lt;code&gt;decide&lt;/code&gt; gathers pending choices into something to act on.&lt;/p&gt;</span>
+<span class="dl add">+    &lt;h1 class=&quot;reveal&quot;&gt;Turn your work into &lt;span class=&quot;grad&quot;&gt;documents you can read, act on, and review.&lt;/span&gt;&lt;/h1&gt;</span>
+<span class="dl add">+    &lt;p class=&quot;lede reveal&quot;&gt;Three commands that take the scattered inputs of your work and produce one self-contained, interactive HTML file. &lt;code&gt;report&lt;/code&gt; synthesizes sources to read; &lt;code&gt;decide&lt;/code&gt; gathers pending choices to act on; &lt;code&gt;branch-review&lt;/code&gt; turns a diff into a filterable review.&lt;/p&gt;</span>
+<span class="dl ctx">     &lt;div class=&quot;flowline reveal&quot;&gt;</span>
+<span class="dl ctx">       &lt;div class=&quot;fl&quot;&gt;&lt;b&gt;sources&lt;/b&gt;&lt;span class=&quot;arw&quot;&gt;→&lt;/span&gt;&lt;b&gt;report&lt;/b&gt;&lt;span class=&quot;arw&quot;&gt;→&lt;/span&gt;&lt;b&gt;a readable document&lt;/b&gt;&lt;/div&gt;</span>
+<span class="dl ctx">       &lt;div class=&quot;fl&quot;&gt;&lt;b&gt;decisions&lt;/b&gt;&lt;span class=&quot;arw&quot;&gt;→&lt;/span&gt;&lt;b&gt;decide&lt;/b&gt;&lt;span class=&quot;arw&quot;&gt;→&lt;/span&gt;&lt;b&gt;an expandable surface + one prompt&lt;/b&gt;&lt;/div&gt;</span>
+<span class="dl add">+      &lt;div class=&quot;fl&quot;&gt;&lt;b&gt;a diff&lt;/b&gt;&lt;span class=&quot;arw&quot;&gt;→&lt;/span&gt;&lt;b&gt;branch-review&lt;/b&gt;&lt;span class=&quot;arw&quot;&gt;→&lt;/span&gt;&lt;b&gt;a filterable review by change-type&lt;/b&gt;&lt;/div&gt;</span>
+<span class="dl ctx">     &lt;/div&gt;</span>
+<span class="dl ctx">   &lt;/div&gt;</span>
+<span class="dl ctx"> </span>
+<span class="dl meta">@@ -205,14 +206,14 @@ &lt;h2 class=&quot;reveal&quot;&gt;One command to add it, one to install&lt;/h2&gt;</span>
+<span class="dl ctx"> &lt;span class=&quot;c&quot;&gt;# 3 · activate in the current session&lt;/span&gt;</span>
+<span class="dl ctx"> &lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;cmd&quot;&gt;reload-plugins&lt;/span&gt;&lt;/pre&gt;</span>
+<span class="dl ctx">     &lt;/div&gt;</span>
+<span class="dl del">-    &lt;p class=&quot;read reveal&quot; style=&quot;margin-top:16px; color:var(--muted); font-size:14.5px;&quot;&gt;Once installed the commands are namespaced — &lt;code&gt;/rich-html:report&lt;/code&gt;, &lt;code&gt;/rich-html:decide&lt;/code&gt;.&lt;/p&gt;</span>
+<span class="dl add">+    &lt;p class=&quot;read reveal&quot; style=&quot;margin-top:16px; color:var(--muted); font-size:14.5px;&quot;&gt;Once installed the commands are namespaced — &lt;code&gt;/rich-html:report&lt;/code&gt;, &lt;code&gt;/rich-html:decide&lt;/code&gt;, &lt;code&gt;/rich-html:branch-review&lt;/code&gt;.&lt;/p&gt;</span>
+<span class="dl ctx">   &lt;/section&gt;</span>
+<span class="dl ctx"> </span>
+<span class="dl del">-  &lt;!-- TWO TOOLS --&gt;</span>
+<span class="dl add">+  &lt;!-- THREE TOOLS --&gt;</span>
+<span class="dl ctx">   &lt;section&gt;</span>
+<span class="dl del">-    &lt;p class=&quot;eyebrow reveal&quot;&gt;Two tools, one system&lt;/p&gt;</span>
+<span class="dl del">-    &lt;h2 class=&quot;reveal&quot;&gt;One to read, one to act on&lt;/h2&gt;</span>
+<span class="dl del">-    &lt;p class=&quot;sec-lede reveal&quot;&gt;Both produce a &lt;b&gt;document about your work&lt;/b&gt; — not the product itself (that&#x27;s what the &lt;code&gt;prototype&lt;/code&gt; plugin&#x27;s &lt;code&gt;mockup&lt;/code&gt; is for). They share a format contract, so the two feel like one system.&lt;/p&gt;</span>
+<span class="dl add">+    &lt;p class=&quot;eyebrow reveal&quot;&gt;Three tools, one system&lt;/p&gt;</span>
+<span class="dl add">+    &lt;h2 class=&quot;reveal&quot;&gt;One to read, one to act on, one to review&lt;/h2&gt;</span>
+<span class="dl add">+    &lt;p class=&quot;sec-lede reveal&quot;&gt;Each produces a &lt;b&gt;document about your work&lt;/b&gt; — not the product itself (that&#x27;s what the &lt;code&gt;prototype&lt;/code&gt; plugin&#x27;s &lt;code&gt;mockup&lt;/code&gt; is for). They share a format contract, so the three feel like one system.&lt;/p&gt;</span>
+<span class="dl ctx">     &lt;div class=&quot;defs&quot;&gt;</span>
+<span class="dl ctx">       &lt;div class=&quot;def reveal&quot;&gt;</span>
+<span class="dl ctx">         &lt;p class=&quot;tag&quot;&gt;read&lt;/p&gt;</span>
+<span class="dl meta">@@ -226,6 +227,12 @@ &lt;h3&gt;decide&lt;/h3&gt;</span>
+<span class="dl ctx">         &lt;p&gt;Gathers pending decisions into an interactive surface where each expands to its real context — then emits one prompt to execute your choices.&lt;/p&gt;</span>
+<span class="dl ctx">         &lt;div class=&quot;meta&quot;&gt;&lt;b&gt;for:&lt;/b&gt; the forks &lt;em&gt;between&lt;/em&gt; things&lt;/div&gt;</span>
+<span class="dl ctx">       &lt;/div&gt;</span>
+<span class="dl add">+      &lt;div class=&quot;def reveal&quot;&gt;</span>
+<span class="dl add">+        &lt;p class=&quot;tag&quot;&gt;review&lt;/p&gt;</span>
+<span class="dl add">+        &lt;h3&gt;branch-review&lt;/h3&gt;</span>
+<span class="dl add">+        &lt;p&gt;Turns a branch or PR diff into a filterable review — the full diff sliced by facet and regrouped by change-type, named by intent. Read-only.&lt;/p&gt;</span>
+<span class="dl add">+        &lt;div class=&quot;meta&quot;&gt;&lt;b&gt;for:&lt;/b&gt; what a change &lt;em&gt;does&lt;/em&gt;, and why&lt;/div&gt;</span>
+<span class="dl add">+      &lt;/div&gt;</span>
+<span class="dl ctx">     &lt;/div&gt;</span>
+<span class="dl ctx">   &lt;/section&gt;</span>
+<span class="dl ctx"> </span>
+<span class="dl meta">@@ -251,6 +258,14 @@ &lt;h2 class=&quot;reveal&quot;&gt;Scattered inputs in, one file out&lt;/h2&gt;</span>
+<span class="dl ctx">         &lt;span class=&quot;arw&quot;&gt;→&lt;/span&gt;</span>
+<span class="dl ctx">         &lt;div class=&quot;box out&quot;&gt;&lt;div class=&quot;k&quot;&gt;emit&lt;/div&gt;&lt;div class=&quot;v&quot;&gt;a surface + one prompt&lt;/div&gt;&lt;/div&gt;</span>
+<span class="dl ctx">       &lt;/div&gt;</span>
+<span class="dl add">+      &lt;div class=&quot;track reveal&quot;&gt;</span>
+<span class="dl add">+        &lt;span class=&quot;lbl&quot;&gt;branch-review&lt;/span&gt;</span>
+<span class="dl add">+        &lt;div class=&quot;box&quot;&gt;&lt;div class=&quot;k&quot;&gt;collect&lt;/div&gt;&lt;div class=&quot;v&quot;&gt;a branch/PR diff&lt;/div&gt;&lt;/div&gt;</span>
+<span class="dl add">+        &lt;span class=&quot;arw&quot;&gt;→&lt;/span&gt;</span>
+<span class="dl add">+        &lt;div class=&quot;box&quot;&gt;&lt;div class=&quot;k&quot;&gt;structure&lt;/div&gt;&lt;div class=&quot;v&quot;&gt;facet + change-type&lt;/div&gt;&lt;/div&gt;</span>
+<span class="dl add">+        &lt;span class=&quot;arw&quot;&gt;→&lt;/span&gt;</span>
+<span class="dl add">+        &lt;div class=&quot;box out&quot;&gt;&lt;div class=&quot;k&quot;&gt;emit&lt;/div&gt;&lt;div class=&quot;v&quot;&gt;a filterable review&lt;/div&gt;&lt;/div&gt;</span>
+<span class="dl add">+      &lt;/div&gt;</span>
+<span class="dl ctx">     &lt;/div&gt;</span>
+<span class="dl ctx">   &lt;/section&gt;</span>
+<span class="dl ctx"> </span>
+<span class="dl meta">@@ -258,7 +273,7 @@ &lt;h2 class=&quot;reveal&quot;&gt;Scattered inputs in, one file out&lt;/h2&gt;</span>
+<span class="dl ctx">   &lt;section&gt;</span>
+<span class="dl ctx">     &lt;p class=&quot;eyebrow reveal&quot;&gt;The shared format · &lt;span class=&quot;mono&quot;&gt;html-doc&lt;/span&gt;&lt;/p&gt;</span>
+<span class="dl ctx">     &lt;h2 class=&quot;reveal&quot;&gt;Four rules that make one file work everywhere&lt;/h2&gt;</span>
+<span class="dl del">-    &lt;p class=&quot;sec-lede reveal&quot;&gt;Both commands build on the &lt;code&gt;html-doc&lt;/code&gt; skill, which encodes the non-obvious constraints so the two outputs feel like one system.&lt;/p&gt;</span>
+<span class="dl add">+    &lt;p class=&quot;sec-lede reveal&quot;&gt;All three commands build on the &lt;code&gt;html-doc&lt;/code&gt; skill, which encodes the non-obvious constraints so the outputs feel like one system.&lt;/p&gt;</span>
+<span class="dl ctx">     &lt;div class=&quot;rules&quot;&gt;</span>
+<span class="dl ctx">       &lt;div class=&quot;rule reveal&quot;&gt;&lt;div class=&quot;t&quot;&gt;Self-contained&lt;/div&gt;&lt;div class=&quot;d&quot;&gt;Inline CSS/JS, no network, assets as &lt;code&gt;data:&lt;/code&gt; URIs — renders as a local file, an email attachment, or a Claude Artifact under a strict CSP.&lt;/div&gt;&lt;/div&gt;</span>
+<span class="dl ctx">       &lt;div class=&quot;rule reveal&quot;&gt;&lt;div class=&quot;t&quot;&gt;Theme-aware&lt;/div&gt;&lt;div class=&quot;d&quot;&gt;Respects the reader&#x27;s light/dark with a manual toggle. A document adapts to the reader — the opposite of a &lt;code&gt;mockup&lt;/code&gt;.&lt;/div&gt;&lt;/div&gt;</span>
+<span class="dl meta">@@ -319,15 +334,39 @@ &lt;h3&gt;Emit one prompt&lt;/h3&gt;</span>
+<span class="dl ctx">           &lt;p&gt;You choose per decision (or &quot;accept all recommended&quot;), and a &lt;b&gt;Copy prompt&lt;/b&gt; button assembles a single, self-standing prompt — one line per decision with its choice and source — to hand straight back to an agent. It never degrades into chat Q&amp;amp;A.&lt;/p&gt;</span>
+<span class="dl ctx">         &lt;/div&gt;</span>
+<span class="dl ctx">       &lt;/div&gt;</span>
+<span class="dl add">+</span>
+<span class="dl add">+      &lt;p class=&quot;stepgroup-h reveal&quot; style=&quot;margin-top:14px;&quot;&gt;branch-review · a diff → a filterable review&lt;/p&gt;</span>
+<span class="dl add">+      &lt;div class=&quot;step reveal&quot;&gt;</span>
+<span class="dl add">+        &lt;div class=&quot;n&quot;&gt;1&lt;/div&gt;</span>
+<span class="dl add">+        &lt;div&gt;</span>
+<span class="dl add">+          &lt;h3&gt;Resolve the diff&lt;/h3&gt;</span>
+<span class="dl add">+          &lt;p&gt;From a PR number/URL, a &lt;code&gt;base...head&lt;/code&gt; range, a branch name, or bare — the current branch vs. its merge-base. The exact base and totals are pinned in the header, so you know precisely what&#x27;s under review. Read-only.&lt;/p&gt;</span>
+<span class="dl add">+        &lt;/div&gt;</span>
+<span class="dl add">+      &lt;/div&gt;</span>
+<span class="dl add">+      &lt;div class=&quot;step reveal&quot;&gt;</span>
+<span class="dl add">+        &lt;div class=&quot;n&quot;&gt;2&lt;/div&gt;</span>
+<span class="dl add">+        &lt;div&gt;</span>
+<span class="dl add">+          &lt;h3&gt;Two filter axes&lt;/h3&gt;</span>
+<span class="dl add">+          &lt;p&gt;Every change is tagged by &lt;b&gt;facet&lt;/b&gt; (&lt;code&gt;code / tests / docs / spec&lt;/code&gt;) and clustered by &lt;b&gt;change-type&lt;/b&gt; — &lt;em&gt;why&lt;/em&gt; each cluster exists, &lt;b&gt;named by its intent&lt;/b&gt; (&lt;code&gt;jul2026-sync-replay&lt;/code&gt;, not a bare &lt;code&gt;service&lt;/code&gt;). The full diff slices both ways, and a summary — files, ± lines, a &lt;code&gt;dataviz&lt;/code&gt; chart — recomputes as you filter.&lt;/p&gt;</span>
+<span class="dl add">+          &lt;span class=&quot;cmdrow&quot;&gt;&lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;rich-html:branch-review #662&lt;/span&gt;</span>
+<span class="dl add">+        &lt;/div&gt;</span>
+<span class="dl add">+      &lt;/div&gt;</span>
+<span class="dl add">+      &lt;div class=&quot;step reveal&quot;&gt;</span>
+<span class="dl add">+        &lt;div class=&quot;n&quot;&gt;3&lt;/div&gt;</span>
+<span class="dl add">+        &lt;div&gt;</span>
+<span class="dl add">+          &lt;h3&gt;Reasoning over hunks&lt;/h3&gt;</span>
+<span class="dl add">+          &lt;p&gt;Each cluster leads with one paragraph on why it exists; the real diff is one expand below it. The change-type rule was hardened by an adversarial redteam — the original seed-vs-emergent taxonomy became name-by-intent, with generic-layer naming as the checkable smell.&lt;/p&gt;</span>
+<span class="dl add">+        &lt;/div&gt;</span>
+<span class="dl add">+      &lt;/div&gt;</span>
+<span class="dl ctx">     &lt;/div&gt;</span>
+<span class="dl ctx">   &lt;/section&gt;</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx">   &lt;!-- WHEN TO USE --&gt;</span>
+<span class="dl ctx">   &lt;section&gt;</span>
+<span class="dl ctx">     &lt;p class=&quot;eyebrow reveal&quot;&gt;Which one&lt;/p&gt;</span>
+<span class="dl del">-    &lt;h2 class=&quot;reveal&quot;&gt;Reading vs deciding&lt;/h2&gt;</span>
+<span class="dl add">+    &lt;h2 class=&quot;reveal&quot;&gt;Reading, deciding, reviewing&lt;/h2&gt;</span>
+<span class="dl ctx">     &lt;div class=&quot;callout reveal&quot;&gt;</span>
+<span class="dl del">-      Reaching for the &lt;b&gt;state of something&lt;/b&gt;, a synthesis, a briefing → &lt;code&gt;report&lt;/code&gt;. Facing a pile of &lt;b&gt;unmade choices&lt;/b&gt; you want to clear in one pass → &lt;code&gt;decide&lt;/code&gt;. If &lt;code&gt;report&lt;/code&gt; hits a decision that needs making it points at &lt;code&gt;decide&lt;/code&gt;; if &lt;code&gt;decide&lt;/code&gt; finds reportable state rather than a fork, it points back at &lt;code&gt;report&lt;/code&gt;.</span>
+<span class="dl add">+      Reaching for the &lt;b&gt;state of something&lt;/b&gt;, a synthesis, a briefing → &lt;code&gt;report&lt;/code&gt;. Facing a pile of &lt;b&gt;unmade choices&lt;/b&gt; you want to clear in one pass → &lt;code&gt;decide&lt;/code&gt;. Wanting to understand &lt;b&gt;what a branch or PR changed&lt;/b&gt;, and why → &lt;code&gt;branch-review&lt;/code&gt;. If &lt;code&gt;report&lt;/code&gt; hits a decision that needs making it points at &lt;code&gt;decide&lt;/code&gt;; if &lt;code&gt;decide&lt;/code&gt; finds reportable state rather than a fork, it points back at &lt;code&gt;report&lt;/code&gt;; and if a change hides an unmade decision, &lt;code&gt;branch-review&lt;/code&gt; points at &lt;code&gt;decide&lt;/code&gt; too.</span>
+<span class="dl ctx">     &lt;/div&gt;</span>
+<span class="dl ctx">   &lt;/section&gt;</span>
+<span class="dl ctx"> </span>
+<span class="dl meta">@@ -337,6 +376,13 @@ &lt;h2 class=&quot;reveal&quot;&gt;Reading vs deciding&lt;/h2&gt;</span>
+<span class="dl ctx">     &lt;h2 class=&quot;reveal&quot;&gt;What&#x27;s changed&lt;/h2&gt;</span>
+<span class="dl ctx">     &lt;p class=&quot;sec-lede reveal&quot;&gt;Notable additions to the shared format, each backed by the evidence behind the call.&lt;/p&gt;</span>
+<span class="dl ctx">     &lt;div class=&quot;clog&quot;&gt;</span>
+<span class="dl add">+      &lt;div class=&quot;clog-item reveal&quot;&gt;</span>
+<span class="dl add">+        &lt;div class=&quot;clog-when&quot;&gt;2026-08-21&lt;/div&gt;</span>
+<span class="dl add">+        &lt;div class=&quot;clog-body&quot;&gt;</span>
+<span class="dl add">+          &lt;h3&gt;&lt;span class=&quot;mono&quot;&gt;branch-review&lt;/span&gt; — a third command &lt;span style=&quot;color:var(--muted); font-weight:400;&quot;&gt;(plugin 0.3.0)&lt;/span&gt;&lt;/h3&gt;</span>
+<span class="dl add">+          &lt;p&gt;Turns a branch or PR diff into a filterable HTML review: the full diff sliced by &lt;b&gt;facet&lt;/b&gt; (&lt;code&gt;code / tests / docs / spec&lt;/code&gt;) and regrouped by &lt;b&gt;change-type&lt;/b&gt;, each cluster &lt;b&gt;named by its intent&lt;/b&gt; rather than a generic layer. The change-type rule was hardened by an adversarial redteam across three real PRs — the original seed-vs-emergent taxonomy was undecidable when a change fit both, so it became name-by-intent with &lt;em&gt;generic-layer naming&lt;/em&gt; as the checkable smell.&lt;/p&gt;</span>
+<span class="dl add">+        &lt;/div&gt;</span>
+<span class="dl add">+      &lt;/div&gt;</span>
+<span class="dl ctx">       &lt;div class=&quot;clog-item reveal&quot;&gt;</span>
+<span class="dl ctx">         &lt;div class=&quot;clog-when&quot;&gt;2026-08-20&lt;/div&gt;</span>
+<span class="dl ctx">         &lt;div class=&quot;clog-body&quot;&gt;</span></pre></details></div>
+    </div>
+  </section>
+
+  <section class="cluster" data-cluster="spec-002-record">
+    <div class="chead">
+      <h2>spec-002-record</h2><span class="ctag">process/convention</span>
+      <span class="clines" data-cluster-lines>33 lines</span>
+    </div>
+    <p class="why">Closes the spec-workflow loop this repo runs on. Spec 002 is renamed <code>todo&nbsp;&rarr;&nbsp;done</code>, gains a <code>Status/Branch</code> header and an <code>Implementation&nbsp;Notes</code> section recording the dogfood verification and how the build diverged from the spec; the catalog row follows. It exists because every landed change here updates the durable record — a convention, not this change&rsquo;s distinctive intent.</p>
+    <div class="files">
+<div class="file" data-facet="spec" data-add="31" data-del="0"><div class="fhead"><span class="fpath">specs/002-done-branch-review.md</span><span class="fbadge f-spec">spec</span><span class="fstat"><span class="plus">+31</span> <span class="minus">&minus;0</span></span></div><details><summary>diff</summary><pre class="diff"><span class="dl meta">@@ -1,3 +1,6 @@</span>
+<span class="dl add">+Status: done</span>
+<span class="dl add">+Branch: moacyrricardo/spec-002-branch-review</span>
+<span class="dl add">+</span>
+<span class="dl ctx"> # 002 — branch-review: a filterable diff review command for rich-html</span>
+<span class="dl ctx"> </span>
+<span class="dl ctx"> ## Context</span>
+<span class="dl meta">@@ -139,3 +142,31 @@ facet. No coupling.</span>
+<span class="dl ctx">   accepted as good-enough.</span>
+<span class="dl ctx"> - **Not yet dogfooded off boletim:** the redteam used boletim PRs. First non-boletim run may surface</span>
+<span class="dl ctx">   path-heuristic gaps the target `CLAUDE.md` override is meant to absorb.</span>
+<span class="dl add">+</span>
+<span class="dl add">+## Implementation Notes</span>
+<span class="dl add">+</span>
+<span class="dl add">+Built as decided. `plugins/rich-html/commands/branch-review.md` is the new thin command; it</span>
+<span class="dl add">+delegates all file HOW to `html-doc` (whose contract was widened from two commands to three) and</span>
+<span class="dl add">+composes `dataviz` for the summary chart. Version bumped `0.2.0 → 0.3.0` in both `plugin.json` and</span>
+<span class="dl add">+the top-level `.claude-plugin/marketplace.json`; the third command was propagated across</span>
+<span class="dl add">+`docs/rich-html-guide.{md,html}`, `docs/index.html`, and `README.md`.</span>
+<span class="dl add">+</span>
+<span class="dl add">+**Verified by a dogfood run** — a fresh agent given *only* the command file, the `html-doc`</span>
+<span class="dl add">+contract, and PR #640 (no other context) produced a real 64 KB self-contained, CSP-safe, filterable</span>
+<span class="dl add">+review. The intent-named taxonomy held (five clusters, each named by intent, none a bare layer</span>
+<span class="dl add">+word; it independently reproduced the &quot;headline change is the untagged cluster&quot; asymmetry). Verdict:</span>
+<span class="dl add">+~90% of a hand-written review out of the box.</span>
+<span class="dl add">+</span>
+<span class="dl add">+**Differed from the spec:** the dogfood showed the *content model* was right but the *rendering</span>
+<span class="dl add">+rules* were under-specified — the agent had to invent every filter/count/chart decision. Those were</span>
+<span class="dl add">+then pinned down in the command (not anticipated at spec time): mixed-facet hunks may split into</span>
+<span class="dl add">+presentational sub-hunks; summary/counts reflect the currently-visible filtered hunks; the chart</span>
+<span class="dl add">+axis is pinned to the full-diff maximum (no rescale on filter); filters sit at the top of the</span>
+<span class="dl add">+layout; the headline-often-untagged and test-cluster tie-breaker rules were added to §3; the</span>
+<span class="dl add">+net-diff flag was scaffolded to distinguish a *changed* path from a mere context *reference*; and a</span>
+<span class="dl add">+&quot;the two axes are lenses, not a partition&quot; caveat was added (facet `spec` and change-type</span>
+<span class="dl add">+`process/convention` legitimately overlap on small PRs).</span>
+<span class="dl add">+</span>
+<span class="dl add">+**Gap resolved:** `dataviz` is a harness-provided skill (not a repo file); it loads via the Skill</span>
+<span class="dl add">+tool, so the command&#x27;s &quot;load `dataviz` first&quot; is satisfiable. Known Gaps carried forward unchanged:</span>
+<span class="dl add">+net-diff flag remains heuristic; off-boletim dogfooding still pending.</span></pre></details></div>
+<div class="file" data-facet="spec" data-add="1" data-del="1"><div class="fhead"><span class="fpath">specs/CATALOG.md</span><span class="fbadge f-spec">spec</span><span class="fstat"><span class="plus">+1</span> <span class="minus">&minus;1</span></span></div><details><summary>diff</summary><pre class="diff"><span class="dl meta">@@ -3,4 +3,4 @@</span>
+<span class="dl ctx"> | #   | Status  | Title / slug   | Branch | Issue | Notes                                          |</span>
+<span class="dl ctx"> |-----|---------|----------------|--------|-------|------------------------------------------------|</span>
+<span class="dl ctx"> | 001 | concern | branch-review  | —      | —     | → resolved by 002 (new thin command; taxonomy redteamed) |</span>
+<span class="dl del">-| 002 | todo    | branch-review  | —      | —     | `/rich-html:branch-review`; ready for /spec-workflow:start |</span>
+<span class="dl add">+| 002 | done    | branch-review  | moacyrricardo/spec-002-branch-review | — | `/rich-html:branch-review` shipped (0.3.0) |</span></pre></details></div>
+    </div>
+  </section>
+  </div>
+  <p class="empty" id="empty">No changes match the current filter.</p>
+
+  <footer>Generated by <code>/rich-html:branch-review&nbsp;#20</code> · a worked example for the rich-html guide · reads the net <code>base…head</code> diff, read-only.</footer>
+</main>
+
+<script>
+const META = {"fullMax": 158, "clusters": ["branch-review-command", "promote-to-third-command", "docs-propagation", "spec-002-record"], "totAdd": 303, "totDel": 52, "totFiles": 10};
+const facetOn = new Set(["code","tests","docs","spec"]);
+const clusterOn = new Set(META.clusters);
+
+function apply(){
+  // facet chips: show/hide file blocks
+  document.querySelectorAll(".file").forEach(f=>{
+    f.hidden = !facetOn.has(f.dataset.facet);
+  });
+  // cluster chips + emptiness of a cluster after facet filtering
+  let anyVisible=false;
+  document.querySelectorAll(".cluster").forEach(c=>{
+    const clOn = clusterOn.has(c.dataset.cluster);
+    const visFiles=[...c.querySelectorAll(".file")].filter(f=>!f.hidden);
+    const show = clOn && visFiles.length>0;
+    c.hidden=!show;
+    if(show) anyVisible=true;
+    // per-cluster visible line count
+    let ln=0; visFiles.forEach(f=>ln+=(+f.dataset.add)+(+f.dataset.del));
+    const badge=c.querySelector("[data-cluster-lines]");
+    if(badge) badge.textContent = ln+" lines";
+  });
+  document.getElementById("empty").classList.toggle("on", !anyVisible);
+  // summary over visible files
+  let A=0,D=0,F=0;
+  document.querySelectorAll(".cluster:not([hidden]) .file").forEach(f=>{
+    if(f.hidden) return; A+=+f.dataset.add; D+=+f.dataset.del; F++;
+  });
+  document.getElementById("sFiles").textContent=F;
+  document.getElementById("sAdd").textContent="+"+A;
+  document.getElementById("sDel").textContent="\u2212"+D;
+  // chart: bars recompute from visible files; axis pinned to full-diff max
+  document.querySelectorAll(".bar").forEach(bar=>{
+    const cid=bar.dataset.cluster;
+    const c=document.querySelector('.cluster[data-cluster="'+cid+'"]');
+    let ln=0;
+    if(clusterOn.has(cid)) c.querySelectorAll(".file").forEach(f=>{ if(!f.hidden) ln+=(+f.dataset.add)+(+f.dataset.del); });
+    bar.hidden = ln===0;
+    bar.querySelector(".bfill").style.width=(ln/META.fullMax*100).toFixed(1)+"%";
+    bar.querySelector(".bval").textContent=ln;
+  });
+  // facet chip counts (files per facet, respecting nothing — raw availability)
+  ["code","tests","docs","spec"].forEach(fac=>{
+    const n=document.querySelectorAll('.file[data-facet="'+fac+'"]').length;
+    const el=document.querySelector('[data-fc="'+fac+'"]'); if(el) el.textContent="("+n+")";
+  });
+}
+function wire(chips,set,key){
+  chips.querySelectorAll(".chip").forEach(ch=>{
+    ch.addEventListener("click",()=>{
+      const v=ch.dataset[key];
+      const on=ch.getAttribute("aria-pressed")==="true";
+      ch.setAttribute("aria-pressed", on?"false":"true");
+      if(on) set.delete(v); else set.add(v);
+      apply();
+    });
+  });
+}
+wire(document.getElementById("facetChips"),facetOn,"facet");
+wire(document.getElementById("clusterChips"),clusterOn,"cluster");
+apply();
+</script>
+</body></html>

@@ -114,6 +114,12 @@ Read-only. It never touches the branch it reviews.
 /rich-html:branch-review #662
 ```
 
+> 📄 **Worked example:** [`rich-html-branch-review-example.html`](./rich-html-branch-review-example.html)
+> is this plugin's own PR #20 reviewed *by* `branch-review` — four change-type clusters (the headline
+> `branch-review-command` left untagged/change-specific, the rest tagged `api-surface` / `docs` /
+> `process/convention`), filterable by facet and change-type with a live-recomputing summary and bar
+> chart. It also shows the *axes-are-lenses* caveat in the wild: on this tidy PR the two axes coincide.
+
 ## When to use which
 
 - Reaching for the **state of something**, a synthesis, a briefing → **`report`**.
@@ -134,7 +140,8 @@ decision, `branch-review` points at `decide` too.
   original seed-vs-emergent taxonomy was undecidable when a change fit both, so it became
   name-by-intent with *generic-layer naming* as the checkable smell. Built from specs
   [`001`](../specs/001-concern-branch-review.md) (concern) and
-  [`002`](../specs/002-doing-branch-review.md) (spec).
+  [`002`](../specs/002-done-branch-review.md) (spec), and dogfooded on its own PR — see the
+  [worked example](./rich-html-branch-review-example.html).
 - **2026-08-20 · Visual evidence — a fourth `html-doc` rule.** Evidence can now be carried in the
   form that reads fastest — a code snippet, an inline-SVG flow diagram, a chart (via the `dataviz`
   skill), an existing screenshot, or a schematic divs+CSS layout sketch — always *added under* the
