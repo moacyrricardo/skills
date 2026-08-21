@@ -92,14 +92,14 @@
   .term .cmd { color: var(--ink); font-weight: 600; }
 
   /* two-tool table cards */
-  .defs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+  .defs { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 8px; }
   .def { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; }
   .def .tag { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 8px; }
   .def h3 { margin-bottom: 8px; }
   .def p { margin: 0 0 10px; color: var(--ink-soft); font-size: 15.5px; }
   .def .meta { font-family:var(--mono); font-size:12px; color:var(--muted); }
   .def .meta b { color: var(--ink-soft); font-weight:600; }
-  @media (max-width: 620px) { .defs { grid-template-columns: 1fr; } }
+  @media (max-width: 780px) { .defs { grid-template-columns: 1fr; } }
 
   /* two-track diagram */
   .tracks { display:flex; flex-direction:column; gap:14px; margin-top:6px; }
@@ -181,11 +181,12 @@
 
   <div class="hero">
     <p class="eyebrow reveal">Claude Code · interactive HTML deliverables</p>
-    <h1 class="reveal">Turn your work into <span class="grad">documents you can read and act on.</span></h1>
-    <p class="lede reveal">Two commands that take the scattered inputs of your work and produce one self-contained, interactive HTML file. <code>report</code> synthesizes sources into something to read; <code>decide</code> gathers pending choices into something to act on.</p>
+    <h1 class="reveal">Turn your work into <span class="grad">documents you can read, act on, and review.</span></h1>
+    <p class="lede reveal">Three commands that take the scattered inputs of your work and produce one self-contained, interactive HTML file. <code>report</code> synthesizes sources to read; <code>decide</code> gathers pending choices to act on; <code>branch-review</code> turns a diff into a filterable review.</p>
     <div class="flowline reveal">
       <div class="fl"><b>sources</b><span class="arw">→</span><b>report</b><span class="arw">→</span><b>a readable document</b></div>
       <div class="fl"><b>decisions</b><span class="arw">→</span><b>decide</b><span class="arw">→</span><b>an expandable surface + one prompt</b></div>
+      <div class="fl"><b>a diff</b><span class="arw">→</span><b>branch-review</b><span class="arw">→</span><b>a filterable review by change-type</b></div>
     </div>
   </div>
 
@@ -205,14 +206,14 @@
 <span class="c"># 3 · activate in the current session</span>
 <span class="p">/</span><span class="cmd">reload-plugins</span></pre>
     </div>
-    <p class="read reveal" style="margin-top:16px; color:var(--muted); font-size:14.5px;">Once installed the commands are namespaced — <code>/rich-html:report</code>, <code>/rich-html:decide</code>.</p>
+    <p class="read reveal" style="margin-top:16px; color:var(--muted); font-size:14.5px;">Once installed the commands are namespaced — <code>/rich-html:report</code>, <code>/rich-html:decide</code>, <code>/rich-html:branch-review</code>.</p>
   </section>
 
-  <!-- TWO TOOLS -->
+  <!-- THREE TOOLS -->
   <section>
-    <p class="eyebrow reveal">Two tools, one system</p>
-    <h2 class="reveal">One to read, one to act on</h2>
-    <p class="sec-lede reveal">Both produce a <b>document about your work</b> — not the product itself (that's what the <code>prototype</code> plugin's <code>mockup</code> is for). They share a format contract, so the two feel like one system.</p>
+    <p class="eyebrow reveal">Three tools, one system</p>
+    <h2 class="reveal">One to read, one to act on, one to review</h2>
+    <p class="sec-lede reveal">Each produces a <b>document about your work</b> — not the product itself (that's what the <code>prototype</code> plugin's <code>mockup</code> is for). They share a format contract, so the three feel like one system.</p>
     <div class="defs">
       <div class="def reveal">
         <p class="tag">read</p>
@@ -225,6 +226,12 @@
         <h3>decide</h3>
         <p>Gathers pending decisions into an interactive surface where each expands to its real context — then emits one prompt to execute your choices.</p>
         <div class="meta"><b>for:</b> the forks <em>between</em> things</div>
+      </div>
+      <div class="def reveal">
+        <p class="tag">review</p>
+        <h3>branch-review</h3>
+        <p>Turns a branch or PR diff into a filterable review — the full diff sliced by facet and regrouped by change-type, named by intent. Read-only.</p>
+        <div class="meta"><b>for:</b> what a change <em>does</em>, and why</div>
       </div>
     </div>
   </section>
@@ -251,6 +258,14 @@
         <span class="arw">→</span>
         <div class="box out"><div class="k">emit</div><div class="v">a surface + one prompt</div></div>
       </div>
+      <div class="track reveal">
+        <span class="lbl">branch-review</span>
+        <div class="box"><div class="k">collect</div><div class="v">a branch/PR diff</div></div>
+        <span class="arw">→</span>
+        <div class="box"><div class="k">structure</div><div class="v">facet + change-type</div></div>
+        <span class="arw">→</span>
+        <div class="box out"><div class="k">emit</div><div class="v">a filterable review</div></div>
+      </div>
     </div>
   </section>
 
@@ -258,7 +273,7 @@
   <section>
     <p class="eyebrow reveal">The shared format · <span class="mono">html-doc</span></p>
     <h2 class="reveal">Four rules that make one file work everywhere</h2>
-    <p class="sec-lede reveal">Both commands build on the <code>html-doc</code> skill, which encodes the non-obvious constraints so the two outputs feel like one system.</p>
+    <p class="sec-lede reveal">All three commands build on the <code>html-doc</code> skill, which encodes the non-obvious constraints so the outputs feel like one system.</p>
     <div class="rules">
       <div class="rule reveal"><div class="t">Self-contained</div><div class="d">Inline CSS/JS, no network, assets as <code>data:</code> URIs — renders as a local file, an email attachment, or a Claude Artifact under a strict CSP.</div></div>
       <div class="rule reveal"><div class="t">Theme-aware</div><div class="d">Respects the reader's light/dark with a manual toggle. A document adapts to the reader — the opposite of a <code>mockup</code>.</div></div>
@@ -319,15 +334,39 @@
           <p>You choose per decision (or "accept all recommended"), and a <b>Copy prompt</b> button assembles a single, self-standing prompt — one line per decision with its choice and source — to hand straight back to an agent. It never degrades into chat Q&amp;A.</p>
         </div>
       </div>
+
+      <p class="stepgroup-h reveal" style="margin-top:14px;">branch-review · a diff → a filterable review</p>
+      <div class="step reveal">
+        <div class="n">1</div>
+        <div>
+          <h3>Resolve the diff</h3>
+          <p>From a PR number/URL, a <code>base...head</code> range, a branch name, or bare — the current branch vs. its merge-base. The exact base and totals are pinned in the header, so you know precisely what's under review. Read-only.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="n">2</div>
+        <div>
+          <h3>Two filter axes</h3>
+          <p>Every change is tagged by <b>facet</b> (<code>code / tests / docs / spec</code>) and clustered by <b>change-type</b> — <em>why</em> each cluster exists, <b>named by its intent</b> (<code>jul2026-sync-replay</code>, not a bare <code>service</code>). The full diff slices both ways, and a summary — files, ± lines, a <code>dataviz</code> chart — recomputes as you filter.</p>
+          <span class="cmdrow"><span class="p">/</span>rich-html:branch-review #662</span>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="n">3</div>
+        <div>
+          <h3>Reasoning over hunks</h3>
+          <p>Each cluster leads with one paragraph on why it exists; the real diff is one expand below it. The change-type rule was hardened by an adversarial redteam — the original seed-vs-emergent taxonomy became name-by-intent, with generic-layer naming as the checkable smell.</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- WHEN TO USE -->
   <section>
     <p class="eyebrow reveal">Which one</p>
-    <h2 class="reveal">Reading vs deciding</h2>
+    <h2 class="reveal">Reading, deciding, reviewing</h2>
     <div class="callout reveal">
-      Reaching for the <b>state of something</b>, a synthesis, a briefing → <code>report</code>. Facing a pile of <b>unmade choices</b> you want to clear in one pass → <code>decide</code>. If <code>report</code> hits a decision that needs making it points at <code>decide</code>; if <code>decide</code> finds reportable state rather than a fork, it points back at <code>report</code>.
+      Reaching for the <b>state of something</b>, a synthesis, a briefing → <code>report</code>. Facing a pile of <b>unmade choices</b> you want to clear in one pass → <code>decide</code>. Wanting to understand <b>what a branch or PR changed</b>, and why → <code>branch-review</code>. If <code>report</code> hits a decision that needs making it points at <code>decide</code>; if <code>decide</code> finds reportable state rather than a fork, it points back at <code>report</code>; and if a change hides an unmade decision, <code>branch-review</code> points at <code>decide</code> too.
     </div>
   </section>
 
@@ -337,6 +376,13 @@
     <h2 class="reveal">What's changed</h2>
     <p class="sec-lede reveal">Notable additions to the shared format, each backed by the evidence behind the call.</p>
     <div class="clog">
+      <div class="clog-item reveal">
+        <div class="clog-when">2026-08-21</div>
+        <div class="clog-body">
+          <h3><span class="mono">branch-review</span> — a third command <span style="color:var(--muted); font-weight:400;">(plugin 0.3.0)</span></h3>
+          <p>Turns a branch or PR diff into a filterable HTML review: the full diff sliced by <b>facet</b> (<code>code / tests / docs / spec</code>) and regrouped by <b>change-type</b>, each cluster <b>named by its intent</b> rather than a generic layer. The change-type rule was hardened by an adversarial redteam across three real PRs — the original seed-vs-emergent taxonomy was undecidable when a change fit both, so it became name-by-intent with <em>generic-layer naming</em> as the checkable smell.</p>
+        </div>
+      </div>
       <div class="clog-item reveal">
         <div class="clog-when">2026-08-20</div>
         <div class="clog-body">
