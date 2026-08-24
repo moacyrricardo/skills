@@ -377,6 +377,14 @@
     <p class="sec-lede reveal">Notable additions to the shared format, each backed by the evidence behind the call.</p>
     <div class="clog">
       <div class="clog-item reveal">
+        <div class="clog-when">2026-08-24</div>
+        <div class="clog-body">
+          <h3><span class="mono">branch-review</span> output redesigned into a review tool <span style="color:var(--muted); font-weight:400;">(plugin 0.3.1)</span></h3>
+          <p>The generated file now <em>resembles a real diff-review UI</em> — a collapsible file navigator, a "why these change-types" overview, and two combinable <b>intersecting</b> filters (change type × file type) over change-type clusters of inline unified diffs — while staying a theme-aware document. The command's §5 now specifies this shape. Annotating a change-type and emitting a <code>decide</code>-style prompt was explored but deliberately left out — that write-path belongs to <code>decide</code>; <code>branch-review</code> stays read-only.</p>
+          <a class="btn" href="./rich-html-branch-review-example.html">Open the redesigned worked example →</a>
+        </div>
+      </div>
+      <div class="clog-item reveal">
         <div class="clog-when">2026-08-21</div>
         <div class="clog-body">
           <h3><span class="mono">branch-review</span> — a third command <span style="color:var(--muted); font-weight:400;">(plugin 0.3.0)</span></h3>

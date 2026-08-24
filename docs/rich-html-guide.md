@@ -115,10 +115,11 @@ Read-only. It never touches the branch it reviews.
 ```
 
 > 📄 **Worked example:** [`rich-html-branch-review-example.html`](./rich-html-branch-review-example.html)
-> is this plugin's own PR #20 reviewed *by* `branch-review` — four change-type clusters (the headline
-> `branch-review-command` left untagged/change-specific, the rest tagged `api-surface` / `docs` /
-> `process/convention`), filterable by facet and change-type with a live-recomputing summary and bar
-> chart. It also shows the *axes-are-lenses* caveat in the wild: on this tidy PR the two axes coincide.
+> is this plugin's own PR #20 reviewed *by* `branch-review` — a review-tool layout with a collapsible
+> file navigator, a "why these change-types" overview, and two combinable, **intersecting** filters
+> (change type × file type) over four clusters of inline unified diffs (the headline
+> `branch-review-command` untagged, the rest tagged `api-surface` / `docs` / `process/convention`).
+> It also shows the *axes-are-lenses* caveat in the wild: on this tidy PR the two axes coincide.
 
 ## When to use which
 
@@ -133,6 +134,13 @@ decision, `branch-review` points at `decide` too.
 
 ## Changelog
 
+- **2026-08-24 · `branch-review` output redesigned into a review tool (plugin `0.3.1`).** The
+  generated file now *resembles a real diff-review UI* — a collapsible file navigator, a "why these
+  change-types" overview, and two combinable **intersecting** filters (change type × file type) over
+  change-type clusters of inline unified diffs — while staying a theme-aware document. The command's
+  §5 now specifies this shape. (Annotating a change-type and emitting a `decide`-style prompt was
+  explored but **deliberately left out** — that write-path belongs to `decide`; `branch-review`
+  stays read-only.)
 - **2026-08-21 · `branch-review` — a third command (plugin `0.3.0`).** Turns a branch or PR diff
   into a filterable HTML review: the full diff sliced by **facet** (`code / tests / docs / spec`)
   and regrouped by **change-type**, each cluster **named by its intent** rather than a generic
