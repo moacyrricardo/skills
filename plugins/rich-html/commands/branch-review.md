@@ -87,30 +87,46 @@ spec/concern for the *intent* and link it. If it has none, the review works iden
 
 ## 4. Summarize — a summary that moves with the filter
 
-A **summary block**, directly under the filter controls, that recomputes as facets and change-types
-are toggled. It reflects the **currently visible** (filtered) changes: files touched (each distinct
-file counted once), ± lines, and per-change-type line counts over the hunks still shown. Render the
-per-change-type line distribution as a **single-series bar chart** — inline SVG, no chart library.
-**Load the `dataviz` skill first** for palette and light/dark-safe form; a review's line
-distribution *is* a distribution. **Pin the chart's axis to the full-diff maximum** so toggling a
-filter shortens bars in place without rescaling the axis — the bars stay comparable to the whole
-change rather than jumping.
+A compact **summary** beside the filter controls that recomputes as the axes are toggled: files
+touched (each distinct file counted once) and ± lines over the **currently visible** (filtered)
+selection. Keep it small — a live "showing N files · +A −B" line, not a dashboard.
+
+When a per-change-type **line distribution** genuinely aids scanning (many clusters, lopsided
+sizes), add a small **single-series bar chart** — inline SVG, no chart library. **Load the `dataviz`
+skill first** for palette and light/dark-safe form, and **pin the axis to the full-diff maximum** so
+toggling a filter shortens bars in place without rescaling. It is optional and subordinate: the
+review's job is the diff, not the chart, so don't let it crowd the clusters.
 
 ## 5. Build the surface (per `html-doc`)
 
-One self-contained, theme-aware file:
+One self-contained, theme-aware file. The canonical shape is a **review tool, not a document dump**
+— it should *resemble* a real diff-review UI (GitHub/GitLab: file tree, diff gutters, dense filter
+bar) while staying a theme-aware document. The worked example
+(`docs/rich-html-branch-review-example.html`) is the reference. Its parts, top to bottom:
 
-- **Layout order:** the filter controls sit at the **top** — they govern the whole document — then
-  the summary block and its chart, then the change-type clusters. Filters are the control surface;
-  everything below reflects the current selection.
-- **Two filter axes** — facet and change-type — as combinable checkbox rows with **live counts**.
-  The full diff renders filtered by the active selection.
-- **Change-type clusters are the primary structure**; the facet filter narrows within and across
-  them. Each cluster is its reasoning paragraph + the hunks one expand away.
+- **A "why these change-types" overview** — 1–2 short paragraphs mapping the diff before any detail:
+  which cluster is the **headline** (the one carrying behaviour) and why the others exist (the
+  support work). It answers "which part actually matters?" from the top, so the reader knows where
+  to spend attention.
+- **Two combinable filter axes** — change-type × file-type — as chip/checkbox rows with **live
+  counts**, sitting at the top where they govern everything below. They **intersect**: a change
+  shows only if *both* its change-type and its file-type are selected — and an empty intersection
+  (`code` × a docs-only cluster) is a valid, honest result, not a bug.
+- **A collapsible file navigator** (left column) — the files grouped by change-type, each jumping to
+  its diff; it collapses to a slim reopen tab to give the diffs full width.
+- **Change-type clusters as the primary structure** — each leads with its name, tag, line count, and
+  **reasoning paragraph**, then renders **its files as inline unified diffs** (add/del gutters, line
+  numbers), each file collapsible. Reasoning sits directly above the real diff it explains — not one
+  tree-trip away (the `html-doc` Visual-evidence rule).
 - Hunks in `<pre>` with add/del styling, every interpolated line **escaped** (`<`, `>`, `&`) so a
   diff can't break the layout or inject markup.
-- **Selection state in small vanilla JS.** The document must be **fully readable with JS disabled**
-  — clusters, reasoning, and diffs are all present; filtering is the enhancement, never the gate.
+- **Small vanilla JS** for the filters, the tree collapse, and file jumps. The document must be
+  **fully readable with JS disabled** — overview, clusters, reasoning, and diffs are all present;
+  filtering and navigation are enhancements, never gates.
+- **Theme-aware, still a document.** The review-tool look adapts to the reader's light/dark (per
+  `html-doc` §2) — it *resembles* a code-review UI but is not a product facsimile, so it respects
+  the viewer's theme rather than pinning one. (Pinning a product theme is `mockup`'s posture, not
+  this one.)
 
 ## 6. Deliver
 
@@ -123,6 +139,10 @@ deliverable.
 
 - **Read-only** is a hard guarantee: this command resolves a diff and writes exactly one output
   file. It never commits, pushes, edits a PR/issue, or changes the branch it reviews.
+- **Out of scope — annotate-and-emit.** Letting the reader *comment on a change-type* and emit an
+  agent-ready prompt from those notes (a `decide`-style payload) is deliberately **not** part of
+  branch-review — that write-path is `decide`'s job and would break the read-only guarantee above.
+  branch-review stays a read-only viewer; feed its findings to `decide` when you want to act on them.
 - Project-agnostic: the tracker, the default branch, the spec location, and any path overrides come
   from the target project's `CLAUDE.md`, never hardcoded here.
 - **Known gap — net-diff blindness:** the review reads the net `base...head` diff, so on a
