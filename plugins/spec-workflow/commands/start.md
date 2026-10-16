@@ -1,3 +1,8 @@
+---
+description: Set up a spec for implementation — find or create the Linear issue, commit the todo→doing rename on main, and check out the feature branch.
+argument-hint: <spec-number|slug>
+---
+
 Set up a spec for implementation: find or create a Linear issue, mark the spec as doing on main, then checkout the feature branch.
 
 The todo → doing rename is committed to `main` first so the catalog always reflects in-progress work accurately. The feature branch is created from the updated main.

@@ -1,3 +1,8 @@
+---
+description: Adversarially stress-test todo/doing specs for gaps and inconsistencies in the document itself. Report-only; never reads the codebase or edits anything.
+argument-hint: <NNN|slug> [more…]
+---
+
 Adversarially stress-test a spec (or a set) for **gaps and inconsistencies in the document
 itself** — the things that would stall or mislead an implementer. Report-only: it never edits,
 never changes status, never opens anything. Usage: `/spec-workflow:redteam <NNN|slug> [more…]`, or

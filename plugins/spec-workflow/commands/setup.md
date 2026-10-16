@@ -1,3 +1,7 @@
+---
+description: Configure the spec workflow for this project — infer what the spec commands need, ask for the rest, and write it into CLAUDE.md. Idempotent.
+---
+
 Preemptively configure the spec workflow for **this** project. Read what the spec commands and
 agents actually need, inspect the codebase and existing `CLAUDE.md`, **infer** what can be
 determined safely, **ask** for the rest, and write the result into `CLAUDE.md` so later commands

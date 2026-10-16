@@ -1,3 +1,7 @@
+---
+description: Audit the specs catalog for structural integrity — CATALOG.md vs spec files, number collisions, cross-reference and asset links — then propose and apply mechanical fixes on confirmation. Never judges spec quality.
+---
+
 Audit the specs catalog for **structural integrity** — not content quality. Cross-check
 `CATALOG.md` against the spec files, catch number collisions, and validate the cross-reference and
 asset-link graph. Produces a report + a concrete fix proposal, then applies the mechanical

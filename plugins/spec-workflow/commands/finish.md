@@ -1,3 +1,7 @@
+---
+description: Close out the current branch — update the spec to done with implementation notes (or superseded), and create the final commit.
+---
+
 Close out the current branch by updating the spec and creating the final commit.
 
 > **Abandoned instead of shipped?** If the branch's work is being dropped because the spec was

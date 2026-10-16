@@ -1,3 +1,7 @@
+---
+description: Deeply evaluate the current branch's work against its doing spec — correctness, completeness, tests, and change division. Read-only; produces a written evaluation.
+---
+
 Deeply evaluate the work done on the current branch against the spec. Read-only — no file changes, just a thorough written evaluation.
 
 ---

@@ -1,3 +1,8 @@
+---
+description: Create a new spec or concern file in the project's specs/ catalog, on main, following spec-conventions.
+argument-hint: "[title or description]"
+---
+
 Help the user create a new spec or concern file in the project catalog.
 
 **Model & templates:** the definitions of *concern* vs *spec*, the `NNN-status-slug` naming, and
