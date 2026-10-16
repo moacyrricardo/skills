@@ -1,3 +1,8 @@
+---
+description: Implement a spec end-to-end — code, tests, and hand-off to /spec-workflow:finish; runs /spec-workflow:start first if the branch and Linear issue aren't set up.
+argument-hint: "[spec-number]"
+---
+
 Implement a spec end-to-end: code, tests, and hand-off to /spec-workflow:finish. Calls /spec-workflow:start first if the branch and Linear issue are not already set up.
 
 ---

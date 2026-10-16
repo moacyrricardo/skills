@@ -1,3 +1,7 @@
+---
+description: Produce a planning table of actionable work (todo/doing specs and unresolved concerns) from the specs catalog.
+---
+
 Produce a planning table from the specs catalog.
 
 > Spec/concern definitions, statuses, the canonical section names, and the `CATALOG.md` index
