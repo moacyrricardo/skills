@@ -1,3 +1,7 @@
+---
+description: Start (or confirm) this project's local dev server using the CLAUDE.md "Dev server" recipe, so other steps can drive it. Idempotent — reports the URL if already up.
+---
+
 Start (or confirm) this project's local dev server so other steps can drive it. Reads the project's CLAUDE.md "Dev server" section for the start command, port, and readiness signal — stays generic across projects. Idempotent: if it's already up, it just reports the URL.
 
 ---
