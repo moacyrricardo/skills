@@ -1,3 +1,8 @@
+---
+description: Squash-merge one PR or a chain of stacked PRs into main, handling the rebase bookkeeping between merges.
+argument-hint: <pr-number> [more…]
+---
+
 Squash-merge one PR or a chain of stacked PRs into main, handling the rebase bookkeeping between each merge.
 
 **Input:** Space-separated PR numbers in merge order, e.g. `3 5 6 7` or a single number `3`.
