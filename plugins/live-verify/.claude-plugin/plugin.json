@@ -1,7 +1,7 @@
 {
   "name": "live-verify",
   "description": "Prove a feature works against a running app: start (or confirm) the project's dev server, then drive the app — a real browser via geckodriver, or curl for APIs — to capture a screenshot/gif/text verdict. Reusable primitives with no spec/tracker coupling: the caller publishes.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Moacyr Ricardo",
     "email": "moacyr.ricardo@gmail.com"
