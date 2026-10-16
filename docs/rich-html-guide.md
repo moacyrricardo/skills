@@ -56,8 +56,9 @@ reads fastest:
 - **Progressive disclosure** — the conclusion is visible; the evidence is one expand away, in place,
   via native `<details>`. Dense, but never a wall.
 - **Visual evidence** — evidence is always the prose claim *plus*, when it helps, a supporting
-  artifact under it (never the artifact alone): a code snippet, an inline-SVG flow diagram, a chart
-  (via the `dataviz` skill), an existing screenshot, or a schematic divs+CSS layout sketch.
+  artifact under it (never the artifact alone): a code snippet, an inline-SVG flow or structure
+  diagram (a system map, data flow, actor steps, service or component sketch), a chart (via the
+  `dataviz` skill), an existing screenshot, or a schematic divs+CSS UI sketch.
 
 ## `report` — sources → a readable document
 
