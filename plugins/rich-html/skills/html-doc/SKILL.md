@@ -63,8 +63,9 @@ the conclusion; let the reader expand to the proof, in place.
 
 Every piece of evidence is **text plus, when it helps, a supporting artifact — never the artifact
 alone.** The prose states the claim or the fork and carries the reader; a code snippet, chart,
-diagram, or sketch sits *under* it, inside the expandable context, as substantiation the reader can
-check. So the question is never "text or visual" — it is whether a supporting artifact earns its
+diagram, or sketch sits *under* it — by default inside the expandable context, as substantiation the
+reader can check. (A command may promote a visual into the always-visible body when the visual *is*
+the fastest way to make the call — `decide`'s framing figure and per-option before/after panes do.) So the question is never "text or visual" — it is whether a supporting artifact earns its
 place beside the text. All three commands draw from the same small vocabulary of supporting forms so
 their output stays one system; each command owns *when* a piece of its content warrants one, this
 skill owns *how* each is built (and every form here is inline and CSP-safe — SVG and divs inline,

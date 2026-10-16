@@ -38,26 +38,61 @@ rather than manufacturing choices.
 For every decision, assemble:
 
 - **A one-line question** — the fork, stated so it can be answered by picking.
-- **Options** — 2–4 concrete choices, each with a short consequence. Mark a **recommended** option
-  when the evidence favors one (with a one-line why); never invent a recommendation you can't
-  support.
+- **A framing paragraph** — visible, not collapsed: the status quo, what changed or broke to make
+  this a fork, what is *already decided* around it, and exactly what is left open. The reader
+  should be able to choose from the card alone; the expandable context is proof, not prerequisite.
+- **A framing visual (nudged, not forced)** — one figure under the framing paragraph that shows the
+  status quo and *where the fork sits in it*. Pick the form from what the decision is about:
+
+  | The fork is about… | Draw |
+  | :-- | :-- |
+  | a screen / UI behavior | a **UI miniature** — schematic divs+CSS of the relevant part of the page |
+  | data shape / data flow | a **data-flow diagram** — sources → transforms → consumers, inline SVG |
+  | a use case / user journey | a **step or sequence strip** — actor actions in order |
+  | service-to-service communication | a **service diagram** — boxes per service, labeled calls/events |
+  | internal architecture | a **component diagram** — modules and their dependencies |
+  | timing / latency / budgets | a **timeline bar** — durations against the limit |
+
+  Mark the open spot visibly (a dashed arrow, a highlighted "?" box) and use color for decided /
+  broken / open, with a `<figcaption>` saying which is which. **Skip it when nothing would be
+  drawn** — a naming call, a pure policy or a single number has no picture; prose alone is then
+  correct, and an empty or decorative figure is worse than none. The test: *would the reader
+  understand the fork faster with the picture than with one more sentence?*
+- **Options** — 2–4 concrete choices. Each option gets:
+  - **A paragraph** — the mechanism (what concretely changes), why it's attractive, what it costs,
+    and when it would become the wrong call. Not a one-line consequence.
+  - **A before/after pair, when the framing visual exists** — two panes side by side, *Today* and
+    *With (x)*, drawn in the **same form and baseline** as the framing visual so options compare
+    at a glance; only the delta the option introduces differs. The *Today* pane may crop to just
+    the part this option touches. A short note under each pane (good / warn / bad colored) names
+    the effect. If the options don't differ in anything drawable, keep the framing visual and skip
+    the per-option pairs.
+  - **Tags** — `recommended` (only when the evidence supports it, with the why in the paragraph),
+    plus risk flags the reader should see before picking (`cross-repo`, `violates <constraint>`,
+    `needs migration`). Never invent a recommendation you can't support.
 - **Expandable context** — the real evidence behind the fork, shown in place via `<details>`: the
   concern's options section, the PR's changed files / the specific thread, the issue excerpt, the
-  code around the marker. This is the point of the surface — wire it to the *actual* source, not a
-  paraphrase. Escape interpolated text. When a fork turns on something visual — a code path, a
-  page-to-page flow, competing layouts — keep the prose that states the fork and pair it with the
-  matching supporting form from `html-doc`'s **Visual evidence** section (the layout-sketch form is
-  especially at home here), rather than describing the visual in words alone.
+  code around the marker (with the path in, per `html-doc`). This is the proof — wire it to the
+  *actual* source, not a paraphrase, and escape interpolated text. The visuals above are drawn
+  *from* this evidence: name the real identifiers (functions, endpoints, fields, screens) in them,
+  never generic placeholders.
 - **Source link** — where it came from, so a choice is traceable.
+
+Draw every visual per `html-doc`'s **Visual evidence** section (inline SVG or divs+CSS, theme
+tokens only, schematic not pixel-faithful).
 
 ## 3. Build the surface (per `html-doc`)
 
 One self-contained interactive HTML file:
 
-- Each decision is a **card**: question + options as selectable controls (radio-style), collapsed
-  by default, expanding in place to its context.
-- **Selection state in vanilla JS** — clicking an option records it; a per-decision "chosen" state
-  drives the emitted prompt.
+- A **lede** above the cards: the source(s), what is already decided and out of scope, and the
+  card layout the reader is about to see.
+- Each decision is a **card**, in this order: id + question + status → framing paragraph →
+  framing visual → options (radio-style selectable controls, each with paragraph + before/after
+  pair + tags) → `<details>` context. The card body is visible; only the context is collapsed.
+- **Selection state in vanilla JS** — clicking anywhere on an option records it; the chosen option
+  and the card's status ("undecided" → "decided") reflect it, and a header counter shows
+  "n / N decided". The chosen state drives the emitted prompt.
 - Convenience actions: **"Accept all recommended"** (one click pre-selects every recommended
   option) and **"Reset"**.
 - **Guardrail:** the surface always renders as a rich document. It must **never** degrade into a
