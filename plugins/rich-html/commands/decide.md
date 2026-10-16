@@ -42,22 +42,14 @@ For every decision, assemble:
   this a fork, what is *already decided* around it, and exactly what is left open. The reader
   should be able to choose from the card alone; the expandable context is proof, not prerequisite.
 - **A framing visual (nudged, not forced)** — one figure under the framing paragraph that shows the
-  status quo and *where the fork sits in it*. Pick the form from what the decision is about:
-
-  | The fork is about… | Draw |
-  | :-- | :-- |
-  | a screen / UI behavior | a **UI miniature** — schematic divs+CSS of the relevant part of the page |
-  | data shape / data flow | a **data-flow diagram** — sources → transforms → consumers, inline SVG |
-  | a use case / user journey | a **step or sequence strip** — actor actions in order |
-  | service-to-service communication | a **service diagram** — boxes per service, labeled calls/events |
-  | internal architecture | a **component diagram** — modules and their dependencies |
-  | timing / latency / budgets | a **timeline bar** — durations against the limit |
-
-  Mark the open spot visibly (a dashed arrow, a highlighted "?" box) and use color for decided /
-  broken / open, with a `<figcaption>` saying which is which. **Skip it when nothing would be
-  drawn** — a naming call, a pure policy or a single number has no picture; prose alone is then
-  correct, and an empty or decorative figure is worse than none. The test: *would the reader
-  understand the fork faster with the picture than with one more sentence?*
+  status quo and *where the fork sits in it*. Pick the form from what the fork is about — a UI region,
+  a data or system flow, an actor's steps, a service map, or a timeline — from `html-doc`'s **Visual
+  evidence** vocabulary, which owns how each form is built. Mark the open spot visibly (a dashed
+  arrow, a highlighted "?" box) and use color for decided / broken / open, with a `<figcaption>`
+  saying which is which. **Skip it when nothing would be drawn** — a naming call, a pure policy or a
+  single number has no picture; prose alone is then correct, and an empty or decorative figure is
+  worse than none. The test: *would the reader understand the fork faster with the picture than with
+  one more sentence?*
 - **Options** — 2–4 concrete choices. Each option gets:
   - **A paragraph** — the mechanism (what concretely changes), why it's attractive, what it costs,
     and when it would become the wrong call. Not a one-line consequence.
