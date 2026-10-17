@@ -56,8 +56,9 @@ reads fastest:
 - **Progressive disclosure** — the conclusion is visible; the evidence is one expand away, in place,
   via native `<details>`. Dense, but never a wall.
 - **Visual evidence** — evidence is always the prose claim *plus*, when it helps, a supporting
-  artifact under it (never the artifact alone): a code snippet, an inline-SVG flow diagram, a chart
-  (via the `dataviz` skill), an existing screenshot, or a schematic divs+CSS layout sketch.
+  artifact under it (never the artifact alone): a code snippet, an inline-SVG flow or structure
+  diagram (a system map, data flow, actor steps, service or component sketch), a chart (via the
+  `dataviz` skill), an existing screenshot, or a schematic divs+CSS UI sketch.
 
 ## `report` — sources → a readable document
 
@@ -83,8 +84,12 @@ agent can execute.
 
 1. **Collect** — sweeps for genuine pending choices: a concern's `## Options`, unresolved PR-review
    forks, "needs decision" issues, autopilot escalations, `TODO(decide:)` markers.
-2. **Model each** — a one-line question, 2–4 concrete options (with a *recommended* one where the
-   evidence supports it), and **expandable context** wired to the actual source.
+2. **Model each** — a one-line question, a visible framing paragraph, and — when something can be
+   drawn — a **framing visual** of the status quo with the fork marked (UI miniature, data-flow,
+   use-case strip, service or component diagram, timeline). Then 2–4 options, each a paragraph plus
+   a **Today / With (x)** pair in the same visual form (with a *recommended* tag where the evidence
+   supports it), and **expandable context** wired to the actual source. Visuals are nudged, never
+   forced: a fork with nothing to draw stays prose.
 3. **Emit one prompt** — you choose per decision (or "accept all recommended"), and a **Copy prompt**
    button assembles a single, self-standing prompt — one line per decision with its choice and source
    — to hand straight back to an agent.
@@ -134,6 +139,12 @@ decision, `branch-review` points at `decide` too.
 
 ## Changelog
 
+- **2026-10-16 · `decide` cards gain framing + before/after visuals (plugin `0.4.0`).** Each decision
+  now carries a visible framing paragraph and, when the fork is drawable, a framing visual chosen by
+  subject (UI miniature, data-flow, use-case strip, service/component diagram, timeline); each option
+  gets a full paragraph and a *Today / With (x)* pair in the same form. Visuals are nudged, not
+  forced — a fork with nothing to draw stays prose. Distilled from a hand-prompted run that
+  outperformed the default shape.
 - **2026-08-24 · `branch-review` output redesigned into a review tool (plugin `0.3.1`).** The
   generated file now *resembles a real diff-review UI* — a collapsible file navigator, a "why these
   change-types" overview, and two combinable **intersecting** filters (change type × file type) over

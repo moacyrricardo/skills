@@ -63,20 +63,26 @@ the conclusion; let the reader expand to the proof, in place.
 
 Every piece of evidence is **text plus, when it helps, a supporting artifact — never the artifact
 alone.** The prose states the claim or the fork and carries the reader; a code snippet, chart,
-diagram, or sketch sits *under* it, inside the expandable context, as substantiation the reader can
-check. So the question is never "text or visual" — it is whether a supporting artifact earns its
-place beside the text. All three commands draw from the same small vocabulary of supporting forms so
-their output stays one system; each command owns *when* a piece of its content warrants one, this
-skill owns *how* each is built (and every form here is inline and CSP-safe — SVG and divs inline,
+diagram, or sketch sits *under* it — by default inside the expandable context, as substantiation the
+reader can check. (A command may promote a visual into the always-visible body when the visual *is*
+the fastest way to make the call — `decide`'s framing figure and per-option before/after panes, and
+`branch-review`'s summary chart, do.) So the question is never "text or visual" — it is whether a
+supporting artifact earns its place beside the text. All three commands draw from the same small
+vocabulary of supporting forms so their output stays one system; each command owns *when* a piece of
+its content warrants one, this skill owns *how* each is built (and every form here is inline and
+CSP-safe — SVG and divs inline,
 images as `data:` URIs):
 
 - **Code → the real snippet, plus how execution reaches it.** Paste the actual lines (escaped, in
   `<pre>`) and add one line on the path in — the caller, the trigger — so the point rests on the
   code, not a paraphrase.
-- **Flow (state/page A → B) → a small inline-SVG diagram.** Labeled nodes and an arrow, so the
-  reader sees the path instead of reading a sentence about it. Keep it a few nodes; it is a
-  signpost, not a UML chart.
-- **Trend / distribution / comparison → a chart.** Inline SVG, no chart library. When you draw one,
+- **Flow / structure (state/page A → B, or a small system map) → a small inline-SVG diagram.**
+  Labeled nodes and arrows, so the reader sees the shape instead of reading a sentence about it. The
+  nodes are whatever the evidence is about: pages or states, data stages (sources → transforms →
+  consumers), an actor's steps in order, services with labeled calls/events, or modules with their
+  dependencies. Keep it a few nodes; it is a signpost, not a full architecture diagram.
+- **Trend / distribution / comparison → a chart.** Inline SVG, no chart library. A duration or
+  timeline bar against a budget is a chart too, so it follows this rule. When you draw one,
   **load the `dataviz` skill first** for palette, form choice, and light/dark-safe rendering rather
   than hand-rolling a bar — a report synthesizing history or logs is often *itself* a trend, so this
   is the form `report` reaches for most.
@@ -84,11 +90,11 @@ images as `data:` URIs):
   screen looks. **Read-only caveat:** all three commands only inspect — use an image the source already
   has (a PR, an issue, a thread); never spin up the app just to capture one. With no existing image,
   fall back to a layout sketch or plain description.
-- **Page layout → rough it in divs+CSS.** A few styled divs sketching each option's arrangement,
-  side by side, so shapes compare at a glance. This one is **decide-flavored** — it serves *choosing
-  between* layouts, so `report` rarely needs it. And it is a **thumbnail, not a facsimile**: pixel
-  fidelity to the product is `mockup`'s posture and deliberately not this skill's (see §2). Keep it
-  schematic.
+- **UI region / layout → rough it in divs+CSS.** A few styled divs sketching the relevant part of a
+  screen — one region, or each option's arrangement side by side so shapes compare at a glance. This
+  one is **decide-flavored** — it serves *choosing between* layouts and showing where a fork sits in
+  a screen, so `report` rarely needs it. And it is a **thumbnail, not a facsimile**: pixel fidelity
+  to the product is `mockup`'s posture and deliberately not this skill's (see §2). Keep it schematic.
 
 Every aid is **evidence, not decoration** — the text always stays; add a supporting artifact only
 when it substantiates the claim faster than more prose would. And none of them gate content: because

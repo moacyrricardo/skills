@@ -278,7 +278,7 @@
       <div class="rule reveal"><div class="t">Self-contained</div><div class="d">Inline CSS/JS, no network, assets as <code>data:</code> URIs — renders as a local file, an email attachment, or a Claude Artifact under a strict CSP.</div></div>
       <div class="rule reveal"><div class="t">Theme-aware</div><div class="d">Respects the reader's light/dark with a manual toggle. A document adapts to the reader — the opposite of a <code>mockup</code>.</div></div>
       <div class="rule reveal"><div class="t">Progressive disclosure</div><div class="d">Conclusion visible, evidence one expand away via native <code>&lt;details&gt;</code>. Dense, but never a wall.</div></div>
-      <div class="rule reveal"><div class="t">Visual evidence</div><div class="d">The prose claim <em>plus</em>, when it helps, a supporting artifact under it — a code snippet, an inline-SVG diagram, a chart (via <code>dataviz</code>), a screenshot, or a layout sketch. Never the artifact alone.</div></div>
+      <div class="rule reveal"><div class="t">Visual evidence</div><div class="d">The prose claim <em>plus</em>, when it helps, a supporting artifact under it — a code snippet, an inline-SVG flow or structure diagram (system map, data flow, actor steps, service/component sketch), a chart (via <code>dataviz</code>), a screenshot, or a schematic UI sketch. Never the artifact alone.</div></div>
     </div>
   </section>
 
@@ -323,7 +323,7 @@
         <div class="n">2</div>
         <div>
           <h3>Model each with real context</h3>
-          <p>A one-line question, 2–4 concrete options (with a <b>recommended</b> one where the evidence supports it), and <b>expandable context</b> wired to the actual source — the point of the surface.</p>
+          <p>A one-line question, a visible framing paragraph and — when something can be drawn — a <b>framing visual</b> of the status quo with the fork marked. Then 2–4 options, each a paragraph plus a <b>Today / With (x)</b> pair in the same form (with a <b>recommended</b> one where the evidence supports it), and <b>expandable context</b> wired to the actual source. Visuals are nudged, never forced.</p>
           <span class="cmdrow"><span class="p">/</span>rich-html:decide everything waiting on me across the open concerns and PRs</span>
         </div>
       </div>
@@ -376,6 +376,13 @@
     <h2 class="reveal">What's changed</h2>
     <p class="sec-lede reveal">Notable additions to the shared format, each backed by the evidence behind the call.</p>
     <div class="clog">
+      <div class="clog-item reveal">
+        <div class="clog-when">2026-10-16</div>
+        <div class="clog-body">
+          <h3><span class="mono">decide</span> cards gain framing + before/after visuals <span style="color:var(--muted); font-weight:400;">(plugin 0.4.0)</span></h3>
+          <p>Each decision now carries a visible framing paragraph and, when the fork is drawable, a framing visual chosen by subject — UI miniature, data-flow, use-case strip, service or component diagram, timeline. Each option gets a full paragraph and a <em>Today / With (x)</em> pair in the same form, so options compare at a glance. Visuals are nudged, not forced: a fork with nothing to draw stays prose. Distilled from a hand-prompted run that outperformed the default shape.</p>
+        </div>
+      </div>
       <div class="clog-item reveal">
         <div class="clog-when">2026-08-24</div>
         <div class="clog-body">
