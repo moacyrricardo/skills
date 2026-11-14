@@ -32,12 +32,16 @@ published as a Claude **Artifact** (which enforces a strict Content-Security-Pol
 The document is *about* something; it is not a product facsimile, so unlike a mock it **must**
 adapt to the reader's environment and offer a manual override.
 
-- Default to the OS preference via `@media (prefers-color-scheme: dark)`.
+- Default to the OS preference via `@media (prefers-color-scheme: dark)`, scoped to
+  `:root:not([data-theme="light"])` so a light choice beats a dark OS.
 - Let a toggle **win in both directions** by stamping `data-theme` on the root and styling
-  `:root[data-theme="dark"]` / `:root[data-theme="light"]` overrides. Canonical toggle:
+  `:root[data-theme="dark"]` / `:root[data-theme="light"]` overrides. The toggle flips the
+  *effective* theme — with no `data-theme` set yet, that is the OS preference — so its first click
+  always switches. Canonical toggle:
   ```html
-  <button class="themebtn" onclick="var r=document.documentElement;
-    r.setAttribute('data-theme', r.getAttribute('data-theme')==='dark'?'light':'dark')">◐ theme</button>
+  <button class="themebtn" onclick="var r=document.documentElement, t=r.getAttribute('data-theme')
+    || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    r.setAttribute('data-theme', t==='dark' ? 'light' : 'dark')">◐ theme</button>
   ```
 - Drive all color from a small set of CSS custom properties (`--bg`, `--fg`, `--muted`,
   `--accent`, `--border`, `--card`, and `--good` / `--warn` / `--bad` for state) redefined per
@@ -145,7 +149,7 @@ All three commands start from the same shape — a fixed header with the theme t
 <style>
   :root{ --bg:#fff; --fg:#1a1a1a; --muted:#666; --accent:#2563eb; --border:#e5e7eb; --card:#f8f9fa;
          --good:#15803d; --warn:#b45309; --bad:#b91c1c; }
-  @media (prefers-color-scheme:dark){ :root{ --bg:#0f1115; --fg:#e8e8e8; --muted:#9aa0a6; --border:#2a2d34; --card:#171a20;
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --bg:#0f1115; --fg:#e8e8e8; --muted:#9aa0a6; --border:#2a2d34; --card:#171a20;
          --good:#4ade80; --warn:#fbbf24; --bad:#f87171; } }
   :root[data-theme="dark"]{ --bg:#0f1115; --fg:#e8e8e8; --muted:#9aa0a6; --border:#2a2d34; --card:#171a20;
          --good:#4ade80; --warn:#fbbf24; --bad:#f87171; }
