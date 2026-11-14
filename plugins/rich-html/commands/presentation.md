@@ -89,8 +89,9 @@ Structure only — class names and styling are yours:
   Home / End; swipe left / right; **F** toggles the Fullscreen API; **N** toggles notes. Arrows,
   PageUp / PageDown and Home / End always navigate, even with a button focused — so they keep
   working after a click on Next; a focused button keeps only Space and Enter, a text field or select
-  keeps every key, and any Ctrl / Alt / Meta combination is ignored. A thin progress bar; `#N` in the URL, read on load and on `hashchange`. No click-to-advance — it
-  fights clicks on figures and links.
+  keeps every key, and any Ctrl / Alt / Meta combination is ignored. A thin progress bar; `#N` in
+  the URL, read on load and on `hashchange`. No click-to-advance — it fights clicks on figures and
+  links.
 - **Fit:** slides render on a fixed 16:9 stage (e.g. 1280×720) scaled to the window, so a slide
   always fits and never scrolls. Below a narrow width (~700 px) the scaling stops and slides stack.
   Button labels follow the deck's language.
