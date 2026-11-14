@@ -1,11 +1,11 @@
 ---
 name: html-doc
-description: The shared authoring contract for the rich-html plugin's document tools (report, decide, and branch-review) — how to build a single self-contained, theme-aware, interactive HTML file that renders anywhere (browser or Claude Artifact under a strict CSP) and uses progressive disclosure / expandable context to keep a dense document readable. Load this when generating a rich-html report, decision surface, or branch review so they feel like one system. This is the single source of truth those commands build on — prefer it over any inline restatement.
+description: The shared authoring contract for the rich-html plugin's document tools (report, decide, branch-review, and presentation) — how to build a single self-contained, theme-aware, interactive HTML file that renders anywhere (browser or Claude Artifact under a strict CSP) and uses progressive disclosure / expandable context to keep a dense document readable. Load this when generating a rich-html report, decision surface, branch review, or presentation so they feel like one system. This is the single source of truth those commands build on — prefer it over any inline restatement.
 ---
 
 # Authoring a self-contained interactive HTML document
 
-`report`, `decide`, and `branch-review` each emit **one HTML file** that a person opens and
+`report`, `decide`, `branch-review`, and `presentation` each emit **one HTML file** that a person opens and
 interacts with. This skill is the format contract they share so their output feels like one system.
 It is *not* about
 what to put in the document (each command owns its content) — only *how the file is built*.
@@ -76,7 +76,7 @@ diagram, or sketch sits *under* it — by default inside the expandable context,
 reader can check. (A command may promote a visual into the always-visible body when the visual *is*
 the fastest way to make the call — `decide`'s today visual and per-option outcome figures, and
 `branch-review`'s summary chart, do.) So the question is never "text or visual" — it is whether a
-supporting artifact earns its place beside the text. All three commands draw from the same small
+supporting artifact earns its place beside the text. All the commands draw from the same small
 vocabulary of supporting forms so their output stays one system; each command owns *when* a piece of
 its content warrants one, this skill owns *how* each is built (and every form here is inline and
 CSP-safe — SVG and divs inline, images as `data:` URIs):
@@ -102,7 +102,7 @@ CSP-safe — SVG and divs inline, images as `data:` URIs):
 - **Many items × a few attributes → a table.** Real `<table>` with a header row, inside its own
   scroll container; when items vary on one number, it is a chart instead.
 - **UI appearance → show it.** Embed the screenshot as a `data:` URI rather than describing how a
-  screen looks. **Read-only caveat:** all three commands only inspect — use an image the source already
+  screen looks. **Read-only caveat:** all the commands only inspect — use an image the source already
   has (a PR, an issue, a thread); never spin up the app just to capture one. With no existing image,
   fall back to a layout sketch or plain description.
 - **UI region / layout → rough it in divs+CSS.** A few styled divs sketching the relevant part of a
@@ -140,7 +140,8 @@ is off.
 
 ## The house skeleton
 
-All three commands start from the same shape — a fixed header with the theme toggle, then content:
+All the commands start from the same shape — a fixed header with the theme toggle, then content
+(`presentation` adapts it into a deck shell):
 
 ```html
 <!doctype html><html lang="…"><head><meta charset="utf-8">
