@@ -1,4 +1,4 @@
-Status: todo
+Status: doing
 Branch: moacyrricardo/spec-003-rich-html-presentation
 
 # 003 — presentation: a slide-deck command for rich-html
