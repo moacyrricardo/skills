@@ -57,8 +57,8 @@ reads fastest:
   via native `<details>`. Dense, but never a wall.
 - **Visual evidence** — evidence is always the prose claim *plus*, when it helps, a supporting
   artifact under it (never the artifact alone): a code snippet, an inline-SVG flow or structure
-  diagram (a system map, data flow, actor steps, service or component sketch), a chart (via the
-  `dataviz` skill), an existing screenshot, or a schematic divs+CSS UI sketch.
+  diagram (a system map, data flow, actor steps, service, sequence, schema or class sketch), a chart
+  (via the `dataviz` skill), a table, an existing screenshot, or a schematic divs+CSS UI sketch.
 
 ## `report` — sources → a readable document
 
@@ -83,23 +83,26 @@ your work** into one place, each with the real evidence to choose against, and e
 agent can execute.
 
 1. **Collect** — sweeps for genuine pending choices: a concern's `## Options`, unresolved PR-review
-   forks, "needs decision" issues, autopilot escalations, `TODO(decide:)` markers.
-2. **Model each** — a one-line question, a visible framing paragraph, and — when something can be
-   drawn — a **framing visual** of the status quo with the fork marked (UI miniature, data-flow,
-   use-case strip, service or component diagram, timeline). Then 2–4 options, each a paragraph plus
-   a **Today / With (x)** pair in the same visual form (with a *recommended* tag where the evidence
-   supports it), and **expandable context** wired to the actual source. Visuals are nudged, never
-   forced: a fork with nothing to draw stays prose.
-3. **Emit one prompt** — you choose per decision (or "accept all recommended"), and a **Copy prompt**
-   button assembles a single, self-standing prompt — one line per decision with its choice and source
-   — to hand straight back to an agent.
+   forks, "needs decision" issues, autopilot escalations, `TODO(decide):` / `FIXME` markers.
+2. **Model each** — a one-line question, then a **What** paragraph (what is being decided) and a
+   **Why** paragraph (why it needs deciding now), and — when something can be drawn — a **today
+   visual** of the status quo with the fork marked (UI sketch, schema, use-case flow, service or
+   sequence diagram, class/module diagram, timeline). Then 2–4 options, each a **How** paragraph plus
+   an **outcome figure** in the same form showing how things look if you choose it; its gains,
+   losses and "wrong call when…" sit collapsed and open when you pick it. Every card also has
+   **Defer — leave open**. Visuals are nudged, never forced: a naming call or a policy stays prose.
+3. **Conflicts** — when options on different cards can't both be done, picking one disables the
+   other with the reason shown; un-picking re-enables it. Softer tensions only warn.
+4. **Emit one prompt** — you choose per decision (or "accept all recommended"), and the page shows a
+   fixed-format prompt — per decision its choice, gains, accepted losses and "revisit if", plus its
+   source — with **Copy prompt** to hand it straight back to an agent. Picks survive a reload.
 
 ```
 /rich-html:decide everything waiting on me across the open concerns and PRs
 ```
 
 Guardrail: `decide` always renders the rich surface — it **never** degrades into chat Q&A. The
-expandable-context format *is* the value.
+evidence-backed card *is* the value.
 
 ## `branch-review` — a diff → a filterable review
 
@@ -139,11 +142,14 @@ decision, `branch-review` points at `decide` too.
 
 ## Changelog
 
-- **2026-10-16 · `decide` cards gain framing + before/after visuals (plugin `0.4.0`).** Each decision
-  now carries a visible framing paragraph and, when the fork is drawable, a framing visual chosen by
-  subject (UI miniature, data-flow, use-case strip, service/component diagram, timeline); each option
-  gets a full paragraph and a *Today / With (x)* pair in the same form. Visuals are nudged, not
-  forced — a fork with nothing to draw stays prose. Distilled from a hand-prompted run that
+- **2026-11-14 · `decide` cards rebuilt around what / why / how (plugin `0.4.0`).** Each decision
+  carries a visible **What** and **Why** paragraph and, when the fork is drawable, a today visual
+  chosen by subject; each option gets a **How** paragraph and an outcome figure in the same form,
+  with its gains, losses and "wrong call when…" collapsed until picked. Options that contradict
+  across cards disable each other with the reason shown; every card can be deferred; the prompt has
+  a fixed format and picks persist. `html-doc` gains state colors, schema / class / sequence
+  diagrams, tables, an optional step-through for timing diagrams, and the same-baseline rule for
+  compared figures. Visuals are nudged, not forced. Distilled from hand-prompted runs that
   outperformed the default shape.
 - **2026-08-24 · `branch-review` output redesigned into a review tool (plugin `0.3.1`).** The
   generated file now *resembles a real diff-review UI* — a collapsible file navigator, a "why these
