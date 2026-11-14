@@ -1,0 +1,264 @@
+<!doctype html>
+<!--
+  rich-html deck shell — the starting point for /rich-html:presentation.
+  Copy this file, keep its <style> and <script> as they are, and replace only what is marked
+  REPLACE: the title, the design tokens (from the project's design system), and the slides.
+  Transitions: data-transition on <main class="stage"> sets the deck default
+  (slide | slide-up | fade | none); the same attribute on one <section class="slide"> overrides it.
+-->
+<html lang="en"><!-- REPLACE: the deck's language -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deck title</title><!-- REPLACE -->
+<script>document.documentElement.classList.add('js')</script>
+<style>
+  /* REPLACE: tokens from the project's design system (keep the names) */
+  :root{ --bg:#fff; --fg:#1a1a1a; --muted:#666; --accent:#2563eb; --border:#e5e7eb; --card:#f8f9fa;
+         --good:#15803d; --warn:#b45309; --bad:#b91c1c; }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --bg:#0f1115; --fg:#e8e8e8;
+         --muted:#9aa0a6; --accent:#60a5fa; --border:#2a2d34; --card:#171a20; --good:#4ade80; --warn:#fbbf24; --bad:#f87171; } }
+  :root[data-theme="dark"]{ --bg:#0f1115; --fg:#e8e8e8; --muted:#9aa0a6; --accent:#60a5fa; --border:#2a2d34;
+         --card:#171a20; --good:#4ade80; --warn:#fbbf24; --bad:#f87171; }
+
+  /* ---- shell: keep from here ---- */
+  :root{ --t:420ms; --ease:cubic-bezier(.22,.61,.36,1); }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; background:var(--bg); color:var(--fg); font:20px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  button{ font:inherit; font-size:15px; color:var(--fg); background:var(--card); border:1px solid var(--border);
+          border-radius:8px; padding:6px 12px; cursor:pointer; }
+  button:disabled{ opacity:.4; cursor:default; }
+  button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  /* Without JS (and in print) the slides stack as a document, notes visible. */
+  .slide{ position:relative; padding:56px 72px 96px; border-bottom:1px solid var(--border); }
+  .slide .over{ margin:0 0 8px; font-size:15px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); }
+  .slide h1{ font-size:56px; line-height:1.1; margin:0 0 20px; }
+  .slide h2{ font-size:38px; line-height:1.15; margin:0 0 24px; }
+  .slide figure{ margin:0; }
+  .slide figure img{ max-width:100%; display:block; }
+  .slide .src{ position:absolute; left:72px; right:72px; bottom:28px; margin:0; font-size:14px; color:var(--muted); }
+  .notes{ margin-top:24px; padding:12px 16px; border-left:3px solid var(--accent); color:var(--muted); font-size:16px; }
+  .deck-bar, .deck-nav, #notes-panel, .progress{ display:none; }
+
+  /* Deck mode: only once the script has run. */
+  .js body{ height:100vh; height:100dvh; overflow:hidden; display:grid; grid-template-rows:auto 1fr auto auto; }
+  .js .deck-bar, .js .deck-nav{ display:flex; align-items:center; gap:10px; padding:8px 16px; }
+  .js .deck-bar{ justify-content:space-between; font-size:15px; color:var(--muted); }
+  .js .deck-nav{ justify-content:center; }
+  .js .progress{ display:block; position:fixed; top:0; left:0; height:3px; background:var(--accent);
+                 transition:width var(--t) var(--ease); z-index:2; }
+  @media (prefers-reduced-motion: reduce){ .js .progress{ transition:none; } }
+  .js .viewport{ position:relative; overflow:hidden; touch-action:pan-y pinch-zoom; }
+  .js .stage{ position:absolute; left:50%; top:50%; width:1280px; height:720px; overflow:hidden;
+              transform:translate(-50%,-50%) scale(var(--k,1)); }
+  .js .slide{ position:absolute; inset:0; border:0; visibility:hidden; background:var(--bg); }
+  .js .slide.is-current, .js .slide.is-leaving{ visibility:visible; }
+  .js .slide.is-leaving{ z-index:0; } .js .slide.is-current{ z-index:1; }
+  .js .slide .notes{ display:none; }
+  /* Phone-sized screen (narrow or short): no scaling — the slide reflows to the screen width and scrolls. */
+  .js .stage.reflow{ left:0; top:0; width:100%; height:100%; transform:none; }
+  .js .stage.reflow .slide{ padding:24px 20px 32px; overflow-y:auto; font-size:17px; }
+  .js .stage.reflow .slide h1{ font-size:32px; } .js .stage.reflow .slide h2{ font-size:25px; }
+  .js .stage.reflow .slide .src{ position:static; margin-top:24px; }
+  .js .stage.reflow img, .js .stage.reflow svg{ max-width:100%; height:auto; }
+  .js #notes-panel:not([hidden]){ display:block; max-height:28vh; overflow:auto; margin:0 16px 8px;
+                                  padding:10px 14px; border:1px solid var(--border); border-radius:8px;
+                                  background:var(--card); font-size:15px; }
+
+  @media print{
+    .js body{ height:auto; overflow:visible; display:block; }
+    .deck-bar, .deck-nav, #notes-panel, .progress{ display:none !important; }
+    .js .viewport, .js .stage{ position:static; transform:none; width:auto; height:auto; overflow:visible; }
+    .js .slide{ position:relative; visibility:visible; min-height:100vh; break-after:page; transform:none !important; opacity:1 !important; }
+    .js .slide .notes{ display:block; }
+  }
+  /* ---- shell: keep up to here ---- */
+</style>
+</head>
+<body>
+  <header class="deck-bar">
+    <span class="deck-title">Deck title</span><!-- REPLACE -->
+    <span>
+      <button id="btn-notes" aria-pressed="false" title="Speaker notes (N)">Notes</button>
+      <button id="btn-full" title="Full screen (F)">⛶</button>
+      <button id="btn-theme" title="Theme">◐</button>
+    </span>
+  </header>
+  <div class="progress" aria-hidden="true"></div>
+
+  <div class="viewport">
+    <main class="stage" data-transition="slide">
+      <!-- REPLACE: the slides. One claim per slide; one figure; a source line; optional notes. -->
+      <section class="slide" aria-label="Cover">
+        <h1>The deck's title, as its claim</h1>
+        <p>A one-line lead.</p>
+        <aside class="notes">What to say on the cover.</aside>
+      </section>
+      <section class="slide">
+        <p class="over">Beat 1</p>
+        <h2>A slide's headline states its point</h2>
+        <figure><!-- the one figure --><figcaption>Caption</figcaption></figure>
+        <p class="src">Source: path/to/file.md:12</p>
+        <aside class="notes">What the slide doesn't show.</aside>
+      </section>
+      <section class="slide" data-transition="fade">
+        <p class="over">Beat 2</p>
+        <h2>This slide fades instead of sliding</h2>
+        <p class="src">Source: …</p>
+      </section>
+    </main>
+  </div>
+
+  <aside id="notes-panel" hidden aria-live="polite"></aside>
+  <nav class="deck-nav" aria-label="Slides">
+    <button id="btn-prev">Previous</button><!-- REPLACE: labels in the deck's language -->
+    <span id="counter" aria-live="polite">1 / 1</span>
+    <button id="btn-next">Next</button>
+  </nav>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var stage = document.querySelector('.stage'), viewport = document.querySelector('.viewport');
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var counter = document.getElementById('counter'), bar = document.querySelector('.progress');
+  var prevBtn = document.getElementById('btn-prev'), nextBtn = document.getElementById('btn-next');
+  var notesBtn = document.getElementById('btn-notes'), panel = document.getElementById('notes-panel');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var cur = -1, running = [];
+
+  // Scale the 1280×720 stage to fit the viewport; on a phone-sized screen, reflow instead.
+  function fit(){
+    var w = viewport.clientWidth, h = viewport.clientHeight, reflow = w < 700 || h < 480;
+    stage.classList.toggle('reflow', reflow);
+    stage.style.setProperty('--k', reflow ? 1 : Math.min(w / 1280, h / 720));
+  }
+
+  // Transitions: each returns [outgoing keyframes, incoming keyframes]; dir is +1 (next) or -1 (back).
+  var T = {
+    'slide':    function(d){ return [[{transform:'translateX(0)'},{transform:'translateX('+(-d*100)+'%)'}],
+                                     [{transform:'translateX('+(d*100)+'%)'},{transform:'translateX(0)'}]]; },
+    'slide-up': function(d){ return [[{transform:'translateY(0)'},{transform:'translateY('+(-d*100)+'%)'}],
+                                     [{transform:'translateY('+(d*100)+'%)'},{transform:'translateY(0)'}]]; },
+    'fade':     function(){ return [[{opacity:1},{opacity:0},{opacity:0}], [{opacity:0},{opacity:0},{opacity:1}]]; },
+    'none':     function(){ return null; }
+  };
+  function kindFor(el){
+    var k = el.getAttribute('data-transition') || stage.getAttribute('data-transition') || 'slide';
+    if (reduce.matches) k = (k === 'none') ? 'none' : 'fade';
+    return T[k] ? k : 'slide';
+  }
+
+  function go(n, opts){
+    opts = opts || {};
+    n = Math.max(0, Math.min(slides.length - 1, n));
+    if (n === cur) return;
+    running.forEach(function(a){ a.finish(); }); running = [];
+    var from = slides[cur], to = slides[n], dir = n > cur ? 1 : -1;
+    slides.forEach(function(s){ s.classList.remove('is-current', 'is-leaving'); s.setAttribute('aria-hidden', 'true'); });
+    to.classList.add('is-current'); to.removeAttribute('aria-hidden');
+    if (from && from !== to && !opts.instant && 'animate' in to){
+      var kind = kindFor(to), frames = T[kind](dir), dur = reduce.matches ? 160 : (opts.dur || 420);
+      if (frames){
+        if (opts.fromX && kind === 'slide') frames[0][0] = {transform:'translateX(' + opts.fromX + 'px)'};
+        from.classList.add('is-leaving');
+        var out = from.animate(frames[0], {duration:dur, easing:'cubic-bezier(.22,.61,.36,1)'});
+        var inn = to.animate(frames[1], {duration:dur, easing:'cubic-bezier(.22,.61,.36,1)'});
+        running = [out, inn];
+        var done = function(){ if (from !== slides[cur]) from.classList.remove('is-leaving'); };
+        out.onfinish = done; setTimeout(done, dur + 80);
+      }
+    }
+    cur = n;
+    counter.textContent = (n + 1) + ' / ' + slides.length;
+    bar.style.width = ((n + 1) / slides.length * 100) + '%';
+    prevBtn.disabled = n === 0; nextBtn.disabled = n === slides.length - 1;
+    var notes = to.querySelector('.notes');
+    panel.innerHTML = notes ? notes.innerHTML : '<em>No notes for this slide.</em>';
+    if (location.hash !== '#' + (n + 1)) history.replaceState(null, '', '#' + (n + 1));
+  }
+  function step(d){ go(cur + d); }
+
+  // Keys: arrows, PageUp/PageDown and Home/End always navigate — even right after clicking a button.
+  // A focused button keeps Space and Enter; a text field or select keeps every key.
+  document.addEventListener('keydown', function(e){
+    if (e.ctrlKey || e.altKey || e.metaKey) return;
+    var t = e.target, tag = t && t.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (t && t.isContentEditable)) return;
+    var onButton = t && t.closest && t.closest('button, a, summary');
+    switch (e.key){
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': step(1); break;
+      case 'ArrowLeft':  case 'ArrowUp':   case 'PageUp':   step(-1); break;
+      case 'Home': go(0); break;
+      case 'End':  go(slides.length - 1); break;
+      case ' ': if (onButton) return; step(e.shiftKey ? -1 : 1); break;
+      case 'f': case 'F': toggleFull(); break;
+      case 'n': case 'N': toggleNotes(); break;
+      default: return;
+    }
+    e.preventDefault();
+  });
+
+  // Swipe: the slide follows the finger for 'slide'; a short or slow swipe snaps back.
+  var sx = 0, sy = 0, st = 0, dx = 0, held = 0, tracking = false, axis = '';
+  viewport.addEventListener('touchstart', function(e){
+    if (e.touches.length !== 1) { tracking = false; return; }
+    running.forEach(function(a){ a.finish(); }); running = [];
+    sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); dx = 0; held = 0; axis = ''; tracking = true;
+  }, {passive:true});
+  viewport.addEventListener('touchmove', function(e){
+    if (!tracking) return;
+    var x = e.touches[0].clientX - sx, y = e.touches[0].clientY - sy;
+    if (!axis) axis = Math.abs(x) > Math.abs(y) + 4 ? 'x' : (Math.abs(y) > 8 ? 'y' : '');
+    if (axis !== 'x') return;
+    dx = x;
+    var edge = (cur === 0 && dx > 0) || (cur === slides.length - 1 && dx < 0);
+    if (kindFor(slides[cur]) === 'slide' && !reduce.matches){
+      held = dx / getK() * (edge ? 0.3 : 1);
+      slides[cur].style.transform = 'translateX(' + held + 'px)';
+    }
+  }, {passive:true});
+  viewport.addEventListener('touchend', function(){
+    if (!tracking) return; tracking = false;
+    var s = slides[cur]; s.style.transform = '';
+    if (axis !== 'x') return;
+    var fast = Math.abs(dx) / Math.max(1, Date.now() - st) > 0.4;
+    var d = dx < 0 ? 1 : -1, target = cur + d;
+    var fromX = held;
+    if ((Math.abs(dx) > 60 || fast) && target >= 0 && target < slides.length){
+      go(target, {fromX: fromX || undefined, dur: 300});
+    } else if (fromX){
+      running = [s.animate([{transform:'translateX(' + fromX + 'px)'},{transform:'translateX(0)'}],
+                           {duration:220, easing:'cubic-bezier(.22,.61,.36,1)'})];
+    }
+  });
+  function getK(){ return parseFloat(stage.style.getPropertyValue('--k')) || 1; }
+
+  function toggleFull(){
+    if (!document.fullscreenElement){ if (root.requestFullscreen) root.requestFullscreen().catch(function(){}); }
+    else if (document.exitFullscreen) document.exitFullscreen();
+  }
+  function toggleNotes(){
+    panel.hidden = !panel.hidden;
+    notesBtn.setAttribute('aria-pressed', String(!panel.hidden));
+    fit();
+  }
+  prevBtn.addEventListener('click', function(){ step(-1); });
+  nextBtn.addEventListener('click', function(){ step(1); });
+  notesBtn.addEventListener('click', toggleNotes);
+  document.getElementById('btn-full').addEventListener('click', toggleFull);
+  if (!root.requestFullscreen) document.getElementById('btn-full').hidden = true;
+  document.getElementById('btn-theme').addEventListener('click', function(){
+    var t = root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    root.setAttribute('data-theme', t === 'dark' ? 'light' : 'dark');
+  });
+
+  window.addEventListener('resize', fit);
+  window.addEventListener('hashchange', function(){ var n = parseInt(location.hash.slice(1), 10); if (n) go(n - 1); });
+  fit();
+  go((parseInt(location.hash.slice(1), 10) || 1) - 1, {instant:true});
+})();
+</script>
+</body>
+</html>
