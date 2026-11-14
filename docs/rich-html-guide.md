@@ -1,8 +1,9 @@
 # rich-html — turn your work into interactive HTML deliverables
 
-A short guide to the `rich-html` plugin and its three commands, `report`, `decide`, and
-`branch-review`. Each takes the scattered inputs of your work and turns them into a single
-**self-contained, interactive HTML file** — to *read*, to *act on*, or to *review*.
+A short guide to the `rich-html` plugin and its four commands, `report`, `decide`,
+`branch-review`, and `presentation`. Each takes the scattered inputs of your work and turns them
+into a single **self-contained, interactive HTML file** — to *read*, to *act on*, to *review*, or
+to *present*.
 
 > 📖 **Prefer the visual version?** Open [`rich-html-guide.html`](./rich-html-guide.html) in a
 > browser for the same guide with the two-track diagram and nicer formatting. This Markdown page is
@@ -12,6 +13,7 @@ A short guide to the `rich-html` plugin and its three commands, `report`, `decid
 sources    → report        → a readable document
 decisions  → decide        → an expandable surface + one prompt
 a diff     → branch-review → a filterable review, grouped by change-type
+a story    → presentation  → a full-screen slide deck
 ```
 
 ## Install
@@ -28,24 +30,24 @@ a diff     → branch-review → a filterable review, grouped by change-type
 ```
 
 Once installed the commands are namespaced: `/rich-html:report`, `/rich-html:decide`,
-`/rich-html:branch-review`.
+`/rich-html:branch-review`, `/rich-html:presentation`.
 
-## Three tools, one system
+## Four tools, one system
 
 Every command produces a **document about your work** — not the product itself (that's what the
 `prototype` plugin's `mockup` is for). They share a format contract, the `html-doc` skill, so the
 outputs feel like one system.
 
-| | `report` | `decide` | `branch-review` |
-| :-- | :------- | :------- | :-------------- |
-| **Turns** | heterogeneous sources | pending decisions | a branch/PR diff |
-| **Into** | a readable document | an interactive decision surface | a filterable diff review |
-| **You** | read it | choose per decision, then run the emitted prompt | filter & read |
-| **For** | facts *about* things | the forks *between* things | what a change *does*, and why |
+| | `report` | `decide` | `branch-review` | `presentation` |
+| :-- | :------- | :------- | :-------------- | :------------- |
+| **Turns** | heterogeneous sources | pending decisions | a branch/PR diff | a story and its sources |
+| **Into** | a readable document | an interactive decision surface | a filterable diff review | a full-screen slide deck |
+| **You** | read it | choose per decision, then run the emitted prompt | filter & read | present it, slide by slide |
+| **For** | facts *about* things | the forks *between* things | what a change *does*, and why | telling a story to an audience |
 
 ## The shared format — the `html-doc` skill
 
-`report`, `decide`, and `branch-review` all build on `html-doc`, which encodes the non-obvious
+`report`, `decide`, `branch-review`, and `presentation` all build on `html-doc`, which encodes the non-obvious
 rules that make one HTML file work everywhere, stay readable, and carry evidence in the form that
 reads fastest:
 
@@ -129,12 +131,39 @@ Read-only. It never touches the branch it reviews.
 > `branch-review-command` untagged, the rest tagged `api-surface` / `docs` / `process/convention`).
 > It also shows the *axes-are-lenses* caveat in the wild: on this tidy PR the two axes coincide.
 
+## `presentation` — a story → a full-screen slide deck
+
+Read-only. It never changes its sources and never re-captures the product.
+
+1. **Frame** — your story as **beats**, in order, and the effect each should have ("it feels
+   bureaucratic" → the numbered steps it takes today, with a tally); audience and occasion.
+2. **Gather** — real sources only: transcripts, specs, PRs, existing screenshots and GIFs, the code
+   for exact UI copy. Every image is looked at before it's captioned; quotes are verbatim with a
+   timestamp or line.
+3. **Shape** — one claim per slide, as its headline; one figure that proves it, picked by what the
+   beat is about (a quote, an annotated screenshot, a step path, a UI miniature, before/after, a
+   GIF, a chart); a source line at the foot.
+4. **Build and check** — a 16:9 stage that always fits the window; ←/→, Space, swipe, **F** for full
+   screen, **N** for speaker notes; a print view and a no-JS fallback (slides stack). Then every
+   slide is rendered headless and looked at — overflow, misplaced callouts, captions that overstate
+   their asset — and fixed.
+
+```
+/rich-html:presentation the onboarding drop-off: what users told us, the 7-step signup today, the
+2-step fix, the prototype GIF — for Friday's product review
+```
+
+The hand-back ends with **check before you present**: slides whose asset shows a neighbouring
+case, example data, and facts it couldn't verify.
+
 ## When to use which
 
 - Reaching for the **state of something**, a synthesis, a briefing → **`report`**.
 - Facing a pile of **unmade choices** and want to clear them in one pass → **`decide`**.
 - Wanting to **understand or review a diff** — what a branch or PR actually changed, and why →
   **`branch-review`**.
+- **Telling a story** to an audience — a problem, how it is today, the fix, the proof →
+  **`presentation`**.
 
 If `report` runs into a decision that needs making, it points at `decide`; if `decide` finds
 reportable state rather than a fork, it points back at `report`; and if a change hides an unmade
@@ -142,6 +171,12 @@ decision, `branch-review` points at `decide` too.
 
 ## Changelog
 
+- **2026-11-14 · `presentation`: a slide-deck command (plugin `0.5.0`).** A story's beats and
+  their real sources become a self-contained, full-screen 16:9 deck — one claim per slide with the
+  figure that proves it, keyboard/button/swipe navigation, speaker notes, print and no-JS views —
+  checked by rendering every slide. Distilled from an audit of a hand-prompted deck; see spec
+  [`003`](../specs/003-doing-rich-html-presentation.md). `html-doc`'s theme toggle no longer
+  ignores its first click when the OS is dark.
 - **2026-11-14 · `decide` cards rebuilt around what / why / how (plugin `0.4.0`).** Each decision
   carries a visible **What** and **Why** paragraph and, when the fork is drawable, a today visual
   chosen by subject; each option gets a **How** paragraph and an outcome figure in the same form,
