@@ -69,36 +69,31 @@ State your reading in one line and proceed. Ask **one** question only if a beat 
 
 ## 4. Build the deck shell
 
-Structure only — class names and styling are yours:
+**Start from the shell — don't write navigation yourself.** Copy
+`${CLAUDE_PLUGIN_ROOT}/templates/deck-shell.html`, keep its `<style>` shell block and `<script>`
+unchanged, and replace only what it marks `REPLACE`: the language, title, design tokens, button
+labels and the slides. The shell is tested once, so every deck gets the same behaviour:
 
-```html
-<header><span class="deck-title">…</span><button class="themebtn">◐</button></header>
-<main class="stage">
-  <section class="slide" id="s1" aria-label="1 of N">
-    <p class="over"><!-- beat --></p><h1><!-- cover title; h2 on every other slide --></h1>
-    <figure><!-- the one figure --><figcaption>…</figcaption></figure>
-    <p class="src"><!-- source line --></p>
-    <aside class="notes"><!-- optional speaker notes --></aside>
-  </section>
-  <!-- … -->
-</main>
-<nav><button>Previous</button> <span aria-live="polite">1 / N</span> <button>Next</button></nav>
-```
+- **Navigation:** Previous / Next buttons, ← / →, PageUp / PageDown, Space, Home / End, swipe (the
+  slide follows the finger), **F** full screen, **N** speaker notes, a progress bar, `#N` in the URL.
+  Arrows keep working after a click on Next; Space on a focused button stays with the button.
+- **Transitions:** `data-transition` on `<main class="stage">` sets the deck's default; the same
+  attribute on one `<section class="slide">` overrides it for arriving at that slide:
+  - `slide` (default) — the next slide comes in from the right, the previous from the left;
+  - `slide-up` — the same, vertically; for a step deeper into the same beat;
+  - `fade` — out, then in; for the cover, a change of beat, or a reveal;
+  - `none` — instant.
+  Keep one default and override sparingly. With reduced motion set, everything becomes a short fade.
+- **Fit:** a 1280×720 stage scaled to the window. On a phone-sized screen (narrower than 700 px or
+  shorter than 480 px) the shell stops scaling: the slide reflows to the screen width and scrolls,
+  so give any multi-column layout a one-column fallback under `.stage.reflow`.
+- **Without JS** slides stack in order with their notes visible; **print** uses the same stacked
+  view, one slide per page, notes under their slide.
 
-- **Navigation:** the buttons (disabled at the ends); ← / →, PageUp / PageDown, Space / Shift+Space,
-  Home / End; swipe left / right; **F** toggles the Fullscreen API; **N** toggles notes. Arrows,
-  PageUp / PageDown and Home / End always navigate, even with a button focused — so they keep
-  working after a click on Next; a focused button keeps only Space and Enter, a text field or select
-  keeps every key, and any Ctrl / Alt / Meta combination is ignored. A thin progress bar; `#N` in
-  the URL, read on load and on `hashchange`. No click-to-advance — it fights clicks on figures and
-  links.
-- **Fit:** slides render on a fixed 16:9 stage (e.g. 1280×720) scaled to the window, so a slide
-  always fits and never scrolls. Below a narrow width (~700 px) the scaling stops and slides stack.
-  Button labels follow the deck's language.
-- **JS never gates content:** the script adds a `.js` class to `<html>`, and only then are other
-  slides hidden and notes collapsed. Without JS, slides stack in order with their notes visible.
-- **Print** uses that same stacked view: one slide per page, header and nav hidden, notes under
-  their slide.
+Each slide is a `<section class="slide">` with an overline (`.over`), its headline (`h1` on the
+cover, `h2` elsewhere), one `<figure>`, a source line (`.src`) and optional notes
+(`<aside class="notes">`). No click-to-advance — it fights clicks on figures and links.
+
 - **Where a deck departs from `html-doc`:**
   - no `<details>` on a slide — the sequence is the disclosure; extra proof goes in the notes;
   - the slide's figure is promoted to the visible body (the `html-doc` §4 promotion clause);
@@ -128,9 +123,9 @@ Structure only — class names and styling are yours:
   product.
 - Look for: overflow or clipped source lines, callouts off target, elements covering each other,
   captions that don't match the asset, capture text too small to read.
-- Spot-check dark theme, a narrow width, the JS-off stack and the print view. Exercise the keys
-  with a small injected script: → after clicking Next must still advance; Space on the focused theme
-  button must toggle the theme, not the slide. Fix, then re-render what changed.
+- Spot-check dark theme, a phone width (390×844, which reflows), the JS-off stack and the print
+  view. If you changed the shell's script, re-test the keys: → after clicking Next must still
+  advance. Fix, then re-render what changed.
 - Grep the file for external URLs and for anything the user asked to keep out.
 - No browser available: say so in the hand-back, and use numbered points beside an image instead
   of callouts placed over it.
