@@ -10,7 +10,7 @@ interacts with. This skill is the format contract they share so their output fee
 It is *not* about
 what to put in the document (each command owns its content) — only *how the file is built*.
 
-The three non-obvious constraints below are the whole point of the skill; a capable model will get
+The four non-obvious constraints below are the whole point of the skill; a capable model will get
 the prose right on its own but will drift on these unless they are written down once.
 
 ## 1. Self-contained — one file, no network
@@ -40,7 +40,10 @@ adapt to the reader's environment and offer a manual override.
     r.setAttribute('data-theme', r.getAttribute('data-theme')==='dark'?'light':'dark')">◐ theme</button>
   ```
 - Drive all color from a small set of CSS custom properties (`--bg`, `--fg`, `--muted`,
-  `--accent`, `--border`, `--card`) redefined per theme — never hard-code a hex in a rule.
+  `--accent`, `--border`, `--card`, and `--good` / `--warn` / `--bad` for state) redefined per
+  theme — never hard-code a hex in a rule. A state color always comes with a label or glyph.
+- Write the document in the language of the user's request and set `lang` to match; quoted source
+  text stays verbatim.
 - **Optional project palette:** if the target project's `CLAUDE.md` points at a design system /
   palette, adopt its accent + surface colors for these variables; otherwise use a neutral,
   accessible default. This is a light decoration, not fidelity — a document reads as a document,
@@ -58,6 +61,8 @@ the conclusion; let the reader expand to the proof, in place.
 - Reserve custom JS for interactions `<details>` can't express (a copy-to-clipboard button, an
   "expand/collapse all", `decide`'s selection state). Keep it small and unobtrusive.
 - The document must be **fully readable with JS disabled** — JS enhances, it never gates content.
+  JS may open or close `<details>` and disable a control in response to an action, provided the
+  content stays in the DOM, readable, and openable without JS.
 
 ## 4. Visual evidence — match evidence to its form
 
@@ -65,13 +70,12 @@ Every piece of evidence is **text plus, when it helps, a supporting artifact —
 alone.** The prose states the claim or the fork and carries the reader; a code snippet, chart,
 diagram, or sketch sits *under* it — by default inside the expandable context, as substantiation the
 reader can check. (A command may promote a visual into the always-visible body when the visual *is*
-the fastest way to make the call — `decide`'s framing figure and per-option before/after panes, and
+the fastest way to make the call — `decide`'s today visual and per-option outcome figures, and
 `branch-review`'s summary chart, do.) So the question is never "text or visual" — it is whether a
 supporting artifact earns its place beside the text. All three commands draw from the same small
 vocabulary of supporting forms so their output stays one system; each command owns *when* a piece of
 its content warrants one, this skill owns *how* each is built (and every form here is inline and
-CSP-safe — SVG and divs inline,
-images as `data:` URIs):
+CSP-safe — SVG and divs inline, images as `data:` URIs):
 
 - **Code → the real snippet, plus how execution reaches it.** Paste the actual lines (escaped, in
   `<pre>`) and add one line on the path in — the caller, the trigger — so the point rests on the
@@ -79,13 +83,20 @@ images as `data:` URIs):
 - **Flow / structure (state/page A → B, or a small system map) → a small inline-SVG diagram.**
   Labeled nodes and arrows, so the reader sees the shape instead of reading a sentence about it. The
   nodes are whatever the evidence is about: pages or states, data stages (sources → transforms →
-  consumers), an actor's steps in order, services with labeled calls/events, or modules with their
-  dependencies. Keep it a few nodes; it is a signpost, not a full architecture diagram.
+  consumers), an actor's steps in order, services with labeled calls/events, modules with their
+  dependencies, entities with their fields and relations (a schema), or classes with only the
+  members that matter. For calls *over time*, draw a sequence: one lifeline per participant,
+  messages top to bottom. Keep it a few nodes; it is a signpost, not a full architecture diagram.
+  When a diagram's point is *timing* (a race, a retry, a state machine), it may step through its
+  states with play / next controls and a caption per step — with reduced motion or JS off, all
+  steps show at once.
 - **Trend / distribution / comparison → a chart.** Inline SVG, no chart library. A duration or
   timeline bar against a budget is a chart too, so it follows this rule. When you draw one,
   **load the `dataviz` skill first** for palette, form choice, and light/dark-safe rendering rather
   than hand-rolling a bar — a report synthesizing history or logs is often *itself* a trend, so this
   is the form `report` reaches for most.
+- **Many items × a few attributes → a table.** Real `<table>` with a header row, inside its own
+  scroll container; when items vary on one number, it is a chart instead.
 - **UI appearance → show it.** Embed the screenshot as a `data:` URI rather than describing how a
   screen looks. **Read-only caveat:** all three commands only inspect — use an image the source already
   has (a PR, an issue, a thread); never spin up the app just to capture one. With no existing image,
@@ -95,6 +106,17 @@ images as `data:` URIs):
   one is **decide-flavored** — it serves *choosing between* layouts and showing where a fork sits in
   a screen, so `report` rarely needs it. And it is a **thumbnail, not a facsimile**: pixel fidelity
   to the product is `mockup`'s posture and deliberately not this skill's (see §2). Keep it schematic.
+
+When a figure is repeated to compare states (today vs. each option), keep its nodes, order and
+positions fixed and change only the delta:
+
+```
+today      [form] → [api] ⇢ ? ⇢ [db]
+option A   [form] → [api] → [queue]* → [db]
+option B   [form] → [api] → [db]*            (* = the only thing added or recolored)
+```
+
+If an option can't be drawn without rearranging the picture, the form is wrong for the comparison.
 
 Every aid is **evidence, not decoration** — the text always stays; add a supporting artifact only
 when it substantiates the claim faster than more prose would. And none of them gate content: because
@@ -117,14 +139,18 @@ is off.
 All three commands start from the same shape — a fixed header with the theme toggle, then content:
 
 ```html
-<!doctype html><html lang="en"><head><meta charset="utf-8">
+<!doctype html><html lang="…"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>…</title>
 <style>
-  :root{ --bg:#fff; --fg:#1a1a1a; --muted:#666; --accent:#2563eb; --border:#e5e7eb; --card:#f8f9fa; }
-  @media (prefers-color-scheme:dark){ :root{ --bg:#0f1115; --fg:#e8e8e8; --muted:#9aa0a6; --border:#2a2d34; --card:#171a20; } }
-  :root[data-theme="dark"]{ --bg:#0f1115; --fg:#e8e8e8; --muted:#9aa0a6; --border:#2a2d34; --card:#171a20; }
-  :root[data-theme="light"]{ --bg:#fff; --fg:#1a1a1a; --muted:#666; --border:#e5e7eb; --card:#f8f9fa; }
+  :root{ --bg:#fff; --fg:#1a1a1a; --muted:#666; --accent:#2563eb; --border:#e5e7eb; --card:#f8f9fa;
+         --good:#15803d; --warn:#b45309; --bad:#b91c1c; }
+  @media (prefers-color-scheme:dark){ :root{ --bg:#0f1115; --fg:#e8e8e8; --muted:#9aa0a6; --border:#2a2d34; --card:#171a20;
+         --good:#4ade80; --warn:#fbbf24; --bad:#f87171; } }
+  :root[data-theme="dark"]{ --bg:#0f1115; --fg:#e8e8e8; --muted:#9aa0a6; --border:#2a2d34; --card:#171a20;
+         --good:#4ade80; --warn:#fbbf24; --bad:#f87171; }
+  :root[data-theme="light"]{ --bg:#fff; --fg:#1a1a1a; --muted:#666; --border:#e5e7eb; --card:#f8f9fa;
+         --good:#15803d; --warn:#b45309; --bad:#b91c1c; }
   body{ margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui,-apple-system,sans-serif; }
   /* … */
 </style></head>
@@ -140,5 +166,5 @@ All three commands start from the same shape — a fixed header with the theme t
 - Write the `.html` to disk and hand it back with the file tools (or publish as an Artifact when
   the user wants a shareable link — Artifacts render this format natively). Each command says where
   its output lands.
-- One document = one file. If a command produces a companion machine payload (e.g. `decide`'s
-  emitted prompt), that is separate from this HTML, not embedded chrome inside it.
+- One document = one file. A companion machine payload (e.g. `decide`'s emitted prompt) is plain
+  text the page displays and copies; it never contains the document's markup.
