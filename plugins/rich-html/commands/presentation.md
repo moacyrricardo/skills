@@ -18,9 +18,10 @@ render check, and the few places a deck departs from `html-doc` (§4).
 ## 1. Frame it — beats, effect, audience
 
 - **Beats** — the user's ordered points. Keep their order; you choose how many slides each needs.
-- **Effect** — what each beat should make the audience conclude. Turn an adjective into a form you
-  can count or show: "it feels bureaucratic" → the numbered steps it takes today, with a tally;
-  "it's slow" → the measured time against the budget.
+- **Effect** — what each beat should make the audience conclude *and feel*. Turn an adjective into a
+  form you can count and show: "it feels bureaucratic" → every screen it takes today, drawn in
+  order, with a tally; "it's slow" → the measured time against the budget. The layout carries the
+  feeling; the content stays sourced.
 - **Audience and occasion** — presented live (fewer words, notes matter) or sent to be read (a
   little more text per slide).
 
@@ -37,7 +38,8 @@ State your reading in one line and proceed. Ask **one** question only if a beat 
 - **Quotes are verbatim**, with a locator (timestamp, line, URL). Note transcription doubt; never
   translate a quote silently. No source, no quote.
 - Example data in a figure is labelled as example; a counted claim ("8 steps") lists what it counts.
-- Nothing captured for a screen you need? Draw it (§3) and say on the slide that it is drawn.
+- Nothing captured for a screen you need? Draw it (§3) and say on the slide that it is drawn. Draw
+  every state the slide talks about — a menu *and* the dialog it opens — not just one of them.
 
 ## 3. Shape the slides — one claim, one form
 
@@ -51,10 +53,10 @@ State your reading in one line and proceed. Ask **one** question only if a beat 
 
   | The beat is… | Slide form |
   | :-- | :-- |
-  | what someone said | one hero quote + up to two supporting quotes, each with its locator |
-  | how a screen looks today | an existing capture with ≤ 3 numbered callouts, keyed to points beside it |
-  | a path that is too long | numbered step cards, each tagged with where it happens, plus a tally |
-  | a screen or control with no capture | a UI miniature built from real markup and copy, one region, captioned |
+  | what someone said | one hero quote + up to two supporting quotes, each with its locator; a voice beat may take more than one slide — keep the voice on the slides, not only in notes |
+  | how a screen looks today | an existing capture with ≤ 3 numbered rings drawn around the exact controls, keyed to points beside it |
+  | a path that is too long | the screens it passes through, drawn small and in order, each numbered and tagged with where it happens; mark revisits and the step where the missing context finally arrives; a tally of steps, clicks and screen changes |
+  | a screen or control with no capture | a UI miniature built from real markup and copy, showing every state the beat mentions, captioned as drawn |
   | a change | before / after on one baseline, only the delta highlighted |
   | it working | a captured GIF or still with numbered captions |
   | a trend or comparison | a chart — load `dataviz` |
@@ -84,9 +86,10 @@ Structure only — class names and styling are yours:
 ```
 
 - **Navigation:** the buttons (disabled at the ends); ← / →, PageUp / PageDown, Space / Shift+Space,
-  Home / End; swipe left / right; **F** toggles the Fullscreen API; **N** toggles notes. Key handlers
-  ignore events whose target is a button, input or link, and any Ctrl / Alt / Meta combination. A
-  thin progress bar; `#N` in the URL, read on load and on `hashchange`. No click-to-advance — it
+  Home / End; swipe left / right; **F** toggles the Fullscreen API; **N** toggles notes. Arrows,
+  PageUp / PageDown and Home / End always navigate, even with a button focused — so they keep
+  working after a click on Next; a focused button keeps only Space and Enter, a text field or select
+  keeps every key, and any Ctrl / Alt / Meta combination is ignored. A thin progress bar; `#N` in the URL, read on load and on `hashchange`. No click-to-advance — it
   fights clicks on figures and links.
 - **Fit:** slides render on a fixed 16:9 stage (e.g. 1280×720) scaled to the window, so a slide
   always fits and never scrolls. Below a narrow width (~700 px) the scaling stops and slides stack.
@@ -108,7 +111,10 @@ Structure only — class names and styling are yours:
 ## 5. Assets
 
 - Crop each capture to the region the slide talks about and downscale to its displayed width; JPEG
-  for screenshots; keep GIFs short and small. Budget ~5 MB for the file; report the final size.
+  for screenshots; keep GIFs short and small. Never crop through a row or a control, or away from
+  the element a caption names. Budget ~5 MB for the file; report the final size.
+- A GIF restarts when its slide is shown and has a replay button; its numbered captions follow the
+  order of what it shows.
 - **Keep base64 out of your context:** write the deck with placeholders (`@@shot-4@@`), then inline
   the assets with a small script that fails if any placeholder is left.
 - `alt` on every image; callout numbers match the points beside the image.
@@ -121,8 +127,9 @@ Structure only — class names and styling are yours:
   product.
 - Look for: overflow or clipped source lines, callouts off target, elements covering each other,
   captions that don't match the asset, capture text too small to read.
-- Spot-check dark theme, a narrow width, the JS-off stack and the print view. Fix, then re-render
-  what changed.
+- Spot-check dark theme, a narrow width, the JS-off stack and the print view. Exercise the keys
+  with a small injected script: → after clicking Next must still advance; Space on the focused theme
+  button must toggle the theme, not the slide. Fix, then re-render what changed.
 - Grep the file for external URLs and for anything the user asked to keep out.
 - No browser available: say so in the hand-back, and use numbered points beside an image instead
   of callouts placed over it.
