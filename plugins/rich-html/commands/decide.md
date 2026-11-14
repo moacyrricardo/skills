@@ -88,7 +88,10 @@ fewer. Conflicts, the prompt and every cross-reference name an option as `D2·B`
     chosen, in the **same form and baseline** as the today visual with only the delta highlighted,
     plus a one-line good / warn / bad note. All options get one or none do; a "leave as is" option
     says "same as today" instead of repeating the figure. With no status quo to draw (greenfield),
-    options may still carry figures, in one shared form.
+    options may still carry figures, in one shared form. Crop each outcome figure to the part the
+    option changes, keeping positions — the full picture is drawn once, in the today visual. Lay
+    the options' figures side by side when they fit so they compare at a glance; stack them only
+    when each needs the full width.
   - **Trade-offs** — its gains, its losses, and one "wrong call when…" sentence, in a collapsed
     `<details>` whose summary shows the counts ("3 gains · 2 losses").
   - **Tags**, always visible — `recommended` with one visible sentence ("Recommended because …"),
@@ -101,7 +104,8 @@ fewer. Conflicts, the prompt and every cross-reference name an option as `D2·B`
 - **Evidence** — the real source behind the fork, in a collapsed `<details>`: the concern's options
   section, the PR thread, the issue excerpt, the code around the marker (with the path in, per
   `html-doc`). Wire it to the actual source, not a paraphrase, and escape interpolated text; the
-  figures above are drawn from it.
+  figures above are drawn from it. Quote the lines that bear on the fork, each with its `path:line`
+  — not whole sections the reader already has.
 - **Source** — where it came from: PR#, issue id, concern number, or `path:line`.
 
 ### Conflicts between decisions
@@ -109,8 +113,10 @@ fewer. Conflicts, the prompt and every cross-reference name an option as `D2·B`
 When an option on one card can't coexist with an option on another, declare it on **both** options,
 as text that is always in the markup:
 
-- **Hard** — an agent could not execute both: they give the same file, field, resource or contract
-  incompatible states, or one removes what the other needs. Hard conflicts disable: once D2·A is
+- **Hard** — no build can satisfy both: one removes or forbids what the other needs (an option
+  drops the column another option writes). If both could ship with extra work — an adapter in
+  between, an endpoint versioned, a migration split in two — it is soft, however awkward. Hard
+  conflicts disable: once D2·A is
   picked, D1·C shows "Unavailable — contradicts D2·A: it removes the `sessions` table this option
   reads." Un-picking D2·A re-enables it. "Requires D2·B" is written as hard conflicts with D2's
   other options.
@@ -196,6 +202,7 @@ D1. <question> — source: <PR# | issue id | concern | path:line>
 D2. <question> — source: <ref>
     Deferred — do not act.
 Tensions accepted: D1·A ~ D3·C — <reason>.
+Out of scope — do not change: <the lede's out-of-scope items>.
 Record each decision at its source (resolve the thread, update the concern).
 ```
 
