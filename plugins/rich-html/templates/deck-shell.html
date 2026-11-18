@@ -42,9 +42,13 @@
   .deck-bar, .deck-nav, #notes-panel, .progress{ display:none; }
 
   /* Deck mode: only once the script has run. */
-  .js body{ height:100vh; height:100dvh; overflow:hidden; display:grid; grid-template-rows:auto 1fr auto auto; }
+  .js body{ height:100vh; height:100dvh; overflow:hidden; display:grid; grid-template-rows:auto 1fr auto auto;
+             grid-template-columns:minmax(0,1fr); }
   .js .deck-bar, .js .deck-nav{ display:flex; align-items:center; gap:10px; padding:8px 16px; }
   .js .deck-bar{ justify-content:space-between; font-size:15px; color:var(--muted); }
+  .deck-title{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .deck-actions{ flex:none; display:flex; gap:6px; }
+  @media (max-width:480px){ .deck-actions button{ padding:5px 9px; } }
   .js .deck-nav{ justify-content:center; }
   .js .progress{ display:block; position:fixed; top:0; left:0; height:3px; background:var(--accent);
                  transition:width var(--t) var(--ease); z-index:2; }
@@ -56,12 +60,15 @@
   .js .slide.is-current, .js .slide.is-leaving{ visibility:visible; }
   .js .slide.is-leaving{ z-index:0; } .js .slide.is-current{ z-index:1; }
   .js .slide .notes{ display:none; }
-  /* Phone-sized screen (narrow or short): no scaling — the slide reflows to the screen width and scrolls. */
-  .js .stage.reflow{ left:0; top:0; width:100%; height:100%; transform:none; }
-  .js .stage.reflow .slide{ padding:24px 20px 32px; overflow-y:auto; font-size:17px; }
-  .js .stage.reflow .slide h1{ font-size:32px; } .js .stage.reflow .slide h2{ font-size:25px; }
-  .js .stage.reflow .slide .src{ position:static; margin-top:24px; }
-  .js .stage.reflow img, .js .stage.reflow svg{ max-width:100%; height:auto; }
+  /* Phone-sized screen (narrow or short): no scaling — the slide reflows to the screen width and
+     scrolls. Screen only, so print always gets the full slide layout. */
+  @media screen{
+    .js .stage.reflow{ left:0; top:0; width:100%; height:100%; transform:none; }
+    .js .stage.reflow .slide{ padding:24px 20px 32px; overflow-y:auto; font-size:17px; }
+    .js .stage.reflow .slide h1{ font-size:32px; } .js .stage.reflow .slide h2{ font-size:25px; }
+    .js .stage.reflow .slide .src{ position:static; margin-top:24px; }
+    .js .stage.reflow img, .js .stage.reflow svg{ max-width:100%; height:auto; }
+  }
   .js #notes-panel:not([hidden]){ display:block; max-height:28vh; overflow:auto; margin:0 16px 8px;
                                   padding:10px 14px; border:1px solid var(--border); border-radius:8px;
                                   background:var(--card); font-size:15px; }
@@ -79,7 +86,7 @@
 <body>
   <header class="deck-bar">
     <span class="deck-title">Deck title</span><!-- REPLACE -->
-    <span>
+    <span class="deck-actions">
       <button id="btn-notes" aria-pressed="false" title="Speaker notes (N)">Notes</button>
       <button id="btn-full" title="Full screen (F)">⛶</button>
       <button id="btn-theme" title="Theme">◐</button>
