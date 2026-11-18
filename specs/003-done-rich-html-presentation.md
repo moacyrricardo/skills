@@ -1,4 +1,4 @@
-Status: doing
+Status: done
 Branch: moacyrricardo/spec-003-rich-html-presentation
 
 # 003 — presentation: a slide-deck command for rich-html
@@ -180,3 +180,47 @@ and the hand-back list.
 - Visual check depends on a local headless browser; without one, quality relies on markup alone.
 - Faithful miniatures sit close to `prototype:mockup`; the line is "one region, captioned, inside a
   deck" vs "a clickable facsimile".
+
+## Implementation Notes
+
+Built as decided: `plugins/rich-html/commands/presentation.md`, the `html-doc` theme-toggle fix
+(its own commit), plugin `0.4.0 → 0.5.0`, and the fourth command propagated across `html-doc`,
+`plugin.json`, the marketplace entry, `README.md`, `docs/index.html` and both guide copies.
+
+**Verified by two blind A/Bs** on fictional projects (no private data). Each compared the command
+with a one-line prompt against `html-doc` from `main` with an eight-line hand prompt like the
+original, using the same model and judged blind against the answer key:
+
+- **Round 1** (invoicing app): 20/24 vs 16/24. The command caught every planted trap, most on the
+  slide face, plus three unplanted defects in the source captures. It lost on the "make it feel
+  long" beat, on miniature completeness, and on a key-handling bug.
+- **Round 2** (studio booking app, after the fixes below): 27/27 vs 19/27. The judge would present
+  it unchanged.
+
+**Differed from the spec:**
+
+- **A shipped deck shell instead of prose rules.** Every agent was writing its own navigation,
+  which is how the round-1 key bug got in: "ignore events whose target is a button" left the arrows
+  dead after a click on Next. `plugins/rich-html/templates/deck-shell.html` is now copied by every
+  run, with its script and style kept as they are. It was tested once, headless, covering keys,
+  swipe, transitions, hash, reduced motion, no-JS and print.
+- **Transitions** (not in the spec, added on user request): `slide` (direction-aware), `slide-up`,
+  `fade` and `none`, set on the stage with a per-slide override. Swipe makes the slide follow the
+  finger and springs back on a short swipe. Reduced motion turns every transition into a 160 ms fade.
+- **Phone reflow replaces Decision #4's stacking.** Below 700 px wide or 480 px tall, the slide
+  reflows to the screen width at 17 px and scrolls, still one slide at a time with swipe and
+  transitions. Scaling the 16:9 stage made text about 30% size on a phone. Stacking remains the
+  no-JS and print view. Reflow is screen-only, so print always gets the full slide layout.
+- **Rules the A/Bs added:**
+  - a too-long path is drawn as the screens it passes through, with revisits and the late step
+    marked;
+  - a labelled playful frame around sourced steps is allowed;
+  - miniatures draw every state a slide mentions;
+  - a voice beat may span slides;
+  - callouts are rings around the exact control;
+  - GIFs restart on their slide and have a replay button, and crops never cut through a row;
+  - the render check exercises the keys.
+
+**Known gaps** carried forward: the visual check still needs a local headless browser, and
+neither A/B used real touch hardware or a real projector. Swipe and full screen were tested with
+synthetic events only.

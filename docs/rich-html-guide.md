@@ -175,7 +175,7 @@ decision, `branch-review` points at `decide` too.
   their real sources become a self-contained, full-screen 16:9 deck — one claim per slide with the
   figure that proves it, keyboard/button/swipe navigation, speaker notes, print and no-JS views —
   checked by rendering every slide. Distilled from an audit of a hand-prompted deck; see spec
-  [`003`](../specs/003-doing-rich-html-presentation.md). `html-doc`'s theme toggle no longer
+  [`003`](../specs/003-done-rich-html-presentation.md). `html-doc`'s theme toggle no longer
   ignores its first click when the OS is dark.
 - **2026-11-14 · `decide` cards rebuilt around what / why / how (plugin `0.4.0`).** Each decision
   carries a visible **What** and **Why** paragraph and, when the fork is drawable, a today visual
