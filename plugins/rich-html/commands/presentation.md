@@ -21,7 +21,9 @@ render check, and the few places a deck departs from `html-doc` (§4).
 - **Effect** — what each beat should make the audience conclude *and feel*. Turn an adjective into a
   form you can count and show: "it feels bureaucratic" → every screen it takes today, drawn in
   order, with a tally; "it's slow" → the measured time against the budget. The layout carries the
-  feeling; the content stays sourced.
+  feeling; the content stays sourced. A playful frame is welcome when the slide says it is one —
+  the real steps on a mock form, under a line like "the steps are real; only the letterhead is a
+  joke". The frame may be invented; what's inside it may not.
 - **Audience and occasion** — presented live (fewer words, notes matter) or sent to be read (a
   little more text per slide).
 
@@ -55,7 +57,7 @@ State your reading in one line and proceed. Ask **one** question only if a beat 
   | :-- | :-- |
   | what someone said | one hero quote + up to two supporting quotes, each with its locator; a voice beat may take more than one slide — keep the voice on the slides, not only in notes |
   | how a screen looks today | an existing capture with ≤ 3 numbered rings drawn around the exact controls, keyed to points beside it |
-  | a path that is too long | the screens it passes through, drawn small and in order, each numbered and tagged with where it happens; mark revisits and the step where the missing context finally arrives; a tally of steps, clicks and screen changes |
+  | a path that is too long | the screens it passes through, drawn small and in order, each numbered and tagged with where it happens; mark revisits and the step where the missing context finally arrives; a tally of steps, clicks and screen changes — or the same steps in a labelled playful frame |
   | a screen or control with no capture | a UI miniature built from real markup and copy, showing every state the beat mentions, captioned as drawn |
   | a change | before / after on one baseline, only the delta highlighted |
   | it working | a captured GIF or still with numbered captions |
